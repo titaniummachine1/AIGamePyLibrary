@@ -142,6 +142,11 @@ def Abs(node: Node) -> Node:
     return Operation(node, "abs")
 
 
+def AbsFloat(node: Node) -> Node:
+    """Alias for Abs - converts a number to its absolute value."""
+    return Abs(node)
+
+
 def Round(node: Node) -> Node:
     return Operation(node, "round")
 
@@ -284,9 +289,33 @@ def CompareFloats(
 
 
 @cache
+def ConditionalSetBool(node0: Node, node1: Node, node2: Node, value: bool = True):
+    baseNode = AddNode("ConditionalSetBool", "0" if value else "1")
+    inputTypes = ["Bool", "Bool", "Bool"]
+    connectInputNodes(baseNode, inputTypes, [node0, node1, node2])
+    return baseNode
+
+
+@cache
 def ConditionalSetFloat(node0: Node, node1: Node, node2: Node, value: bool = True):
     baseNode = AddNode("ConditionalSetFloatV2", "0" if value else "1")
     inputTypes = ["Bool", "Float", "Float"]
+    connectInputNodes(baseNode, inputTypes, [node0, node1, node2])
+    return baseNode
+
+
+@cache
+def ConditionalSetSurvivalEmote(node0: Node, node1: Node, node2: Node, value: bool = True):
+    baseNode = AddNode("ConditionalSetSurvivalEmote", "0" if value else "1")
+    inputTypes = ["Bool", "SurvivalEmote", "SurvivalEmote"]
+    connectInputNodes(baseNode, inputTypes, [node0, node1, node2])
+    return baseNode
+
+
+@cache
+def ConditionalSetSurvivalState(node0: Node, node1: Node, node2: Node, value: bool = True):
+    baseNode = AddNode("ConditionalSetSurvivalState", "0" if value else "1")
+    inputTypes = ["Bool", "SurvivalState", "SurvivalState"]
     connectInputNodes(baseNode, inputTypes, [node0, node1, node2])
     return baseNode
 
@@ -311,6 +340,28 @@ def ConstructSlimeProperties(
     baseNode = AddNode("ConstructSlimeProperties")
     inputTypes = ["String", "Color", "Country", "Stat", "Stat", "Stat"]
     connectInputNodes(baseNode, inputTypes, [node0, node1, node2, node3, node4, node5])
+    return baseNode
+
+
+@cache
+def ConstructSurvivalProperties(
+    node0: Node,
+    node1: countryNames,
+    node2: colorNames,
+    node3: Node,
+    node4: Node,
+    node5: colorNames,
+    node6: Node,
+    node7: Node,
+):
+    """Sets cosmetic options for an Aialander. Inputs: name, country, skin color, body style, hair style, hair color, facial hair, outfit URL."""
+    baseNode = AddNode("ConstructSurvivalProperties")
+    inputTypes = ["String", "Country", "Color", "Float", "Float", "Color", "Float", "String"]
+    connectInputNodes(
+        baseNode,
+        inputTypes,
+        [node0, node1, node2, node3, node4, node5, node6, node7],
+    )
     return baseNode
 
 
@@ -396,6 +447,19 @@ def DebugDrawDisc(node0: Node, node1: Node, node2: Node, node3: colorNames):
     return baseNode
 
 
+def TimePlot(
+    node0: Node,
+    node1: colorNames,
+    node2: Node,
+    node3: Node,
+):
+    """Adds a value to the time plot graph during a simulation (toggle with F1). Inputs: name, color, iconUrl, value."""
+    baseNode = AddNode("TimePlot")
+    inputTypes = ["String", "Color", "String", "Float"]
+    connectInputNodes(baseNode, inputTypes, [node0, node1, node2, node3])
+    return baseNode
+
+
 @cache
 def Distance(node0: Node, node1: Node):
     baseNode = AddNode("Distance")
@@ -423,6 +487,27 @@ def DotProduct(node0: Node, node1: Node):
 @cache
 def Float(value: int | float | str):
     return AddNode("Float", str(value))
+
+
+@cache
+def GetVariable(name: str):
+    """Outputs the value from the corresponding SetVariable node with the same variable name."""
+    return AddNode("GetVariable", name)
+
+
+@cache
+def IsNull(node0: Node):
+    """Checks if the input is a null value."""
+    baseNode = AddNode("IsNull")
+    inputTypes = ["Any"]
+    connectInputNodes(baseNode, inputTypes, [node0])
+    return baseNode
+
+
+@cache
+def Keypress(value: int):
+    """Indicates whether the selected key is currently pressed. Pass key index (0-based)."""
+    return AddNode("Keypress", str(value))
 
 
 @cache
@@ -628,6 +713,20 @@ def RandomFloat(node0: Node, node1: Node):
     return baseNode
 
 
+def Region():
+    """Groups nodes visually for organization. Does not affect logic."""
+    return AddNode("Region", includePorts=True)
+
+
+@cache
+def Relay(node0: Node):
+    """Passes through data from input to output. Useful for organizing connections."""
+    baseNode = AddNode("Relay")
+    inputTypes = ["Any"]
+    connectInputNodes(baseNode, inputTypes, [node0])
+    return baseNode
+
+
 @cache
 def ScaleVector3(node0: Node, node1: Node):
     baseNode = AddNode("ScaleVector3")
@@ -652,6 +751,15 @@ def Vector3Split(node0: Node):
     inputTypes = ["Vector3"]
     connectInputNodes(baseNode, inputTypes, [node0])
     return Vector3Components(baseNode, Node(baseNode.data, 2), Node(baseNode.data, 3))
+
+
+@cache
+def SetVariable(name: str, value: Node):
+    """Saves the input value so that it can be used by GetVariable nodes with the same variable name."""
+    baseNode = AddNode("SetVariable", name)
+    inputTypes = ["Any"]
+    connectInputNodes(baseNode, inputTypes, [value])
+    return baseNode
 
 
 @cache
@@ -680,6 +788,54 @@ def SubtractVector3(node0: Node, node1: Node):
     return baseNode
 
 
+@cache
+def SurvivalAutoPosition(node0: Node):
+    """Automatically decide where to move an Aialander based on predetermined rules for a given state."""
+    baseNode = AddNode("SurvivalAutoPosition")
+    inputTypes = ["SurvivalState"]
+    connectInputNodes(baseNode, inputTypes, [node0])
+    return baseNode
+
+
+@cache
+def SurvivalController(node0: Node, node1: Node, node2: Node, node3: Node):
+    """Controls an Aialander's brain. Inputs: targetPosition, state, sprint, emote. Use SurvivalEmote(0) for no emote."""
+    baseNode = AddNode("SurvivalController")
+    inputTypes = ["Vector3", "SurvivalState", "Bool", "SurvivalEmote"]
+    connectInputNodes(baseNode, inputTypes, [node0, node1, node2, node3])
+    return baseNode
+
+
+@cache
+def SurvivalEmote(value: int):
+    """Selection of emotes. 0=None, 1=Hi, 2=Talk, 3=Bored, 4=Wave."""
+    return AddNode("SurvivalEmote", str(value))
+
+
+@cache
+def SurvivalGetBool(value: int):
+    """Selection of bool options. 0=Is Carrying Resource, 1=Container has Health, 2=Container Was Attacked, 3=Container Was Stolen From, 4=Self Was Attacked."""
+    return AddNode("SurvivalGetBool", str(value))
+
+
+@cache
+def SurvivalGetFloat(value: int):
+    """Selection of float options (Health %, Hunger %, Stamina %, etc.). See README for full list."""
+    return AddNode("SurvivalGetFloat", str(value))
+
+
+@cache
+def SurvivalGetTransform(value: int):
+    """Selection of Transform options (Self, Player Nearest, etc.). See README for full list."""
+    return AddNode("SurvivalGetTransform", str(value))
+
+
+@cache
+def SurvivalState(value: int):
+    """Selection of states. 0=Passive, 1=Gather, 2=Eat, 3=Attack, 4=Steal, 5=Dead."""
+    return AddNode("SurvivalState", str(value))
+
+
 def connectInputNodes(baseNode, inputTypes, inputs):
     counters = {}
 
@@ -702,11 +858,21 @@ def connectInputNodes(baseNode, inputTypes, inputs):
         num2 = counters[inputType]
         counters[inputType] += 1
 
-        portName1 = f"{inputType}{num1}"
-        portName2 = f"{inputType}{num2}"
-        if isinstance(inputType, tuple):
-            portName1 = f"{inputType[0]}{num1}"
-            portName2 = f"{inputType[1]}{num2}"
+        if inputType == "Any":
+            # Get actual output port from input node (Float1, Vector31, Bool1, etc.)
+            outputPorts = [
+                p["id"]
+                for p in inputNode.data["serializablePorts"]
+                if p["polarity"] != 0
+            ]
+            portName1 = outputPorts[num1 - 1]
+            portName2 = "Any1"
+        else:
+            portName1 = f"{inputType}{num1}"
+            portName2 = f"{inputType}{num2}"
+            if isinstance(inputType, tuple):
+                portName1 = f"{inputType[0]}{num1}"
+                portName2 = f"{inputType[1]}{num2}"
 
         if inputData is not None:
             ConnectPorts((portName1, portName2), inputNode, baseNode)
