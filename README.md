@@ -76,9 +76,9 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 ---
 
 <details>
-<summary><strong>Default</strong></summary>
+<summary><strong>Default Nodes</strong></summary>
 
-**Description:** General purpose nodes for Slime Volleyball, AIALander Survival, and other games. Includes arithmetic, vectors, logic, variables, and debug tools.
+**Description:** General purpose nodes for all simulations. Includes arithmetic, vectors, logic, variables, and debug tools.
 
 <details>
 <summary>Basic Types</summary>
@@ -293,7 +293,7 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 ---
 
 <details>
-<summary><strong>Survival</strong></summary>
+<summary><strong>Survival Simulation</strong></summary>
 
 **Description:** Nodes for the Survival game. The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
 
@@ -522,7 +522,7 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 ---
 
 <details>
-<summary><strong>Slime Volleyball</strong></summary>
+<summary><strong>Slime Volleyball Simulation</strong></summary>
 
 <details>
 <summary>Game Entity Access</summary>
