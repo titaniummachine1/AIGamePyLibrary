@@ -5,8 +5,8 @@ import random
 from collections import deque
 from typing import Literal
 
-from .data import colors, outputs, ports, sizes
-from .utils import Color, Position2, Position3, generateId
+from .data import outputs, ports
+from .utils import Position3, generateId
 
 data = {"serializableNodes": [], "serializableConnections": []}
 
@@ -425,60 +425,20 @@ def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
         position = Position3(0, 0)
 
     nodeId = generateId()
-    instanceId = random.randint(0, 999999)
 
     node["serializableRectTransform"] = {}
-    node["serializableRectTransform"]["position"] = Position3(0, 0)
     node["serializableRectTransform"]["localPosition"] = position
-    node["serializableRectTransform"]["anchorMin"] = Position2(0, 1)
-    node["serializableRectTransform"]["anchorMax"] = Position2(0, 1)
-    node["serializableRectTransform"]["sizeDelta"] = sizes[nodeName]
-    node["serializableRectTransform"]["scale"] = Position3(1, 1, 1)
     node["id"] = nodeName
     node["sID"] = nodeId
-    node["enableSelfConnection"] = False
-    node["enableDrag"] = True
-    node["enableHover"] = False
-    node["enableSelect"] = True
-    node["disableClick"] = False
     node["modifier"] = nodeValue
-    node["defaultColor"] = colors[nodeName]
-    node["outlineSelectedColor"] = Color(1, 0.58, 0.04)
-    node["outlineHoverColor"] = Color(1, 0.81, 0.3)
     node["serializablePorts"] = []
     if includePorts:
         for portData in ports[nodeName]:
             node["serializablePorts"].append(
                 {
-                    "serializableRectTransform": {
-                        "position": Position3(0, 0),
-                        "localPosition": portData["position"],
-                        "anchorMin": Position2(0, 1),
-                        "anchorMax": Position2(0, 1),
-                        "sizeDelta": Position2(40, 40),
-                        "scale": Position3(1, 1, 1),
-                    },
                     "id": portData["id"],
                     "sID": generateId(),
                     "polarity": portData["polarity"],
-                    "maxConnections": portData["maxConnections"],
-                    "iconColorDefault": portData["iconColorDefault"],
-                    "iconColorHover": portData["iconColorHover"],
-                    "iconColorSelected": portData["iconColorSelected"],
-                    "iconColorConnected": Color(1, 1, 1),
-                    "enableDrag": True,
-                    "enableHover": True,
-                    "disableClick": False,
-                    "controlPointSerializableRectTransform": {
-                        "position": Position3(0, 0),
-                        "localPosition": portData["controlPointPosition"],
-                        "anchorMin": Position2(0.5, 0.5),
-                        "anchorMax": Position2(0.5, 0.5),
-                        "sizeDelta": Position2(0, 0),
-                        "scale": Position3(2.21, 2.21, 2.21),
-                    },
-                    "nodeInstanceID": instanceId,
-                    "nodeSID": nodeId,
                 }
             )
 
@@ -494,60 +454,10 @@ def ConnectPorts(portType: tuple | str, node0: Node, node1: Node):
     else:
         port0 = node0.outputPorts[portType]
         port1 = node1.inputPorts[portType]
-    connection = {}
-    connection["id"] = f"Connection ({port0["id"]} - {port1["id"]})"
-    connection["sID"] = generateId()
-    connection["port0InstanceID"] = port0["nodeInstanceID"]
-    connection["port1InstanceID"] = port1["nodeInstanceID"]
-    connection["port0SID"] = port0["sID"]
-    connection["port1SID"] = port1["sID"]
-    connection["selectedColor"] = Color(1.0, 0.58, 0.04)
-    connection["hoverColor"] = Color(1.0, 0.81, 0.3)
-    connection["defaultColor"] = Color(0.98, 0.94, 0.84)
-    connection["curveStyle"] = 2
-    connection["label"] = ""
-    connection["line"] = {
-        "capStart": {
-            "active": False,
-            "shape": 3,
-            "size": 5.0,
-            "color": Color(1.0, 0.81, 0.3),
-            "angleOffset": 0.0,
-        },
-        "capEnd": {
-            "active": False,
-            "shape": 3,
-            "size": 5.0,
-            "color": Color(1.0, 0.81, 0.3),
-            "angleOffset": 0.0,
-        },
-        "ID": "",
-        "startWidth": 3.0,
-        "endWidth": 3.0,
-        "dashDistance": 5.0,
-        "color": Color(0.98, 0.94, 0.84),
-        "points": [
-            port0["serializableRectTransform"]["localPosition"],
-            port0["controlPointSerializableRectTransform"]["localPosition"],
-            port1["serializableRectTransform"]["localPosition"],
-            port1["controlPointSerializableRectTransform"]["localPosition"],
-        ],
-        "lineStyle": 0,
-        "length": 0,
-        "animation": {
-            "isActive": False,
-            "pointsDistance": 90.0,
-            "size": 10.0,
-            "color": port0["iconColorDefault"],
-            "shape": 1,
-            "speed": 0.0,
-        },
+    connection = {
+        "port0SID": port0["sID"],
+        "port1SID": port1["sID"],
     }
-    connection["enableDrag"] = True
-    connection["enableHover"] = True
-    connection["enableSelect"] = True
-    connection["disableClick"] = False
-
     data["serializableConnections"].append(connection)
     return connection
 
@@ -640,24 +550,8 @@ def autoLayout(offsetX=350, offsetY=-215):
 
 
 def updateConnectionLinePoints():
-    for connection in data["serializableConnections"]:
-        port0 = None
-        port1 = None
-
-        for node in data["serializableNodes"]:
-            for port in node["serializablePorts"]:
-                if port["sID"] == connection["port0SID"]:
-                    port0 = port
-                elif port["sID"] == connection["port1SID"]:
-                    port1 = port
-
-        if port0 and port1:
-            connection["line"]["points"] = [
-                port0["serializableRectTransform"]["localPosition"],
-                port0["controlPointSerializableRectTransform"]["localPosition"],
-                port1["serializableRectTransform"]["localPosition"],
-                port1["controlPointSerializableRectTransform"]["localPosition"],
-            ]
+    """No-op: minimal serialization format does not include connection line points."""
+    pass
 
 
 def removeUnusedNodes():
