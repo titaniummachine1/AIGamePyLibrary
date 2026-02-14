@@ -381,6 +381,9 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 </details>
 
 <details>
+<summary>Nodes</summary>
+
+<details>
 <summary>Controller & Properties</summary>
 
 - **`SurvivalController(targetPosition, state, sprint, emote)`** - Controls an Aialander's brain. Navigation uses pathfinding to find the nearest viable point to the input target position
@@ -434,6 +437,8 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
   - Options: `True`, `False` (same as ConditionalSetFloat)
   - Inputs: Bool, SurvivalEmote, SurvivalEmote
   - Output: SurvivalEmote
+
+</details>
 
 </details>
 
