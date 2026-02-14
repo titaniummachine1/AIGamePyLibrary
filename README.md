@@ -293,11 +293,11 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 ---
 
 <details>
-<summary><strong>AIALander - Survival</strong></summary>
+<summary><strong>Survival</strong></summary>
 
 **Description:** Nodes for the Survival game. The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
 
-**Overview:** Aialanders are trapped on a deserted island with a few apple trees and other inhabitants. Each Aialander has a storage container they can put food.
+**Overview:** Aialanders are trapped on a deserted island with apple trees and other inhabitants. Each Aialander has a storage container they can put food.
 
 **Objective:** To survive on the island given the available food. Other inhabitants may be friendly or may not be, it's your choice how you respond to them. Ending with the highest rank will give you the most clout but it's your decision if that's important to you or not.
 
@@ -441,10 +441,11 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 
 ---
 
-### Slime Volleyball Specific Nodes
+<details>
+<summary><strong>Slime Volleyball</strong></summary>
 
 <details>
-<summary><strong>Game Entity Access</strong></summary>
+<summary>Game Entity Access</summary>
 
 The library provides pre-defined game entities for Slime Volleyball:
 
@@ -474,7 +475,7 @@ The library provides pre-defined game entities for Slime Volleyball:
 </details>
 
 <details>
-<summary><strong>Slime Volleyball Specific Functions</strong></summary>
+<summary>Slime Volleyball Specific Functions</summary>
 
 - **`InitializeSlime(name, color, country, speed, acceleration, jump)`**
   - Initializes your slime bot with the specified properties
@@ -528,6 +529,8 @@ The library provides pre-defined game entities for Slime Volleyball:
 - **`Country(value)`** - Creates a country node
   - Options: `"Unknown"`, `"Afghanistan"`, `"Albania"`, `"Algeria"`, `"Andorra"`, `"Angola"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Azerbaijan"`, `"Bahamas"`, `"Bahrain"`, `"Bangladesh"`, `"Barbados"`, `"Belarus"`, `"Belgium"`, `"Bermuda"`, `"Bohemia"`, `"Botswana"`, `"Brazil"`, `"Bulgaria"`, `"Burkina Faso"`, `"Burundi"`, `"Cameroon"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Costa Rica"`, `"Croatia"`, `"Cuba"`, `"Cyprus"`, `"Czechia"`, `"Côte d'Ivoire"`, `"Denmark"`, `"Djibouti"`, `"Dominican Republic"`, `"DR Congo"`, `"Ecuador"`, `"Egypt"`, `"Eritrea"`, `"Estonia"`, `"Ethiopia"`, `"Fiji"`, `"Finland"`, `"France"`, `"Gabon"`, `"Georgia"`, `"Germany"`, `"Ghana"`, `"Greece"`, `"Grenada"`, `"Guatemala"`, `"Guyana"`, `"Haiti"`, `"Hong Kong"`, `"Hungary"`, `"Iceland"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Jamaica"`, `"Japan"`, `"Jordan"`, `"Kazakhstan"`, `"Kenya"`, `"Kosovo"`, `"Kuwait"`, `"Kyrgyzstan"`, `"Latvia"`, `"Lebanon"`, `"Lithuania"`, `"Luxembourg"`, `"Malaysia"`, `"Mauritius"`, `"Mexico"`, `"Moldova"`, `"Mongolia"`, `"Montenegro"`, `"Morocco"`, `"Mozambique"`, `"Myanmar"`, `"Namibia"`, `"Netherlands"`, `"New Zealand"`, `"Niger"`, `"Nigera"`, `"North Korea"`, `"North Macedonia"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Panama"`, `"Paraguay"`, `"Peru"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"San Marino"`, `"Saudi Arabia"`, `"Scotland"`, `"Senegal"`, `"Serbia"`, `"Singapore"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sri Lanka"`, `"Sudan"`, `"Suriname"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Taiwan"`, `"Tajikistan"`, `"Tanzania"`, `"Thailand"`, `"Togo"`, `"Tonga"`, `"Trinidad and Tobago"`, `"Tunisia"`, `"Turkey"`, `"Turkmenistan"`, `"Uganda"`, `"Ukraine"`, `"Unite Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Uruguay"`, `"Uzbekistan"`, `"Venezuela"`, `"Vietnam"`, `"Virgin Islands"`, `"Yemen"`, `"Zambia"`, `"Zimbabwe"`
   - Output: Country
+
+</details>
 
 </details>
 
