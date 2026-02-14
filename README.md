@@ -71,205 +71,272 @@ scaled = offset * 0.5
 
 ## Complete Node Reference
 
-### General Nodes (Available in All Games)
+Node configurations determine which nodes are available in the Unity editor. Each configuration has a specific purpose. Expand the lists below to see nodes by configuration.
+
+---
 
 <details>
-<summary><strong>Basic Types</strong></summary>
+<summary><strong>Default</strong></summary>
 
-- **`Float(value)`** - Creates a float constant node
+**Description:** General purpose nodes for Slime Volleyball, AIALander Survival, and other games. Includes arithmetic, vectors, logic, variables, and debug tools.
+
+<details>
+<summary>Basic Types</summary>
+
+- **`Float(value)`** - Represents a real number
   - Input: `value` (int, float, or str)
   - Output: Float
 
-- **`Bool(value)`** - Creates a boolean constant node
+- **`Bool(value)`** - Represents a true/false or "boolean" value
   - Input: `value` (bool)
   - Output: Bool
 
-- **`String(value)`** - Creates a string constant node
+- **`String(value)`** - Represents a text value
   - Input: `value` (str)
   - Output: String
 
-</details>
+- **`Color(value)`** - Outputs the color value selected in the dropdown
+  - Output: Color
 
-<details>
-<summary><strong>Arithmetic Operations</strong></summary>
-
-- **`AddFloats(a, b)`** or `a + b` - Adds two float values
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`SubtractFloats(a, b)`** or `a - b` - Subtracts two float values
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`MultiplyFloats(a, b)`** or `a * b` - Multiplies two float values
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`DivideFloats(a, b)`** or `a / b` - Divides two float values
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`Modulo(a, b)`** or `a % b` - Modulo operation
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`Power(a, b)`** or `a ** b` - Raises a to the power of b
-  - Inputs: Float, Float
-  - Output: Float
+- **`Country(value)`** - Outputs the country value selected in the dropdown
+  - Output: Country
 
 </details>
 
 <details>
-<summary><strong>Vector Operations</strong></summary>
+<summary>Arithmetic Operations</summary>
 
-- **`AddVector3(a, b)`** or `a + b` - Adds two Vector3 values
+- **`AddFloats(a, b)`** or `a + b` - Performs an addition operation between two numbers
+  - Inputs: Float, Float
+  - Output: Float
+
+- **`SubtractFloats(a, b)`** or `a - b` - Performs a subtract operation between two numbers
+  - Inputs: Float, Float
+  - Output: Float
+
+- **`MultiplyFloats(a, b)`** or `a * b` - Performs a multiplication operation between two numbers
+  - Inputs: Float, Float
+  - Output: Float
+
+- **`DivideFloats(a, b)`** or `a / b` - Performs a divide operation between two numbers
+  - Inputs: Float, Float
+  - Output: Float
+
+- **`Modulo(a, b)`** or `a % b` - Divides a number by another number and returns any remainder
+  - Inputs: Float, Float
+  - Output: Float
+
+- **`ClampFloat(value, min, max)`** - Limits or "clamps" a number between a minimum and maximum value
+  - Inputs: Float, Float, Float
+  - Output: Float
+
+- **`RandomFloat(min, max)`** - Returns a random number value between two values (changes every Update)
+  - Inputs: Float, Float
+  - Output: Float
+
+</details>
+
+<details>
+<summary>Math Functions</summary>
+
+- **`Abs(x)`** or `AbsFloat(x)` - Convert a number to its unsigned or absolute value
+  - Input: Float
+  - Output: Float
+
+- **`Operation(x)`** - Performs the selected operation on the input number (Abs, Round, Floor, Ceil, Sin, Cos, Tan, Sqrt, etc.)
+  - Input: Float
+  - Output: Float
+
+</details>
+
+<details>
+<summary>Vector Operations</summary>
+
+- **`AddVector3(a, b)`** or `a + b` - Adds two three-dimensional vectors to each other
   - Inputs: Vector3, Vector3
   - Output: Vector3
 
-- **`SubtractVector3(a, b)`** or `a - b` - Subtracts two Vector3 values
+- **`SubtractVector3(a, b)`** or `a - b` - Performs a subtract operation between two Vector3's
   - Inputs: Vector3, Vector3
   - Output: Vector3
 
-- **`ScaleVector3(vec, scalar)`** or `vec * scalar` - Scales a vector by a float
+- **`ScaleVector3(vec, scalar)`** or `vec * scalar` - Multiplies a Vector3 by a number
   - Inputs: Vector3, Float
   - Output: Vector3
 
-- **`DotProduct(a, b)`** or `a @ b` - Dot product of two vectors
+- **`DotProduct(a, b)`** or `a @ b` - Returns the dot product between two inputs. 1 = same direction, 0 = perpendicular, -1 = opposite direction
   - Inputs: Vector3, Vector3
   - Output: Float
 
-- **`CrossProduct(a, b)`** - Cross product of two vectors
+- **`CrossProduct(a, b)`** - Calculates the cross product of two Vector3. Result is perpendicular to both inputs
   - Inputs: Vector3, Vector3
   - Output: Vector3
 
-- **`Magnitude(vec)`** - Magnitude (length) of a vector
+- **`Magnitude(vec)`** - Returns the length of the input Vector
   - Input: Vector3
   - Output: Float
 
-- **`Normalize(vec)`** - Normalizes a vector to unit length
+- **`Normalize(vec)`** - Returns a vector with the same direction as the input but with a magnitude of 1
   - Input: Vector3
   - Output: Vector3
 
-- **`Distance(pos1, pos2)`** - Distance between two Vector3 positions
+- **`Distance(pos1, pos2)`** - Calculates the distance between two points
   - Inputs: Vector3, Vector3
   - Output: Float
 
-- **`Vector3Split(vec)`** - Splits a Vector3 into x, y, z components
+- **`Vector3Split(vec)`** - Splits a Vector3 into its three corresponding x, y, and z values
   - Input: Vector3
-  - Output: Vector3Components (access via `.x`, `.y`, `.z`)
+  - Output: Float (x), Float (y), Float (z)
 
-- **`Vector3(x, y, z)`** or `ConstructVector3(x, y, z)` - Constructs a Vector3 from components
+- **`Vector3(x, y, z)`** or `ConstructVector3(x, y, z)` - Creates a Vector3 data type from three input numbers
   - Inputs: Float, Float, Float
   - Output: Vector3
 
 </details>
 
 <details>
-<summary><strong>Comparison Operations</strong></summary>
+<summary>Comparison & Logic Operations</summary>
 
-- **`CompareFloats(a, b, operator)`** or `a < b`, `a > b`, etc. - Compares two float values
+- **`CompareFloats(a, b, operator)`** or `a < b`, `a > b`, etc. - Evaluates two float values against the operation selected in the dropdown
   - Inputs: Float, Float
-  - Operator: `"=="`, `"<"`, `">"`, `"<="`, `">="`
   - Output: Bool
 
-- **`CompareBool(a, b, operator)`** - Compares two boolean values
+- **`CompareBool(a, b, operator)`** - Evaluates two boolean values against the operation selected in the dropdown
   - Inputs: Bool, Bool
-  - Operator: `"and"`, `"or"`, `"equal to"`, `"xor"`, `"nor"`, `"nand"`, `"xnor"`
   - Output: Bool
 
-- **`Not(condition)`** or `~condition` - Boolean negation
+- **`Not(condition)`** or `~condition` - Toggles the value of the input boolean (TRUE↔FALSE)
   - Input: Bool
   - Output: Bool
 
-- **`And(a, b)`** or `a & b` - Boolean AND
-  - Inputs: Bool, Bool
-  - Output: Bool
+- **`ConditionalSetFloat(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different number values
+  - Inputs: Bool, Float, Float
+  - Output: Float
 
-- **`Or(a, b)`** or `a | b` - Boolean OR
-  - Inputs: Bool, Bool
-  - Output: Bool
+- **`ConditionalSetVector3(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different Vector3 values
+  - Inputs: Bool, Vector3, Vector3
+  - Output: Vector3
 
-- **`Xor(a, b)`** or `a ^ b` - Boolean XOR
-  - Inputs: Bool, Bool
+- **`ConditionalSetBool(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different boolean values
+  - Inputs: Bool, Bool, Bool
   - Output: Bool
 
 </details>
 
 <details>
-<summary><strong>Conditional Operations</strong></summary>
+<summary>Variables & Utilities</summary>
 
-- **`ConditionalSetFloat(condition, trueValue, falseValue)`** - Returns one float based on condition
-  - Inputs: Bool, Float, Float
-  - Output: Float
+- **`SetVariable(value)`** - Saves the input value so that it can be used by any GetVariable nodes with a corresponding typed value
+  - Input: Any
+  - Output: None (destination node)
 
-- **`ConditionalSetVector3(condition, trueValue, falseValue)`** - Returns one Vector3 based on condition
-  - Inputs: Bool, Vector3, Vector3
+- **`GetVariable(name)`** - Outputs the value from the corresponding SetVariable node with the same typed value
+  - Output: Any
+
+- **`Relay(value)`** - Passes through data from input to output. Useful for organizing connections and keeping the graph readable
+  - Input: Any
+  - Output: Any
+
+- **`IsNull(value)`** - Checks if the input is a null value
+  - Input: Any
+  - Output: Bool
+
+- **`Keypress(key)`** - Indicates whether the selected key is currently pressed
+  - Output: Bool
+
+- **`RelativePosition(transform, direction)`** - Gets the world position relative to the input Transform and based on the selected option
+  - Input: Transform
   - Output: Vector3
 
 </details>
 
 <details>
-<summary><strong>Math Functions</strong></summary>
+<summary>Debug & Visualization</summary>
 
-- **`Abs(x)`** - Absolute value
-- **`Round(x)`** - Rounds to nearest integer
-- **`Floor(x)`** - Floor (rounds down)
-- **`Ceil(x)`** - Ceiling (rounds up)
-- **`Sin(x)`** - Sine
-- **`Cos(x)`** - Cosine
-- **`Tan(x)`** - Tangent
-- **`Asin(x)`** - Arc sine
-- **`Acos(x)`** - Arc cosine
-- **`Atan(x)`** - Arc tangent
-- **`Sqrt(x)`** - Square root
-- **`Sign(x)`** - Sign function (-1, 0, or 1)
-- **`Ln(x)`** - Natural logarithm
-- **`Log10(x)`** - Base-10 logarithm
-- **`Exp(x)`** - e^x
-- **`Pow10(x)`** - 10^x
+- **`Debug(value)`** - Displays the real-time value of the output connection
+  - Input: Any
+  - Output: None (destination node)
 
-All math functions:
-- Input: Float
-- Output: Float
-
-</details>
-
-<details>
-<summary><strong>Utility Operations</strong></summary>
-
-- **`ClampFloat(value, min, max)`** - Clamps a float between min and max
-  - Inputs: Float, Float, Float
-  - Output: Float
-
-- **`RandomFloat(min, max)`** - Generates a random float between min and max
-  - Inputs: Float, Float
-  - Output: Float
-
-</details>
-
-<details>
-<summary><strong>Debug Nodes</strong></summary>
-
-- **`Debug(value, string=None, changePosition=True)`** - Debug output node
-  - Input: Any node type
-  - Output: None (side effect)
-
-- **`DebugDrawLine(start, end, width, color)`** - Draws a debug line
+- **`DebugDrawLine(start, end, width, color)`** - Draws a 2D line in worldspace. Useful for debugging and visualizing information
   - Inputs: Vector3, Vector3, Float, Color
-  - Output: None (side effect)
+  - Output: None (destination node)
 
-- **`DebugDrawDisc(center, radius, height, color)`** - Draws a debug disc
+- **`DebugDrawDisc(center, radius, height, color)`** - Draws a 2D disc in worldspace on the XY plane
   - Inputs: Vector3, Float, Float, Color
-  - Output: None (side effect)
+  - Output: None (destination node)
+
+- **`TimePlot(name, color, iconUrl, value)`** - Adds a value to the time plot graph during a simulation (toggle with F1)
+  - Inputs: String, Color, String, Float
+  - Output: None (destination node)
 
 </details>
 
 <details>
-<summary><strong>Custom Nodes</strong></summary>
+<summary>Organization</summary>
 
-- **`QuadraticFormula(a, b, c)`** - Solves quadratic equation ax² + bx + c = 0
-  - Inputs: Float, Float, Float
-  - Output: Tuple of (solutionExists: Bool, root1: Float, root2: Float)
+- **`Region`** - Groups nodes visually for organization. Does not affect logic.
+  - No inputs/outputs
+
+</details>
+
+</details>
+
+---
+
+<details>
+<summary><strong>AIALander - Survival</strong></summary>
+
+**Description:** Nodes for the AIALander Survival game mode. Control Aialander characters with pathfinding, states, emotes, and survival-specific data access.
+
+<details>
+<summary>Controller & Properties</summary>
+
+- **`SurvivalController(targetPosition, state, sprint, emote)`** - Controls an Aialander's brain. Navigation uses pathfinding to find the nearest viable point to the input target position
+  - Inputs: Vector3 (target), SurvivalState, Bool (sprint), SurvivalEmote (optional)
+  - Output: None (destination node)
+
+- **`ConstructSurvivalProperties(...)`** - Sets cosmetic options for this Aialander (name, country, skin color, body style, hair, etc.)
+  - Inputs: String, Country, Color, Float, Float, Color, Float, String (outfit URL)
+  - Output: None (destination node)
+
+</details>
+
+<details>
+<summary>Data Access</summary>
+
+- **`SurvivalGetTransform(value)`** - Selection of Transform options representing current locations in the simulation
+  - Output: Transform
+
+- **`SurvivalGetFloat(value)`** - Selection of global number-based options representing current parameters in the simulation
+  - Output: Float
+
+- **`SurvivalGetBool(value)`** - Selection of global True/False options representing current parameters in the simulation
+  - Output: Bool
+
+</details>
+
+<details>
+<summary>States & Emotes</summary>
+
+- **`SurvivalState(value)`** - Selection of states Aialanders can be in. States determine what automatic behaviors Aialanders take
+  - Output: SurvivalState
+
+- **`SurvivalEmote(value)`** - Selection of emotes Aialanders can perform
+  - Output: SurvivalEmote
+
+- **`SurvivalAutoPosition(state)`** - Automatically decide where to move an Aialander based on predetermined rules for a given state
+  - Input: SurvivalState
+  - Output: Vector3
+
+- **`ConditionalSetSurvivalState(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different state values
+  - Inputs: Bool, SurvivalState, SurvivalState
+  - Output: SurvivalState
+
+- **`ConditionalSetSurvivalEmote(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different emote values
+  - Inputs: Bool, SurvivalEmote, SurvivalEmote
+  - Output: SurvivalEmote
+
+</details>
 
 </details>
 
