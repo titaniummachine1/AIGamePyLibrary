@@ -1,5 +1,44 @@
 from typing import Literal
 
+# Default node dimensions (width, height) matching Unity prefabs - for full serialization format
+NODE_SIZES = {
+    "String": (256, 64),
+    "Float": (256, 64),
+    "Color": (256, 64),
+    "Country": (256, 64),
+    "Bool": (256, 64),
+    "ConstructSurvivalProperties": (192, 288),
+    "ConstructVector3": (256, 160),
+    "CompareFloats": (256, 160),
+    "CompareBool": (256, 160),
+    "SurvivalGetFloat": (320, 64),
+    "SurvivalGetBool": (320, 64),
+    "SurvivalState": (256, 64),
+    "ConditionalSetSurvivalState": (256, 288),
+    "ConditionalSetSurvivalEmote": (256, 288),
+    "SurvivalAutoPosition": (256, 64),
+    "SurvivalEmote": (256, 64),
+    "SurvivalController": (192, 160),
+    "Relay": (32, 32),
+    "AddFloats": (256, 64),
+    "SubtractFloats": (256, 64),
+    "MultiplyFloats": (256, 64),
+    "DivideFloats": (256, 64),
+    "Not": (256, 64),
+    "Modulo": (256, 64),
+    "Operation": (256, 64),
+    "GetVariable": (256, 64),
+    "SetVariable": (256, 64),
+    "IsNull": (256, 64),
+    "Region": (256, 224),
+}
+DEFAULT_NODE_SIZE = (256, 64)
+
+# Default colors matching Unity (RGBA 0-1)
+DEFAULT_NODE_COLOR = {"r": 0.21960784494876862, "g": 0.21960784494876862, "b": 0.21960784494876862, "a": 1}
+DEFAULT_CONNECTION_COLOR = {"r": 0.98, "g": 0.94, "b": 0.84, "a": 1}
+CAP_COLOR = {"r": 1, "g": 0.81, "b": 0.3, "a": 1}
+
 outputs = {
     "AddVector3": "Vector3",
     "AddFloats": float,

@@ -1,3 +1,4 @@
+import os
 from uuid import uuid4
 
 
@@ -15,3 +16,19 @@ def Position3(x, y, z=0):
 
 def Position2(x, y):
     return {"x": x, "y": y}
+
+
+def GetSurvivalSavePath(
+    filename: str,
+    company: str = "Unicorn One",
+    product: str = "AIComp",
+) -> str:
+    """
+    Returns the full path for a Survival save file, matching Unity's persistentDataPath.
+    Use this so Python-generated saves appear where the AIComp game loads them from.
+    Example: GetSurvivalSavePath("AIApy.txt") -> .../AppData/LocalLow/Unicorn One/AIComp/Saves/Survival/AIApy.txt
+    """
+    if not filename.endswith(".txt"):
+        filename = filename + ".txt"
+    base = os.environ.get("USERPROFILE", os.path.expanduser("~"))
+    return os.path.join(base, "AppData", "LocalLow", company, product, "Saves", "Survival", filename)

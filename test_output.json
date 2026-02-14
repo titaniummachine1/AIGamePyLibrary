@@ -1,0 +1,4478 @@
+{
+  "serializableNodes": [
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "String",
+      "sID": "5c2119a9-89e8-4574-9ba7-367f09ed874f",
+      "modifier": "AIA",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "String1",
+          "sID": "70f1bb7d-c281-4254-a672-1c068f29d8f5",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5c2119a9-89e8-4574-9ba7-367f09ed874f"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Country",
+      "sID": "7a77663f-030a-46e8-8734-983dba443fe6",
+      "modifier": "United States of America",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Country1",
+          "sID": "61f4af6e-8517-48d4-a12b-750c38fdc6ca",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "7a77663f-030a-46e8-8734-983dba443fe6"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Color",
+      "sID": "41841812-0082-4fc1-a444-bd6e44beeef7",
+      "modifier": "White",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Color1",
+          "sID": "8e8c0840-6f6d-41eb-a4ea-71fdc22a59eb",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "41841812-0082-4fc1-a444-bd6e44beeef7"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Float",
+      "sID": "6fdd172c-b98c-4d07-90e2-4920db3ba06b",
+      "modifier": "0",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "7ebedfa2-ac0c-4186-926f-0885eee65be6",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "6fdd172c-b98c-4d07-90e2-4920db3ba06b"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Float",
+      "sID": "898c0f9d-7dd9-4004-84a9-45cb2c9f62d1",
+      "modifier": "3",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "dd64af15-60a1-4b50-a849-d4592de81e59",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "898c0f9d-7dd9-4004-84a9-45cb2c9f62d1"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Color",
+      "sID": "1cc76d53-37c6-4d36-8515-a775ac576c35",
+      "modifier": "Dark Brown",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Color1",
+          "sID": "02ff919e-208e-4231-8628-8e30fa2d71df",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "1cc76d53-37c6-4d36-8515-a775ac576c35"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Float",
+      "sID": "c8133553-21aa-4ce0-9676-8d42c6505d16",
+      "modifier": "1",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "94261e52-7d4d-4fb9-b8df-66eb53bd49a3",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "c8133553-21aa-4ce0-9676-8d42c6505d16"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "String",
+      "sID": "c72635ce-0d99-4edd-89e2-be7e555ae4a6",
+      "modifier": "https://i.imgur.com/CvucGD8.png",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "String1",
+          "sID": "25b983ff-4f65-47e0-a4b8-ce97b2bbfe62",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "c72635ce-0d99-4edd-89e2-be7e555ae4a6"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 192,
+          "y": 288
+        }
+      },
+      "id": "ConstructSurvivalProperties",
+      "sID": "3496e1c8-a22e-4048-b20f-07b98c0f7249",
+      "modifier": "",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "String1",
+          "sID": "e7d8b9d6-cef2-4fcb-b4fb-ed1a1eaff61f",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Country1",
+          "sID": "19cb05f0-7440-4776-8af6-25918f964d16",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -80,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -80,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Color1",
+          "sID": "f996237e-12b0-4dfb-a906-77e0073b21ec",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -112,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -112,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "c2b3abca-1672-4631-8523-83c36f58907d",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -144,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -144,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float2",
+          "sID": "e6a28303-4684-430c-81f9-aad030bcd21d",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -176,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -176,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Color2",
+          "sID": "83113453-0021-47a3-b8b5-034a5a806b6a",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -208,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -208,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float3",
+          "sID": "83ae0846-4834-4f07-b1be-1c99f6f4469b",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -240,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -240,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "String2",
+          "sID": "da3ca5d5-6cab-4d0a-aa02-5465403e5ffb",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3496e1c8-a22e-4048-b20f-07b98c0f7249"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 320,
+          "y": 64
+        }
+      },
+      "id": "SurvivalGetFloat",
+      "sID": "dd01e7fd-7beb-48d4-b651-f44bbdad91b7",
+      "modifier": "1",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "3647cbec-283c-484e-aa5d-c4b2efedf504",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "dd01e7fd-7beb-48d4-b651-f44bbdad91b7"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "Float",
+      "sID": "8ea579d8-c3a2-42a6-a06d-e73fcf47e0cc",
+      "modifier": "0.5",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "d3247042-eda7-4dcf-a40d-7bba206f0ac7",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "8ea579d8-c3a2-42a6-a06d-e73fcf47e0cc"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 160
+        }
+      },
+      "id": "CompareFloats",
+      "sID": "5878241c-6964-496b-bc1a-78ab3a46d498",
+      "modifier": 1,
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Bool1",
+          "sID": "a46673f4-148d-4429-bad6-b4b9c2ea57d6",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5878241c-6964-496b-bc1a-78ab3a46d498"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "c13e4e82-7d8c-41ed-bd01-d8451169ba85",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5878241c-6964-496b-bc1a-78ab3a46d498"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float2",
+          "sID": "489703b6-8e90-4dd2-a65c-50cf27e79a58",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5878241c-6964-496b-bc1a-78ab3a46d498"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "SurvivalState",
+      "sID": "242d1ec5-a299-4f57-920a-2b919504825d",
+      "modifier": "2",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState1",
+          "sID": "eade611d-d2f4-4602-a0a1-845404b26dee",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "242d1ec5-a299-4f57-920a-2b919504825d"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "SurvivalState",
+      "sID": "3da04ad1-6f99-488b-accc-2f027191e355",
+      "modifier": "1",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState1",
+          "sID": "720197d6-4b75-447f-ab93-f9de7774aab7",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "3da04ad1-6f99-488b-accc-2f027191e355"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 288
+        }
+      },
+      "id": "ConditionalSetSurvivalState",
+      "sID": "b8dddd60-2d87-4732-8483-19d55b018f7b",
+      "modifier": "0",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Bool1",
+          "sID": "e4200c50-4247-4a06-8054-fc5f6b1245b6",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "b8dddd60-2d87-4732-8483-19d55b018f7b"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState1",
+          "sID": "00377cd4-406a-42c3-ac80-cc08467696b5",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "b8dddd60-2d87-4732-8483-19d55b018f7b"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -80,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -80,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState2",
+          "sID": "8e96dc0e-fda6-421c-954a-5e2add431581",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "b8dddd60-2d87-4732-8483-19d55b018f7b"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState1",
+          "sID": "a75ad553-d111-4970-b1de-a15c989487cc",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "b8dddd60-2d87-4732-8483-19d55b018f7b"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "SurvivalAutoPosition",
+      "sID": "ad764682-87e8-452b-b9f1-6aa3de0e4740",
+      "modifier": "",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState1",
+          "sID": "bb665160-664e-4172-9512-9289d6eda112",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "ad764682-87e8-452b-b9f1-6aa3de0e4740"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Vector31",
+          "sID": "732ed09f-bfc9-4ae0-ba9a-9a5464b2c282",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "ad764682-87e8-452b-b9f1-6aa3de0e4740"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 320,
+          "y": 64
+        }
+      },
+      "id": "SurvivalGetFloat",
+      "sID": "81e51b64-a0c9-42a2-bcbf-1bfd7f6abf62",
+      "modifier": "2",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "699f3d3e-aac5-406b-9712-cee5c3c5054b",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "81e51b64-a0c9-42a2-bcbf-1bfd7f6abf62"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 160
+        }
+      },
+      "id": "CompareFloats",
+      "sID": "12d31aac-e14c-465a-834e-ec1c5d9f8623",
+      "modifier": 2,
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Bool1",
+          "sID": "b33906ff-b350-4159-8b48-d61d31892499",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "12d31aac-e14c-465a-834e-ec1c5d9f8623"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float1",
+          "sID": "a1ef51c6-7bbe-45b3-a2b1-6b809c3c8b20",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "12d31aac-e14c-465a-834e-ec1c5d9f8623"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Float2",
+          "sID": "be83ecd9-c029-4cd7-aed6-1424b4b3ecda",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "12d31aac-e14c-465a-834e-ec1c5d9f8623"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 256,
+          "y": 64
+        }
+      },
+      "id": "SurvivalEmote",
+      "sID": "22486907-cbc8-49ac-a324-b30e2d2c2915",
+      "modifier": "0",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 1,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 1,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalEmote1",
+          "sID": "7ca214bb-282c-4907-80b5-0d4d30f43cd2",
+          "polarity": 1,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": 10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "22486907-cbc8-49ac-a324-b30e2d2c2915"
+        }
+      ]
+    },
+    {
+      "serializableRectTransform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "localPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "anchorMin": {
+          "x": 0,
+          "y": 1
+        },
+        "anchorMax": {
+          "x": 0,
+          "y": 1
+        },
+        "sizeDelta": {
+          "x": 192,
+          "y": 160
+        }
+      },
+      "id": "SurvivalController",
+      "sID": "5e4904f1-3e9a-4054-a4eb-0b627ae3ba1d",
+      "modifier": "",
+      "defaultColor": {
+        "r": 0.21960784494876862,
+        "g": 0.21960784494876862,
+        "b": 0.21960784494876862,
+        "a": 1
+      },
+      "serializablePorts": [
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -16,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Vector31",
+          "sID": "39a9ee78-88e4-4f6b-94f4-f18967478b28",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5e4904f1-3e9a-4054-a4eb-0b627ae3ba1d"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -48,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalState1",
+          "sID": "ca5420ac-f397-40aa-9caa-cb63d8ccd930",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5e4904f1-3e9a-4054-a4eb-0b627ae3ba1d"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -80,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -80,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "Bool1",
+          "sID": "a1da75e0-3cb0-49aa-bffc-9abe731f1c3e",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5e4904f1-3e9a-4054-a4eb-0b627ae3ba1d"
+        },
+        {
+          "serializableRectTransform": {
+            "position": {
+              "x": -16,
+              "y": -112,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -16,
+              "y": -112,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0,
+              "y": 1
+            },
+            "anchorMax": {
+              "x": 0,
+              "y": 1
+            },
+            "sizeDelta": {
+              "x": 40,
+              "y": 32
+            }
+          },
+          "id": "SurvivalEmote1",
+          "sID": "d9bfefea-80da-4f53-966b-23fa74d74f68",
+          "polarity": 0,
+          "controlPointSerializableRectTransform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "localPosition": {
+              "x": -10,
+              "y": -8.742277714191005e-06,
+              "z": 0
+            },
+            "anchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "anchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "sizeDelta": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "nodeSID": "5e4904f1-3e9a-4054-a4eb-0b627ae3ba1d"
+        }
+      ]
+    }
+  ],
+  "serializableConnections": [
+    {
+      "id": "Connection (String - ConstructSurvivalProperties)",
+      "sID": "0d728eb1-3f38-45ba-8ea7-c04ac20ef608",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "70f1bb7d-c281-4254-a672-1c068f29d8f5",
+      "port1SID": "e7d8b9d6-cef2-4fcb-b4fb-ed1a1eaff61f",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Country - ConstructSurvivalProperties)",
+      "sID": "585d0ee3-dcb6-4bec-8a14-688251824826",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "61f4af6e-8517-48d4-a12b-750c38fdc6ca",
+      "port1SID": "19cb05f0-7440-4776-8af6-25918f964d16",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Color - ConstructSurvivalProperties)",
+      "sID": "e16a66ae-773a-4ce0-b16a-9c9b3d8da55b",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "8e8c0840-6f6d-41eb-a4ea-71fdc22a59eb",
+      "port1SID": "f996237e-12b0-4dfb-a906-77e0073b21ec",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Float - ConstructSurvivalProperties)",
+      "sID": "4c8e5ad1-6c4b-420b-8e91-77fc18674303",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "7ebedfa2-ac0c-4186-926f-0885eee65be6",
+      "port1SID": "c2b3abca-1672-4631-8523-83c36f58907d",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Float - ConstructSurvivalProperties)",
+      "sID": "fa2f5f36-dac1-42c7-987f-bfe008612e29",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "dd64af15-60a1-4b50-a849-d4592de81e59",
+      "port1SID": "e6a28303-4684-430c-81f9-aad030bcd21d",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Color - ConstructSurvivalProperties)",
+      "sID": "de546a49-25be-4d87-ac7f-9cc65e42e7ef",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "02ff919e-208e-4231-8628-8e30fa2d71df",
+      "port1SID": "83113453-0021-47a3-b8b5-034a5a806b6a",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Float - ConstructSurvivalProperties)",
+      "sID": "7c72c9f5-960b-42aa-ad3d-7c1666ba0bc9",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "94261e52-7d4d-4fb9-b8df-66eb53bd49a3",
+      "port1SID": "83ae0846-4834-4f07-b1be-1c99f6f4469b",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (String - ConstructSurvivalProperties)",
+      "sID": "0f88be44-5971-401c-9445-ccc5812fb7f2",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "25b983ff-4f65-47e0-a4b8-ce97b2bbfe62",
+      "port1SID": "da3ca5d5-6cab-4d0a-aa02-5465403e5ffb",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (SurvivalGetFloat - CompareFloats)",
+      "sID": "699cb0a0-8a21-4df3-b87b-80ecd19d786a",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "3647cbec-283c-484e-aa5d-c4b2efedf504",
+      "port1SID": "c13e4e82-7d8c-41ed-bd01-d8451169ba85",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Float - CompareFloats)",
+      "sID": "82519356-127c-4d28-a08e-1b6b6031defc",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "d3247042-eda7-4dcf-a40d-7bba206f0ac7",
+      "port1SID": "489703b6-8e90-4dd2-a65c-50cf27e79a58",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (CompareFloats - ConditionalSetSurvivalState)",
+      "sID": "52077259-2610-4f25-8b04-a56ca1ef90c4",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "a46673f4-148d-4429-bad6-b4b9c2ea57d6",
+      "port1SID": "e4200c50-4247-4a06-8054-fc5f6b1245b6",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (SurvivalState - ConditionalSetSurvivalState)",
+      "sID": "2369ffc6-d2a7-4dcb-874a-8cf6554ef539",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "eade611d-d2f4-4602-a0a1-845404b26dee",
+      "port1SID": "00377cd4-406a-42c3-ac80-cc08467696b5",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (SurvivalState - ConditionalSetSurvivalState)",
+      "sID": "a882ddbf-35ba-43e0-bc8a-11b67229dcd2",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "720197d6-4b75-447f-ab93-f9de7774aab7",
+      "port1SID": "8e96dc0e-fda6-421c-954a-5e2add431581",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (ConditionalSetSurvivalState - SurvivalAutoPosition)",
+      "sID": "09901a6b-715b-4385-8a38-a4e3393ce2cb",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "a75ad553-d111-4970-b1de-a15c989487cc",
+      "port1SID": "bb665160-664e-4172-9512-9289d6eda112",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (SurvivalGetFloat - CompareFloats)",
+      "sID": "b6a8f9f6-e383-4d7d-90bf-3d513396f700",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "699f3d3e-aac5-406b-9712-cee5c3c5054b",
+      "port1SID": "a1ef51c6-7bbe-45b3-a2b1-6b809c3c8b20",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (Float - CompareFloats)",
+      "sID": "4b302911-340d-4e41-ac83-c5c691d9c18a",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "d3247042-eda7-4dcf-a40d-7bba206f0ac7",
+      "port1SID": "be83ecd9-c029-4cd7-aed6-1424b4b3ecda",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (SurvivalAutoPosition - SurvivalController)",
+      "sID": "2afd88c3-80f5-4d9b-8b72-aa58fb4b35b4",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "732ed09f-bfc9-4ae0-ba9a-9a5464b2c282",
+      "port1SID": "39a9ee78-88e4-4f6b-94f4-f18967478b28",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (ConditionalSetSurvivalState - SurvivalController)",
+      "sID": "dcc7d07c-86b9-4a39-9a87-695bcb1cc370",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "a75ad553-d111-4970-b1de-a15c989487cc",
+      "port1SID": "ca5420ac-f397-40aa-9caa-cb63d8ccd930",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (CompareFloats - SurvivalController)",
+      "sID": "0be45c4d-b4c1-42a5-aa5d-690f02806042",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "b33906ff-b350-4159-8b48-d61d31892499",
+      "port1SID": "a1da75e0-3cb0-49aa-bffc-9abe731f1c3e",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    },
+    {
+      "id": "Connection (SurvivalEmote - SurvivalController)",
+      "sID": "1777dbd1-0951-4cef-8123-a5696632e539",
+      "port0InstanceID": 0,
+      "port1InstanceID": 0,
+      "port0SID": "7ca214bb-282c-4907-80b5-0d4d30f43cd2",
+      "port1SID": "d9bfefea-80da-4f53-966b-23fa74d74f68",
+      "selectedColor": {
+        "r": 1,
+        "g": 0.58,
+        "b": 0.04,
+        "a": 1
+      },
+      "hoverColor": {
+        "r": 1,
+        "g": 0.81,
+        "b": 0.3,
+        "a": 1
+      },
+      "defaultColor": {
+        "r": 0.98,
+        "g": 0.94,
+        "b": 0.84,
+        "a": 1
+      },
+      "curveStyle": 3,
+      "label": "",
+      "line": {
+        "capStart": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "capEnd": {
+          "active": false,
+          "shape": 3,
+          "size": 5,
+          "color": {
+            "r": 1,
+            "g": 0.81,
+            "b": 0.3,
+            "a": 1
+          },
+          "angleOffset": 0
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": {
+          "r": 0.98,
+          "g": 0.94,
+          "b": 0.84,
+          "a": 1
+        },
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+          "isActive": false,
+          "pointsDistance": 90,
+          "size": 10,
+          "color": {
+            "r": 0.3,
+            "g": 0.89,
+            "b": 0.3,
+            "a": 1
+          },
+          "shape": 1,
+          "speed": 0
+        }
+      },
+      "enableDrag": true,
+      "enableHover": true,
+      "enableSelect": true,
+      "disableClick": false
+    }
+  ]
+}

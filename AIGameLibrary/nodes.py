@@ -3,7 +3,7 @@ from typing import Literal
 
 from .data import colorNames, countryNames
 from .lib import AddNode, ConnectPorts, Node, SaveData, data
-from .utils import Color, Position3
+from .utils import Color, GetSurvivalSavePath, Position3
 
 
 def parseLiteral(value):
@@ -219,6 +219,30 @@ def InitializeSlime(
 
     ConstructSlimeProperties(
         name, color, country, speedNode, accelerationNode, jumpNode
+    )
+
+
+@cache
+def InitializeSurvival(
+    name: str = "AIA",
+    country: countryNames = "United States of America",
+    skin: colorNames = "White",
+    body_style: int | float = 0,
+    hair_style: int | float = 3,
+    hair_color: colorNames = "Dark Brown",
+    facial_hair: int | float = 1,
+    custom_texture: str = "https://i.imgur.com/CvucGD8.png",
+):
+    """Initialize survival character with cosmetic properties. Sets up an Aialander for the Survival game. All args have defaults matching the AIA bot."""
+    ConstructSurvivalProperties(
+        String(name),
+        Country(country),
+        Color(skin),
+        Float(body_style),
+        Float(hair_style),
+        Color(hair_color),
+        Float(facial_hair),
+        String(custom_texture),
     )
 
 

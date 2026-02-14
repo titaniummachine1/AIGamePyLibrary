@@ -5,7 +5,15 @@ import random
 from collections import deque
 from typing import Literal
 
-from .data import outputs, ports
+from .data import (
+    outputs,
+    ports,
+    NODE_SIZES,
+    DEFAULT_NODE_SIZE,
+    DEFAULT_NODE_COLOR,
+    DEFAULT_CONNECTION_COLOR,
+    CAP_COLOR,
+)
 from .utils import Position3, generateId
 
 data = {"serializableNodes": [], "serializableConnections": []}
@@ -418,6 +426,55 @@ class Node:
         return self.__matmul__(other)
 
 
+def _rect_transform(local_pos, size, anchor_x=0, anchor_y=1):
+    """Build serializableRectTransform matching Unity format."""
+    x, y, z = local_pos.get("x", 0), local_pos.get("y", 0), local_pos.get("z", 0)
+    w, h = size
+    return {
+        "position": {"x": x, "y": y, "z": z},
+        "localPosition": local_pos,
+        "anchorMin": {"x": anchor_x, "y": anchor_y},
+        "anchorMax": {"x": anchor_x, "y": anchor_y},
+        "sizeDelta": {"x": w, "y": h},
+    }
+
+
+def _default_line():
+    """Line structure matching Unity - points filled by UpdateLine at runtime."""
+    return {
+        "capStart": {
+            "active": False,
+            "shape": 3,
+            "size": 5,
+            "color": CAP_COLOR,
+            "angleOffset": 0,
+        },
+        "capEnd": {
+            "active": False,
+            "shape": 3,
+            "size": 5,
+            "color": CAP_COLOR,
+            "angleOffset": 0,
+        },
+        "ID": "",
+        "startWidth": 3,
+        "endWidth": 3,
+        "dashDistance": 5,
+        "color": DEFAULT_CONNECTION_COLOR,
+        "points": [],
+        "lineStyle": 0,
+        "length": 0,
+        "animation": {
+            "isActive": False,
+            "pointsDistance": 90,
+            "size": 10,
+            "color": {"r": 0.3, "g": 0.89, "b": 0.3, "a": 1},
+            "shape": 1,
+            "speed": 0,
+        },
+    }
+
+
 def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
     node = {}
 
@@ -425,12 +482,13 @@ def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
         position = Position3(0, 0)
 
     nodeId = generateId()
+    size = NODE_SIZES.get(nodeName, DEFAULT_NODE_SIZE)
 
-    node["serializableRectTransform"] = {}
-    node["serializableRectTransform"]["localPosition"] = position
+    node["serializableRectTransform"] = _rect_transform(position, size)
     node["id"] = nodeName
     node["sID"] = nodeId
     node["modifier"] = nodeValue
+    node["defaultColor"] = DEFAULT_NODE_COLOR
     node["serializablePorts"] = []
     if includePorts:
         for portData in ports[nodeName]:
@@ -439,6 +497,7 @@ def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
                     "id": portData["id"],
                     "sID": generateId(),
                     "polarity": portData["polarity"],
+                    "nodeSID": nodeId,
                 }
             )
 
@@ -454,9 +513,24 @@ def ConnectPorts(portType: tuple | str, node0: Node, node1: Node):
     else:
         port0 = node0.outputPorts[portType]
         port1 = node1.inputPorts[portType]
+    conn_id = generateId()
     connection = {
+        "id": f"Connection ({node0.data['id']} - {node1.data['id']})",
+        "sID": conn_id,
+        "port0InstanceID": 0,
+        "port1InstanceID": 0,
         "port0SID": port0["sID"],
         "port1SID": port1["sID"],
+        "selectedColor": {"r": 1, "g": 0.58, "b": 0.04, "a": 1},
+        "hoverColor": CAP_COLOR,
+        "defaultColor": DEFAULT_CONNECTION_COLOR,
+        "curveStyle": 3,
+        "label": "",
+        "line": _default_line(),
+        "enableDrag": True,
+        "enableHover": True,
+        "enableSelect": True,
+        "disableClick": False,
     }
     data["serializableConnections"].append(connection)
     return connection
