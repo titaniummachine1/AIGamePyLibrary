@@ -295,7 +295,7 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <details>
 <summary><strong>AIALander - Survival</strong></summary>
 
-**Description:** Nodes for the AIALander Survival game mode. Control Aialander characters with pathfinding, states, emotes, and survival-specific data access.
+**Description:** Nodes for the Survival game. The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
 
 <details>
 <summary>Controller & Properties</summary>
