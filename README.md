@@ -400,15 +400,90 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 <summary>Data Access</summary>
 
 - **`SurvivalGetTransform(value)`** - Selection of Transform options representing current locations in the simulation
-  - Options: `0` Self, `1` Player Last Damaged By, `2` Player Last Attacking (Global), `3` Player Nearest, `4` Player 2nd Nearest, `5` Player Farthest, `6` Player with Highest Health, `7` Player with Lowest Health, `8` Player with Highest Hunger, `9` Player with Lowest Hunger, `10` Player with Highest Stamina, `11` Player with Lowest Stamina, `12` Player Last Stolen From Self Container, `13` Player Last Stealing (Global), `14` Player with Highest Score, `15` Player with Lowest Score, `16` Player of Closest Score, `17` Player with Most Aggression, `18` Player with Lowest Aggression, `19` Player Nearest with Aggression, `20` Player Nearest with No Aggression, `21` Player with Most Stored Fruit, `22` Player with Least Stored Fruit, `23` Container Self, `24` Container Closest (excluding self), `25` Container Farthest (excluding self), `26` Container of Last Attacker, `27` Container of Last Global Attacker, `28` Container of Most Stored Fruit, `29` Container of Nearest Dead Player, `30` Container of Nearest Dead Player (with Food), `31` Container of Highest Aggression Player, `32` Container of Lowest Aggression Player, `33` Container of Player with Closest Rank, `34` Fruit Nearest, `35` Fruit Farthest, `36` Fruit Nearest Self Container, `37` Fruit (Random), `38` Tree Nearest
+  - Options:
+    - `0` Self
+    - `1` Player Last Damaged By
+    - `2` Player Last Attacking (Global)
+    - `3` Player Nearest
+    - `4` Player 2nd Nearest
+    - `5` Player Farthest
+    - `6` Player with Highest Health
+    - `7` Player with Lowest Health
+    - `8` Player with Highest Hunger
+    - `9` Player with Lowest Hunger
+    - `10` Player with Highest Stamina
+    - `11` Player with Lowest Stamina
+    - `12` Player Last Stolen From Self Container
+    - `13` Player Last Stealing (Global)
+    - `14` Player with Highest Score
+    - `15` Player with Lowest Score
+    - `16` Player of Closest Score
+    - `17` Player with Most Aggression
+    - `18` Player with Lowest Aggression
+    - `19` Player Nearest with Aggression
+    - `20` Player Nearest with No Aggression
+    - `21` Player with Most Stored Fruit
+    - `22` Player with Least Stored Fruit
+    - `23` Container Self
+    - `24` Container Closest (excluding self)
+    - `25` Container Farthest (excluding self)
+    - `26` Container of Last Attacker
+    - `27` Container of Last Global Attacker
+    - `28` Container of Most Stored Fruit
+    - `29` Container of Nearest Dead Player
+    - `30` Container of Nearest Dead Player (with Food)
+    - `31` Container of Highest Aggression Player
+    - `32` Container of Lowest Aggression Player
+    - `33` Container of Player with Closest Rank
+    - `34` Fruit Nearest
+    - `35` Fruit Farthest
+    - `36` Fruit Nearest Self Container
+    - `37` Fruit (Random)
+    - `38` Tree Nearest
   - Output: Transform
 
 - **`SurvivalGetFloat(value)`** - Selection of global number-based options representing current parameters in the simulation
-  - Options: `0` Health Percentage, `1` Hunger Percentage, `2` Stamina Percentage, `3` Current Rank, `4` Stored Food Count, `5` Distance to Nearest Player, `6` Distance to Nearest Aggressive Player, `7` Distance to Last Attacker, `8` Distance to Nearest Container, `9` Distance to Nearest Fruit Tree, `10` Player Count Remaining, `11` Current Simulation Time, `12` Max Simulation Time, `13` Simulation Time Remaining, `14` Delta time, `15` Fixed delta time, `16` Pi, `17` Self Gathers, `18` Self Food Consumed, `19` Self Steals, `20` Self Damage Dealt, `21` Self Kills, `22` Self Aggression Level, `23` Available Fruit Count, `24` Player Count Without Stored Food, `25` Average Player Health, `26` Average Player Hunger, `27` Average Player Stamina, `28` Average Player Aggression Level, `29` Total Possible Fruit, `30` Distance Traveled
+  - Options:
+    - `0` Health Percentage
+    - `1` Hunger Percentage
+    - `2` Stamina Percentage
+    - `3` Current Rank
+    - `4` Stored Food Count
+    - `5` Distance to Nearest Player
+    - `6` Distance to Nearest Aggressive Player
+    - `7` Distance to Last Attacker
+    - `8` Distance to Nearest Container
+    - `9` Distance to Nearest Fruit Tree
+    - `10` Player Count Remaining
+    - `11` Current Simulation Time
+    - `12` Max Simulation Time
+    - `13` Simulation Time Remaining
+    - `14` Delta time
+    - `15` Fixed delta time
+    - `16` Pi
+    - `17` Self Gathers
+    - `18` Self Food Consumed
+    - `19` Self Steals
+    - `20` Self Damage Dealt
+    - `21` Self Kills
+    - `22` Self Aggression Level
+    - `23` Available Fruit Count
+    - `24` Player Count Without Stored Food
+    - `25` Average Player Health
+    - `26` Average Player Hunger
+    - `27` Average Player Stamina
+    - `28` Average Player Aggression Level
+    - `29` Total Possible Fruit
+    - `30` Distance Traveled
   - Output: Float
 
 - **`SurvivalGetBool(value)`** - Selection of global True/False options representing current parameters in the simulation
-  - Options: `0` Is Carrying Resource, `1` Container has Health, `2` Container Was Attacked, `3` Container Was Stolen From, `4` Self Was Attacked
+  - Options:
+    - `0` Is Carrying Resource
+    - `1` Container has Health
+    - `2` Container Was Attacked
+    - `3` Container Was Stolen From
+    - `4` Self Was Attacked
   - Output: Bool
 
 </details>
