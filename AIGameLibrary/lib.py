@@ -13,8 +13,10 @@ from .data import (
     DEFAULT_NODE_COLOR,
     DEFAULT_CONNECTION_COLOR,
     CAP_COLOR,
+    SERIALIZE_SIZE_DELTA_NODES,
+    SERIALIZE_COLOR_NODES,
 )
-from .utils import Position3, generateId
+from .utils import Position2, Position3, generateId
 
 data = {"serializableNodes": [], "serializableConnections": []}
 
@@ -426,25 +428,51 @@ class Node:
         return self.__matmul__(other)
 
 
-def _rect_transform(local_pos, size, anchor_x=0, anchor_y=1):
-    """Build serializableRectTransform matching Unity format."""
+def _rect_transform(local_pos, size, node_id, anchor_x=0, anchor_y=1):
+    """Build serializableRectTransform. New minimal format: only position+anchoredPosition for layout.
+    Region nodes include sizeDelta/anchors (SerializeSizeDelta per NodeTypeDataSO)."""
     x, y, z = local_pos.get("x", 0), local_pos.get("y", 0), local_pos.get("z", 0)
     w, h = size
-    return {
-        "position": {"x": x, "y": y, "z": z},
-        "localPosition": local_pos,
-        "anchorMin": {"x": anchor_x, "y": anchor_y},
-        "anchorMax": {"x": anchor_x, "y": anchor_y},
-        "sizeDelta": {"x": w, "y": h},
+    rect = {
+        "position": {"x": 0, "y": 0, "z": 0},
+        "anchoredPosition": {"x": x, "y": y},
     }
+    if node_id in SERIALIZE_SIZE_DELTA_NODES:
+        rect["localPosition"] = local_pos
+        rect["anchorMin"] = {"x": anchor_x, "y": anchor_y}
+        rect["anchorMax"] = {"x": anchor_x, "y": anchor_y}
+        rect["sizeDelta"] = {"x": w, "y": h}
+    return rect
+
+
+def _get_layout_position(transform):
+    """Get (x, y) from transform. Prefers anchoredPosition, falls back to localPosition for old JSON."""
+    ap = transform.get("anchoredPosition")
+    if ap is not None:
+        return (ap.get("x", 0), ap.get("y", 0))
+    lp = transform.get("localPosition", {})
+    return (lp.get("x", 0), lp.get("y", 0))
+
+
+def _is_at_origin(transform):
+    """True if node is at default (0,0) and should receive auto layout."""
+    x, y = _get_layout_position(transform)
+    return x == 0 and y == 0
+
+
+def _set_layout_position(transform, x, y):
+    """Set layout position. Uses anchoredPosition (Unity's preferred field for placement)."""
+    transform["anchoredPosition"] = Position2(x, y)
+    transform["localPosition"] = Position3(x, y, 0)
+    transform["position"] = {"x": 0, "y": 0, "z": 0}
 
 
 def _default_line():
-    """Line structure matching Unity - points filled by UpdateLine at runtime."""
+    """Line structure matching Unity UIC4 Line class. Points filled by UpdateLine at runtime."""
     return {
         "capStart": {
             "active": False,
-            "shape": 3,
+            "shape": 3,  # Shape.Type.Diamond
             "size": 5,
             "color": CAP_COLOR,
             "angleOffset": 0,
@@ -456,21 +484,21 @@ def _default_line():
             "color": CAP_COLOR,
             "angleOffset": 0,
         },
-        "ID": "",
+        "ID": "line",  # Match Unity Line default
         "startWidth": 3,
         "endWidth": 3,
         "dashDistance": 5,
         "color": DEFAULT_CONNECTION_COLOR,
         "points": [],
-        "lineStyle": 0,
+        "lineStyle": 0,  # LineStyle.Type.Solid
         "length": 0,
         "animation": {
             "isActive": False,
-            "pointsDistance": 90,
+            "pointsDistance": 35,  # Match Unity LineAnimation default
             "size": 10,
-            "color": {"r": 0.3, "g": 0.89, "b": 0.3, "a": 1},
-            "shape": 1,
-            "speed": 0,
+            "color": {"r": 1, "g": 0.81, "b": 0.3, "a": 1},
+            "shape": 1,  # Shape.Type.Diamond
+            "speed": 20,
         },
     }
 
@@ -484,11 +512,14 @@ def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
     nodeId = generateId()
     size = NODE_SIZES.get(nodeName, DEFAULT_NODE_SIZE)
 
-    node["serializableRectTransform"] = _rect_transform(position, size)
+    node["serializableRectTransform"] = _rect_transform(position, size, nodeName)
     node["id"] = nodeName
     node["sID"] = nodeId
     node["modifier"] = nodeValue
-    node["defaultColor"] = DEFAULT_NODE_COLOR
+    if nodeName in SERIALIZE_COLOR_NODES:
+        node["serializeColor"] = True
+        node["serializeSizeDelta"] = True
+        node["serializableDefaultColor"] = DEFAULT_NODE_COLOR
     node["serializablePorts"] = []
     if includePorts:
         for portData in ports[nodeName]:
@@ -524,7 +555,7 @@ def ConnectPorts(portType: tuple | str, node0: Node, node1: Node):
         "selectedColor": {"r": 1, "g": 0.58, "b": 0.04, "a": 1},
         "hoverColor": CAP_COLOR,
         "defaultColor": DEFAULT_CONNECTION_COLOR,
-        "curveStyle": 3,
+        "curveStyle": 2,  # Connection.CurveStyle.Soft_Z_Shape (Unity default)
         "label": "",
         "line": _default_line(),
         "enableDrag": True,
@@ -551,9 +582,9 @@ def gridLayout(offsetX=350, offsetY=-215):
 
     for i, node in enumerate(data["serializableNodes"]):
         transform = node["serializableRectTransform"]
-        if transform["localPosition"] != Position3(0, 0):
+        if not _is_at_origin(transform):
             continue
-        transform["localPosition"] = Position3(x, y)
+        _set_layout_position(transform, x, y)
         x += offsetX
         if (i + 1) % nodesPerRow == 0:
             x = 1263
@@ -615,9 +646,9 @@ def autoLayout(offsetX=350, offsetY=-215):
 
         for node in nodesInColumn:
             transform = node["serializableRectTransform"]
-            if transform["localPosition"] != Position3(0, 0):
+            if not _is_at_origin(transform):
                 continue
-            transform["localPosition"] = Position3(currentX, currentY)
+            _set_layout_position(transform, currentX, currentY)
             currentY += offsetY
 
         currentX += offsetX
@@ -626,6 +657,35 @@ def autoLayout(offsetX=350, offsetY=-215):
 def updateConnectionLinePoints():
     """No-op: minimal serialization format does not include connection line points."""
     pass
+
+
+def _prepare_for_unity_format():
+    """Ensure graph data matches new minimal format (NodeTypeDataSO).
+    - Standard nodes: rect = position (0,0,0) + anchoredPosition only; no color/size (prefab provides)
+    - Region: full rect + color (SerializeSizeDelta, SerializeColor)
+    - Ports: id, sID, polarity, nodeSID only (position from prefab)
+    """
+    for node in data["serializableNodes"]:
+        node_id = node.get("id", "")
+        transform = node.get("serializableRectTransform", {})
+        if transform:
+            ap = transform.get("anchoredPosition")
+            lp = transform.get("localPosition", {})
+            if ap is None and lp:
+                transform["anchoredPosition"] = {"x": lp.get("x", 0), "y": lp.get("y", 0)}
+            transform["position"] = {"x": 0, "y": 0, "z": 0}
+            if node_id not in SERIALIZE_SIZE_DELTA_NODES:
+                for key in ("localPosition", "anchorMin", "anchorMax", "sizeDelta"):
+                    transform.pop(key, None)
+        if node_id not in SERIALIZE_COLOR_NODES:
+            node.pop("defaultColor", None)
+            node.pop("serializableDefaultColor", None)
+        if node_id not in SERIALIZE_SIZE_DELTA_NODES:
+            node.pop("serializeSizeDelta", None)
+            node.pop("serializeColor", None)
+        for port in node.get("serializablePorts", []):
+            port.pop("serializableRectTransform", None)
+            port.pop("controlPointSerializableRectTransform", None)
 
 
 def removeUnusedNodes():
@@ -751,18 +811,19 @@ def SaveData(
         case "single":
             for node in data["serializableNodes"]:
                 transform = node["serializableRectTransform"]
-                if transform["localPosition"] != Position3(0, 0) and keepPosition:
+                if not _is_at_origin(transform) and keepPosition:
                     continue
-                transform["localPosition"] = Position3(0, 0)
+                _set_layout_position(transform, 0, 0)
         case "hidden":
             for node in data["serializableNodes"]:
                 transform = node["serializableRectTransform"]
-                if transform["localPosition"] != Position3(0, 0) and keepPosition:
+                if not _is_at_origin(transform) and keepPosition:
                     continue
-                transform["localPosition"] = Position3(9999, 9999)
+                _set_layout_position(transform, 9999, 9999)
                 transform["scale"] = Position3(0, 0)
 
     updateConnectionLinePoints()
+    _prepare_for_unity_format()
 
-    with open(filePath, "w") as f:
-        json.dump(data, f, separators=(",", ":"))
+    with open(filePath, "w", encoding="utf-8") as f:
+        json.dump(data, f, separators=(",", ":"), ensure_ascii=False)

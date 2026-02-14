@@ -34,6 +34,10 @@ NODE_SIZES = {
 }
 DEFAULT_NODE_SIZE = (256, 64)
 
+# Node types that serialize size/color per NodeTypeDataSO (e.g. Region has user-resizable dimensions)
+SERIALIZE_SIZE_DELTA_NODES = {"Region"}
+SERIALIZE_COLOR_NODES = {"Region"}
+
 # Default colors matching Unity (RGBA 0-1)
 DEFAULT_NODE_COLOR = {"r": 0.21960784494876862, "g": 0.21960784494876862, "b": 0.21960784494876862, "a": 1}
 DEFAULT_CONNECTION_COLOR = {"r": 0.98, "g": 0.94, "b": 0.84, "a": 1}

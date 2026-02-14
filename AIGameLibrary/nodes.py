@@ -32,13 +32,17 @@ def cache(function):
 
     def wrapper(*args, **kwargs):
         disableCache = kwargs.pop("disableCache", False)
-        cacheArgs = tuple(hash(arg) for arg in args)
+        # Include both args and kwargs in cache key (kwargs sorted for determinism)
+        cacheArgs = (
+            tuple(hash(arg) for arg in args),
+            tuple((k, hash(v)) for k, v in sorted(kwargs.items())),
+        )
 
         if disableCache:
-            return function(*args)
+            return function(*args, **kwargs)
 
         if cacheArgs not in cachedNodes:
-            cachedNodes[cacheArgs] = function(*args)
+            cachedNodes[cacheArgs] = function(*args, **kwargs)
 
         return cachedNodes[cacheArgs]
 
@@ -224,16 +228,16 @@ def InitializeSlime(
 
 @cache
 def InitializeSurvival(
-    name: str = "AIA",
-    country: countryNames = "United States of America",
-    skin: colorNames = "White",
-    body_style: int | float = 0,
-    hair_style: int | float = 3,
-    hair_color: colorNames = "Dark Brown",
-    facial_hair: int | float = 1,
-    custom_texture: str = "https://i.imgur.com/CvucGD8.png",
+    name: str,
+    country: countryNames,
+    skin: colorNames,
+    body_style: int | float,
+    hair_style: int | float,
+    hair_color: colorNames,
+    facial_hair: int | float,
+    custom_texture: str,
 ):
-    """Initialize survival character with cosmetic properties. Sets up an Aialander for the Survival game. All args have defaults matching the AIA bot."""
+    """Initialize survival character with cosmetic properties. Sets up an Aialander for the Survival game. All parameters are required."""
     ConstructSurvivalProperties(
         String(name),
         Country(country),
