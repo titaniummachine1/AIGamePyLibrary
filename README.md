@@ -297,6 +297,89 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 
 **Description:** Nodes for the Survival game. The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
 
+**Overview:** Aialanders are trapped on a deserted island with a few apple trees and other inhabitants. Each Aialander has a storage container they can put food.
+
+**Objective:** To survive on the island given the available food. Other inhabitants may be friendly or may not be, it's your choice how you respond to them. Ending with the highest rank will give you the most clout but it's your decision if that's important to you or not.
+
+<details>
+<summary>Customization</summary>
+
+The properties node has a custom outfit at the bottom that can take a URL string to an image. You can upload the image to something like imgur and then copy the image URL.
+
+If you want, here's the PSD to make a custom outfit texture for your character:
+https://github.com/theaia/AIGamePyLibrary/blob/main/CustomOutfit.psd
+
+</details>
+
+<details>
+<summary>Container Information</summary>
+
+**Health**
+- Each player starts with a designated container with 250 health.
+- Containers do not regenerate health.
+- When a container's health reaches 0 it will be destroyed along with any food stored in it.
+
+**Terrain**
+- Terrain has an approximate diameter of 160.
+- For the competition the seed will be random—you may be the closest one to a tree, or the furthest.
+- I'll be running the sim with both abundant and scarce resources. Adjust your strategy appropriately.
+- After being harvested, fruit respawn after 190 seconds. Each tree starts with and has a maximum of 3 fruit.
+
+</details>
+
+<details>
+<summary>Ranking</summary>
+
+Players are sorted by Survival Time, then Most Health, then Hunger, then stored apple count.
+
+</details>
+
+<details>
+<summary>Player Information</summary>
+
+**Health**
+- Players all start with 100 health.
+- Players will regenerate 1 health per Tick after they've not taken damage for 5 seconds.
+- After a player has started regenerating health, their "last attacked by" player is reset.
+
+**Hunger**
+- Players start with 100 Hunger points.
+- Every 5 seconds players lose 10 points. The 5 second timer is reset whenever a player eats.
+- If the player does not have 10 hunger to be consumed, they will instead take 10 damage.
+- Consuming food restores 25 points.
+
+**Stamina**
+- Players all start with 100 stamina.
+- Sprinting consumes stamina at .15 per tick and Attacking consumes stamina at 5 per attack.
+- After not consuming stamina for 3 seconds players will regenerate 2 stamina per Tick.
+
+**Aggression**
+- Players have an aggression level.
+- Attacking a player with the same or lower aggression level will increase a player's aggression by 1.
+- Attacking a player's container with the same or lower aggression level will increase a player's aggression by .5.
+- Players can reference players based on aggression using the Get Transform and Get Float nodes.
+- Stealing from an alive player's container will increase aggression by .25.
+- Stealing from a dead player's inventory does not affect a player's aggression level.
+
+</details>
+
+<details>
+<summary>Player States</summary>
+
+- **Passive** - The player will not perform any actions during this state.
+
+- **Gathering** - If not carrying any food a player will search for nearby food to gather and automatically pick it from trees or off the ground. When carrying food the player will automatically deposit it into its own storage container if nearby.
+
+- **Eating** - If not carrying any food a player will search for nearby food to gather and automatically pick it from trees, off of the ground, or from its own container. When carrying food the player will automatically consume it.
+
+- **Attack** - If not carrying any food a player will search for nearby players and containers and will automatically attack them when in range. When carrying food the player will automatically drop it.
+
+- **Steal** - If not carrying any food a player will search for nearby containers they do not own to steal from. When carrying food the player will automatically deposit it into its own storage container if nearby.
+
+- **Dead** - The player will not perform any actions during this state.
+
+</details>
+
 <details>
 <summary>Controller & Properties</summary>
 
