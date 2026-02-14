@@ -96,9 +96,11 @@ Node configurations determine which nodes are available in the Unity editor. Eac
   - Output: String
 
 - **`Color(value)`** - Outputs the color value selected in the dropdown
+  - Options: `"Auburn"`, `"Black"`, `"Blonde"`, `"Blue"`, `"Brown"`, `"Dark Brown"`, `"Dark Green"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"Tan"`, `"White"`, `"Yellow"`
   - Output: Color
 
 - **`Country(value)`** - Outputs the country value selected in the dropdown
+  - Options: `"Unknown"`, `"Afghanistan"`, `"Albania"`, `"Algeria"`, `"Andorra"`, `"Angola"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Azerbaijan"`, `"Bahamas"`, `"Bahrain"`, `"Bangladesh"`, `"Barbados"`, `"Belarus"`, `"Belgium"`, `"Bermuda"`, `"Bohemia"`, `"Botswana"`, `"Brazil"`, `"Bulgaria"`, `"Burkina Faso"`, `"Burundi"`, `"Cameroon"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Costa Rica"`, `"Croatia"`, `"Cuba"`, `"Cyprus"`, `"Czechia"`, `"Côte d'Ivoire"`, `"Denmark"`, `"Djibouti"`, `"Dominican Republic"`, `"DR Congo"`, `"Ecuador"`, `"Egypt"`, `"Eritrea"`, `"Estonia"`, `"Ethiopia"`, `"Fiji"`, `"Finland"`, `"France"`, `"Gabon"`, `"Georgia"`, `"Germany"`, `"Ghana"`, `"Greece"`, `"Grenada"`, `"Guatemala"`, `"Guyana"`, `"Haiti"`, `"Hong Kong"`, `"Hungary"`, `"Iceland"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Jamaica"`, `"Japan"`, `"Jordan"`, `"Kazakhstan"`, `"Kenya"`, `"Kosovo"`, `"Kuwait"`, `"Kyrgyzstan"`, `"Latvia"`, `"Lebanon"`, `"Lithuania"`, `"Luxembourg"`, `"Malaysia"`, `"Mauritius"`, `"Mexico"`, `"Moldova"`, `"Mongolia"`, `"Montenegro"`, `"Morocco"`, `"Mozambique"`, `"Myanmar"`, `"Namibia"`, `"Netherlands"`, `"New Zealand"`, `"Niger"`, `"Nigera"`, `"North Korea"`, `"North Macedonia"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Panama"`, `"Paraguay"`, `"Peru"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"San Marino"`, `"Saudi Arabia"`, `"Scotland"`, `"Senegal"`, `"Serbia"`, `"Singapore"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sri Lanka"`, `"Sudan"`, `"Suriname"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Taiwan"`, `"Tajikistan"`, `"Tanzania"`, `"Thailand"`, `"Togo"`, `"Tonga"`, `"Trinidad and Tobago"`, `"Tunisia"`, `"Turkey"`, `"Turkmenistan"`, `"Uganda"`, `"Ukraine"`, `"Unite Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Uruguay"`, `"Uzbekistan"`, `"Venezuela"`, `"Vietnam"`, `"Virgin Islands"`, `"Yemen"`, `"Zambia"`, `"Zimbabwe"`
   - Output: Country
 
 </details>
@@ -143,7 +145,8 @@ Node configurations determine which nodes are available in the Unity editor. Eac
   - Input: Float
   - Output: Float
 
-- **`Operation(x)`** - Performs the selected operation on the input number (Abs, Round, Floor, Ceil, Sin, Cos, Tan, Sqrt, etc.)
+- **`Operation(x)`** - Performs the selected operation on the input number
+  - Options: `abs`, `round`, `floor`, `ceil`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sqrt`, `sign`, `ln`, `log10`, `e^`, `10^`
   - Input: Float
   - Output: Float
 
@@ -198,10 +201,12 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <summary>Comparison & Logic Operations</summary>
 
 - **`CompareFloats(a, b, operator)`** or `a < b`, `a > b`, etc. - Evaluates two float values against the operation selected in the dropdown
+  - Options: `==`, `<`, `>`, `<=`, `>=`
   - Inputs: Float, Float
   - Output: Bool
 
 - **`CompareBool(a, b, operator)`** - Evaluates two boolean values against the operation selected in the dropdown
+  - Options: `AND`, `OR`, `EQUAL TO`, `XOR`, `NOR`, `NAND`, `XNOR`
   - Inputs: Bool, Bool
   - Output: Bool
 
@@ -210,14 +215,17 @@ Node configurations determine which nodes are available in the Unity editor. Eac
   - Output: Bool
 
 - **`ConditionalSetFloat(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different number values
+  - Options: `True` (use trueValue when condition is true), `False` (use trueValue when condition is false)
   - Inputs: Bool, Float, Float
   - Output: Float
 
 - **`ConditionalSetVector3(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different Vector3 values
+  - Options: `True`, `False` (same as ConditionalSetFloat)
   - Inputs: Bool, Vector3, Vector3
   - Output: Vector3
 
 - **`ConditionalSetBool(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different boolean values
+  - Options: `True`, `False` (same as ConditionalSetFloat)
   - Inputs: Bool, Bool, Bool
   - Output: Bool
 
@@ -245,6 +253,7 @@ Node configurations determine which nodes are available in the Unity editor. Eac
   - Output: Bool
 
 - **`RelativePosition(transform, direction)`** - Gets the world position relative to the input Transform and based on the selected option
+  - Options: `Self`, `Self + Forward`, `Self + Backward`, `Self + Left`, `Self + Right`, `Self + Up`, `Self + Down`, `Forward`, `Backward`, `Left`, `Right`, `Up`, `Down`
   - Input: Transform
   - Output: Vector3
 
@@ -305,12 +314,15 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <summary>Data Access</summary>
 
 - **`SurvivalGetTransform(value)`** - Selection of Transform options representing current locations in the simulation
+  - Options: `Self`, `Player Last Damaged By`, `Player Last Attacking (Global)`, `Player Nearest`, `Player 2nd Nearest`, `Player Farthest`, `Player with Highest Health`, `Player with Lowest Health`, `Player with Highest Hunger`, `Player with Lowest Hunger`, `Player with Highest Stamina`, `Player with Lowest Stamina`, `Player Last Stolen From Self Container`, `Player Last Stealing (Global)`, `Player with Highest Score`, `Player with Lowest Score`, `Player of Closest Score`, `Player with Most Aggression`, `Player with Lowest Aggression`, `Player Nearest with Aggression`, `Player Nearest with No Aggression`, `Player with Most Stored Fruit`, `Player with Least Stored Fruit`, `Container Self`, `Container Closest (excluding self)`, `Container Farthest (excluding self)`, `Container of Last Attacker`, `Container of Last Global Attacker`, `Container of Most Stored Fruit`, `Container of Nearest Dead Player`, `Container of Nearest Dead Player (with Food)`, `Container of Highest Aggression Player`, `Container of Lowest Aggression Player`, `Container of Player with Closest Rank`, `Fruit Nearest`, `Fruit Farthest`, `Fruit Nearest Self Container`, `Fruit (Random)`, `Tree Nearest`
   - Output: Transform
 
 - **`SurvivalGetFloat(value)`** - Selection of global number-based options representing current parameters in the simulation
+  - Options: `Health Percentage`, `Hunger Percentage`, `Stamina Percentage`, `Current Rank`, `Stored Food Count`, `Distance to Nearest Player`, `Distance to Nearest Aggressive Player`, `Distance to Last Attacker`, `Distance to Nearest Container`, `Distance to Nearest Fruit Tree`, `Player Count Remaining`, `Current Simulation Time`, `Max Simulation Time`, `Simulation Time Remaining`, `Delta time`, `Fixed delta time`, `Pi`, `Self Gathers`, `Self Food Consumed`, `Self Steals`, `Self Damage Dealt`, `Self Kills`, `Self Aggression Level`, `Available Fruit Count`, `Player Count Without Stored Food`, `Average Player Health`, `Average Player Hunger`, `Average Player Stamina`, `Average Player Aggression Level`, `Total Possible Fruit`, `Distance Traveled`
   - Output: Float
 
 - **`SurvivalGetBool(value)`** - Selection of global True/False options representing current parameters in the simulation
+  - Options: `Is Carrying Resource`, `Container has Health`, `Container Was Attacked`, `Container Was Stolen From`, `Self Was Attacked`
   - Output: Bool
 
 </details>
@@ -319,9 +331,11 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <summary>States & Emotes</summary>
 
 - **`SurvivalState(value)`** - Selection of states Aialanders can be in. States determine what automatic behaviors Aialanders take
+  - Options: `Passive`, `Gather`, `Eat`, `Attack`, `Steal`, `Dead`
   - Output: SurvivalState
 
 - **`SurvivalEmote(value)`** - Selection of emotes Aialanders can perform
+  - Options: `None`, `Hi`, `Talk`, `Bored`, `Wave`
   - Output: SurvivalEmote
 
 - **`SurvivalAutoPosition(state)`** - Automatically decide where to move an Aialander based on predetermined rules for a given state
@@ -329,10 +343,12 @@ Node configurations determine which nodes are available in the Unity editor. Eac
   - Output: Vector3
 
 - **`ConditionalSetSurvivalState(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different state values
+  - Options: `True`, `False` (same as ConditionalSetFloat)
   - Inputs: Bool, SurvivalState, SurvivalState
   - Output: SurvivalState
 
 - **`ConditionalSetSurvivalEmote(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different emote values
+  - Options: `True`, `False` (same as ConditionalSetFloat)
   - Inputs: Bool, SurvivalEmote, SurvivalEmote
   - Output: SurvivalEmote
 
@@ -405,11 +421,12 @@ The library provides pre-defined game entities for Slime Volleyball:
   - Output: Bool
 
 - **`GetFloat(value)`** - Gets float data from the game
-  - Available values: `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`, `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
+  - Options (Default/General): `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`
+  - Options (Slime Volleyball): Also includes `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
   - Output: Float
 
 - **`GetTransform(value)`** - Gets transform data from the game
-  - Available values: `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
+  - Options (Slime Volleyball): `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
   - Output: Transform
 
 - **`RelativePosition(transform, direction)`** - Gets a relative position vector
@@ -422,11 +439,11 @@ The library provides pre-defined game entities for Slime Volleyball:
   - Output: Stat
 
 - **`Color(value)`** - Creates a color node
-  - Available colors: `"Black"`, `"Blue"`, `"Brown"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"White"`, `"Yellow"`
+  - Options: `"Auburn"`, `"Black"`, `"Blonde"`, `"Blue"`, `"Brown"`, `"Dark Brown"`, `"Dark Green"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"Tan"`, `"White"`, `"Yellow"`
   - Output: Color
 
 - **`Country(value)`** - Creates a country node
-  - Available countries: `"Andorra"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Bangladesh"`, `"Belarus"`, `"Belgium"`, `"Brazil"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Croatia"`, `"Cuba"`, `"Czechia"`, `"DR Congo"`, `"Denmark"`, `"Egypt"`, `"Ethiopia"`, `"Finland"`, `"France"`, `"Germany"`, `"Guatemala"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Japan"`, `"Jordan"`, `"Kenya"`, `"Latvia"`, `"Malaysia"`, `"Mexico"`, `"Myanmar"`, `"Netherlands"`, `"New Zealand"`, `"Nigera"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"Russia"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Tanzania"`, `"Thailand"`, `"Turkey"`, `"Ukraine"`, `"Unite Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Vietnam"`, `"Yemen"`
+  - Options: `"Unknown"`, `"Afghanistan"`, `"Albania"`, `"Algeria"`, `"Andorra"`, `"Angola"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Azerbaijan"`, `"Bahamas"`, `"Bahrain"`, `"Bangladesh"`, `"Barbados"`, `"Belarus"`, `"Belgium"`, `"Bermuda"`, `"Bohemia"`, `"Botswana"`, `"Brazil"`, `"Bulgaria"`, `"Burkina Faso"`, `"Burundi"`, `"Cameroon"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Costa Rica"`, `"Croatia"`, `"Cuba"`, `"Cyprus"`, `"Czechia"`, `"Côte d'Ivoire"`, `"Denmark"`, `"Djibouti"`, `"Dominican Republic"`, `"DR Congo"`, `"Ecuador"`, `"Egypt"`, `"Eritrea"`, `"Estonia"`, `"Ethiopia"`, `"Fiji"`, `"Finland"`, `"France"`, `"Gabon"`, `"Georgia"`, `"Germany"`, `"Ghana"`, `"Greece"`, `"Grenada"`, `"Guatemala"`, `"Guyana"`, `"Haiti"`, `"Hong Kong"`, `"Hungary"`, `"Iceland"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Jamaica"`, `"Japan"`, `"Jordan"`, `"Kazakhstan"`, `"Kenya"`, `"Kosovo"`, `"Kuwait"`, `"Kyrgyzstan"`, `"Latvia"`, `"Lebanon"`, `"Lithuania"`, `"Luxembourg"`, `"Malaysia"`, `"Mauritius"`, `"Mexico"`, `"Moldova"`, `"Mongolia"`, `"Montenegro"`, `"Morocco"`, `"Mozambique"`, `"Myanmar"`, `"Namibia"`, `"Netherlands"`, `"New Zealand"`, `"Niger"`, `"Nigera"`, `"North Korea"`, `"North Macedonia"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Panama"`, `"Paraguay"`, `"Peru"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"San Marino"`, `"Saudi Arabia"`, `"Scotland"`, `"Senegal"`, `"Serbia"`, `"Singapore"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sri Lanka"`, `"Sudan"`, `"Suriname"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Taiwan"`, `"Tajikistan"`, `"Tanzania"`, `"Thailand"`, `"Togo"`, `"Tonga"`, `"Trinidad and Tobago"`, `"Tunisia"`, `"Turkey"`, `"Turkmenistan"`, `"Uganda"`, `"Ukraine"`, `"Unite Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Uruguay"`, `"Uzbekistan"`, `"Venezuela"`, `"Vietnam"`, `"Virgin Islands"`, `"Yemen"`, `"Zambia"`, `"Zimbabwe"`
   - Output: Country
 
 </details>
