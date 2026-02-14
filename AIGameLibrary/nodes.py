@@ -855,9 +855,9 @@ def SurvivalGetTransform(value: int):
 
 
 @cache
-def SurvivalState(value: int):
-    """Selection of states. 0=Passive, 1=Gather, 2=Eat, 3=Attack, 4=Steal, 5=Dead."""
-    return AddNode("SurvivalState", str(value))
+def SurvivalState(value: str):
+    """Selection of states. Use enum name: 'Passive', 'Gather', 'Eat', 'Attack', 'Steal', 'Dead'."""
+    return AddNode("SurvivalState", value)
 
 
 def connectInputNodes(baseNode, inputTypes, inputs):

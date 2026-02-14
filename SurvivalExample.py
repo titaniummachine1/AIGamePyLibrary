@@ -22,8 +22,8 @@ hungerPct = SurvivalGetFloat(1)  # Hunger Percentage
 hungerBelow50 = CompareFloats(hungerPct, Float(0.5), "<")
 state = ConditionalSetSurvivalState(
     hungerBelow50,
-    SurvivalState(2),  # Eat
-    SurvivalState(1),  # Gather
+    SurvivalState("Eat"),
+    SurvivalState("Gather"),
 )
 
 # Auto-position based on state (goes to fruit/container for Eat, trees for Gather)
