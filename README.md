@@ -368,6 +368,7 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 - Sprinting increases player speed 9. Players must have available stamina to sprint.
 - Attacking deals 10 damage per hit and consumes 5 stamina. Players must have enough stamina to attack. Attack range is 2. Attack radius is 1 in the forward direction of the player. Attacking while holding food will drop the food.
 - Players will drop food they are holding when they die.
+- Emoting will stop all movement and cause the player to perform a looping animation until their emote state is set to "None".
 
 **Health**
 - Players all start with 100 health.
