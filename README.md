@@ -295,11 +295,11 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <details>
 <summary><strong>Survival Simulation</strong></summary>
 
-**Description:** Nodes for the Survival game. The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
+**Description:** The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
 
-**Overview:** Aialanders are trapped on a deserted island with apple trees and other inhabitants. Each Aialander has a storage container they can put food.
+**Overview:** Aialanders are trapped on a deserted island with apple trees and other inhabitants. Each Aialander has a storage container they can put food. Tree count and location can vary per simulation.
 
-**Objective:** To survive on the island given the available food. Other inhabitants may be friendly or may not be, it's your choice how you respond to them. Ending with the highest rank will give you the most clout but it's your decision if that's important to you or not.
+**Objective:** To survive on the island given the available food. Other inhabitants may be friendly or aggressive, you can choose any personality you want. Ending with the highest rank will give you the most clout but it's your decision if that's important to you or not.
 
 <details>
 <summary>Customization</summary>
@@ -307,6 +307,7 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 **Body Type**
 - `0` Pants and shorts
 - `1` Dress
+- `2` Robot
 
 **Beard Styles**
 - `0` None
@@ -355,12 +356,17 @@ https://github.com/theaia/AIGamePyLibrary/blob/main/CustomOutfit.psd
 <details>
 <summary>Ranking</summary>
 
-Players are sorted by Survival Time, then Most Health, then Hunger, then stored apple count.
+Players are sorted by Survival Time, then Most Health, then Hunger, then stored apple count. When a player dies, their survival time stops at the time they die.
 
 </details>
 
 <details>
 <summary>Player Information</summary>
+
+**Abilities**
+- Standard move speed is 5.
+- Sprinting increases player speed 9. Players must have available stamina to sprint.
+- Attacking deals 10 damage per hit and consumes 5 stamina. Players must have enough stamina to attack. Attack range is 2. Attack radius is 1 in the forward direction of the player.
 
 **Health**
 - Players all start with 100 health.
