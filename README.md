@@ -1,4 +1,4 @@
-# AIA Game Library
+# Aialander Pylib
 
 A Python library for creating AI bots for AIA's game collection. This library allows you to programmatically create node-based AI logic that can be exported and used in Unity games.
 
