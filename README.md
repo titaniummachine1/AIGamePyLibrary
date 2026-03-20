@@ -556,6 +556,89 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 ---
 
 <details>
+<summary><strong>Parking Simulation</strong></summary>
+
+**Requirements:** The ModularUniformController is the required destination to control a single car. ConstructModularUniformProperties sets that car's aesthetic. CarRaycasts casts rays out in 8 directions and returns HitInfo.
+
+**Overview:** The goal of the simulation is to navigate the car to a target parking stall and have it sit inside the stall for 3 seconds. After that, the player progresses to a new level with the same goal but from a different local position and with a different target parking stall.
+
+Alignment to the stall is encouraged but not required. Colliding with any objects will reset the player to the starting position.
+
+<details>
+<summary>Controller & Properties</summary>
+
+- **`ModularUniformController(throttle, steering, brake)`** - Sends inputs to the car to control it
+  - Inputs:
+    - Float (throttle: `1` is forward, `-1` is reverse)
+    - Float (steering: `-1` is left, `1` is right)
+    - Float (brake: any value over `0` applies brake)
+  - Output: None (destination node)
+
+- **`ConstructModularUniformProperties(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Sets cosmetic options for this car
+  - Inputs:
+    - String (name tag)
+    - Country (country this character is representing)
+    - Color (skin color)
+    - Float (body style: `0` = male, `1` = female; value wraps to prevent errors)
+    - Float (hair style; value wraps to prevent errors)
+    - Color (hair color)
+    - Float (facial hair style; value wraps to prevent errors)
+    - Color (car color)
+    - String (optional image URL to download and apply to the outfit)
+  - Output: None (destination node)
+
+</details>
+
+<details>
+<summary>Sensors & Raycast Results</summary>
+
+- **`Spherecast(radius, distance)`** - Defines the radius/size and travel distance used for spherecast sensors
+  - Inputs:
+    - Float (radius)
+    - Float (distance)
+  - Output: Spherecast
+
+- **`CarRaycasts(spherecast)`** - Sends sensors out into the world around the car to detect information about the world
+  - Inputs:
+    - Spherecast (length/size of spherecasts to send out as sensors)
+  - Outputs:
+    - `RaycastHit1` forward left
+    - `RaycastHit2` forward
+    - `RaycastHit3` forward right
+    - `RaycastHit4` rear left
+    - `RaycastHit5` rear
+    - `RaycastHit6` rear right
+
+- **`HitInfo(raycastHit)`** - Extracts collision info from a `RaycastHit`
+  - Inputs: RaycastHit (connect one of `RaycastHit1`..`RaycastHit6`)
+  - Outputs:
+    - Bool (was a collision detected?)
+    - Float (distance to the collision; returns infinity if no collision)
+
+</details>
+
+<details>
+<summary>Game State Access</summary>
+
+- **`ParkingGetTransform(value)`** - Selection of Transform options that represent a current location in the simulation
+  - Options: `Self`, `Target Parking Stall`
+  - Output: Transform
+
+- **`ParkingGetFloat(value)`** - Selection of global number-based options that represent a current parameter in the simulation
+  - Options: `Speed`, `Target Stall Width`, `Target Stall Depth`, `Current Level`, `Fail Count`, `Current Simulation Time`, `Max Simulation Time`, `Delta Time`, `Fixed Delta Time`, `Pi`
+  - Output: Float
+
+- **`ParkingGetBool(value)`** - Selection of global True/False based options that represent a current parameter in the simulation
+  - Options: `Is Partially in Target Parking Stall`, `Is Fully in Target Parking Stall`
+  - Output: Bool
+
+</details>
+
+</details>
+
+---
+
+<details>
 <summary><strong>Slime Volleyball Simulation</strong></summary>
 
 <details>
