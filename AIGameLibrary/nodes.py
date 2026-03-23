@@ -864,6 +864,142 @@ def SurvivalState(value: str):
     return AddNode("SurvivalState", value)
 
 
+class RaycastHitComponents:
+    """Multi-output helper for `CarRaycasts` (RaycastHit1..RaycastHit8)."""
+
+    def __init__(self, baseNode: Node):
+        self._baseNode = baseNode
+
+    @property
+    def RaycastHit1(self) -> Node:
+        return Node(self._baseNode.data, 1)
+
+    @property
+    def RaycastHit2(self) -> Node:
+        return Node(self._baseNode.data, 2)
+
+    @property
+    def RaycastHit3(self) -> Node:
+        return Node(self._baseNode.data, 3)
+
+    @property
+    def RaycastHit4(self) -> Node:
+        return Node(self._baseNode.data, 4)
+
+    @property
+    def RaycastHit5(self) -> Node:
+        return Node(self._baseNode.data, 5)
+
+    @property
+    def RaycastHit6(self) -> Node:
+        return Node(self._baseNode.data, 6)
+
+    @property
+    def RaycastHit7(self) -> Node:
+        return Node(self._baseNode.data, 7)
+
+    @property
+    def RaycastHit8(self) -> Node:
+        return Node(self._baseNode.data, 8)
+
+
+class HitInfoComponents:
+    """Multi-output helper for `HitInfo` (WasHit, Distance)."""
+
+    def __init__(self, baseNode: Node):
+        # We override `type` so Python operators work (==, <, arithmetic, etc.).
+        self._wasHit = Node(baseNode.data, 1)
+        self._wasHit.type = bool
+
+        self._distance = Node(baseNode.data, 1)
+        self._distance.type = float
+
+    @property
+    def WasHit(self) -> Node:
+        return self._wasHit
+
+    @property
+    def Distance(self) -> Node:
+        return self._distance
+
+
+@cache
+def ModularUniformController(throttle: Node, steering: Node, brake: Node):
+    """Destination node: sends throttle/steering/brake to the parking car."""
+    baseNode = AddNode("ModularCarController")
+    inputTypes = ["Float", "Float", "Float"]
+    connectInputNodes(baseNode, inputTypes, [throttle, steering, brake])
+    return baseNode
+
+
+@cache
+def ConstructModularUniformProperties(
+    name: str,
+    country: countryNames,
+    skinColor: colorNames,
+    bodyStyle: int | float,
+    hairStyle: int | float,
+    hairColor: colorNames,
+    facialHairStyle: int | float,
+    carColor: colorNames,
+    outfitUrl: str,
+):
+    """Destination node: sets cosmetic options for the parking car."""
+    baseNode = AddNode("UniformModularCarProperties")
+    inputTypes = ["String", "Country", "Color", "Float", "Float", "Color", "Float", "Color", "String"]
+    connectInputNodes(
+        baseNode,
+        inputTypes,
+        [name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl],
+    )
+    return baseNode
+
+
+@cache
+def Spherecast(radius: Node, distance: Node):
+    """Defines the Spherecast radius/distance used for `CarRaycasts` sensors."""
+    baseNode = AddNode("Spherecast")
+    inputTypes = ["Float", "Float"]
+    connectInputNodes(baseNode, inputTypes, [radius, distance])
+    return baseNode
+
+
+@cache
+def CarRaycasts(spherecast: Node) -> RaycastHitComponents:
+    """Sends sensors out around the parking car and returns `RaycastHit1..6`."""
+    baseNode = AddNode("CarRaycasts")
+    inputTypes = ["Spherecast"]
+    connectInputNodes(baseNode, inputTypes, [spherecast])
+    return RaycastHitComponents(baseNode)
+
+
+@cache
+def HitInfo(raycastHit: Node) -> HitInfoComponents:
+    """Extracts bool+distance from a selected `RaycastHit` output."""
+    baseNode = AddNode("HitInfo")
+    inputTypes = ["RaycastHit"]
+    connectInputNodes(baseNode, inputTypes, [raycastHit])
+    return HitInfoComponents(baseNode)
+
+
+@cache
+def ParkingGetTransform(value: int):
+    """Selection of Transform options for the parking simulation."""
+    return AddNode("ParkingGetTransform", str(value))
+
+
+@cache
+def ParkingGetFloat(value: int):
+    """Selection of Float options for the parking simulation."""
+    return AddNode("ParkingGetFloat", str(value))
+
+
+@cache
+def ParkingGetBool(value: int):
+    """Selection of Bool options for the parking simulation."""
+    return AddNode("ParkingGetBool", str(value))
+
+
 def connectInputNodes(baseNode, inputTypes, inputs):
     counters = {}
 
