@@ -928,6 +928,32 @@ class RaycastHitComponents:
     def RaycastHit8(self) -> Node:
         return Node(self._baseNode.data, 8)
 
+    def __iter__(self):
+        """Allow tuple unpacking: ray1, ..., ray8 = CarRaycasts(sensor)."""
+        yield self.RaycastHit1
+        yield self.RaycastHit2
+        yield self.RaycastHit3
+        yield self.RaycastHit4
+        yield self.RaycastHit5
+        yield self.RaycastHit6
+        yield self.RaycastHit7
+        yield self.RaycastHit8
+
+    def __len__(self):
+        return 8
+
+    def __getitem__(self, index):
+        return [
+            self.RaycastHit1,
+            self.RaycastHit2,
+            self.RaycastHit3,
+            self.RaycastHit4,
+            self.RaycastHit5,
+            self.RaycastHit6,
+            self.RaycastHit7,
+            self.RaycastHit8,
+        ][index]
+
 
 class HitInfoComponents:
     """Multi-output helper for `HitInfo` (WasHit, Distance)."""
