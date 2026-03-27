@@ -621,9 +621,11 @@ Alignment to the stall is encouraged but not required. Colliding with any object
     - `RaycastHit4` rear left
     - `RaycastHit5` rear
     - `RaycastHit6` rear right
+    - `RaycastHit7` additional ray output
+    - `RaycastHit8` additional ray output
 
 - **`HitInfo(raycastHit)`** - Extracts collision info from a `RaycastHit`
-  - Inputs: RaycastHit (connect one of `RaycastHit1`..`RaycastHit6`)
+  - Inputs: RaycastHit (connect one of `RaycastHit1`..`RaycastHit8`)
   - Outputs:
     - Bool (was a collision detected?)
     - Float (distance to the collision; returns infinity if no collision)

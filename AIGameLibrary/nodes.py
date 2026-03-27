@@ -992,7 +992,7 @@ def Spherecast(radius: Node, distance: Node):
 
 @cache
 def CarRaycasts(spherecast: Node) -> RaycastHitComponents:
-    """Sends sensors out around the parking car and returns `RaycastHit1..6`."""
+    """Sends sensors out around the parking car and returns `RaycastHit1..8`."""
     baseNode = AddNode("CarRaycasts")
     inputTypes = ["Spherecast"]
     connectInputNodes(baseNode, inputTypes, [spherecast])
