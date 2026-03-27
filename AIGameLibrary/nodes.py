@@ -251,6 +251,32 @@ def InitializeSurvival(
 
 
 @cache
+def InitializeParking(
+    name: str,
+    country: countryNames,
+    skin_color: colorNames,
+    body_style: int | float,
+    hair_style: int | float,
+    hair_color: colorNames,
+    facial_hair_style: int | float,
+    car_color: colorNames,
+    custom_texture: str,
+):
+    """Initialize parking car and driver cosmetics for the Parking simulation."""
+    ConstructModularUniformProperties(
+        String(name),
+        Country(country),
+        Color(skin_color),
+        Float(body_style),
+        Float(hair_style),
+        Color(hair_color),
+        Float(facial_hair_style),
+        Color(car_color),
+        String(custom_texture),
+    )
+
+
+@cache
 def AddVector3(node0: Node, node1: Node):
     baseNode = AddNode("AddVector3")
     inputTypes = ["Vector3", "Vector3"]

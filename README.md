@@ -574,6 +574,19 @@ Alignment to the stall is encouraged but not required. Colliding with any object
     - Float (brake: any value over `0` applies brake)
   - Output: None (destination node)
 
+- **`InitializeParking(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Convenience helper to set all parking car cosmetic options in one call
+  - Inputs:
+    - String (name tag)
+    - Country (country this character is representing)
+    - Color (skin color)
+    - Float (body style: `0` = male, `1` = female; value wraps to prevent errors)
+    - Float (hair style; value wraps to prevent errors)
+    - Color (hair color)
+    - Float (facial hair style; value wraps to prevent errors)
+    - Color (car color)
+    - String (optional image URL to download and apply to the outfit)
+  - Output: None (side effect)
+
 - **`ConstructModularUniformProperties(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Sets cosmetic options for this car
   - Inputs:
     - String (name tag)
