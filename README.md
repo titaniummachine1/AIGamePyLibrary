@@ -564,6 +564,11 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 
 Alignment to the stall is encouraged but not required. Colliding with any objects will reset the player to the starting position.
 
+**Tips**
+
+- Raycasts all extend from the **center** of the car. The car width is roughly **6**; the car length is roughly **10.8**.
+- Stepping on the **brake** while setting **throttle** to **`-1`** will almost instantly stop the car—worth using when an obstacle is very close.
+
 <details>
 <summary>Controller & Properties</summary>
 

@@ -974,6 +974,17 @@ class HitInfoComponents:
     def Distance(self) -> Node:
         return self._distance
 
+    def __iter__(self):
+        """Allow tuple unpacking: was_hit, distance = HitInfo(raycast_hit)."""
+        yield self.WasHit
+        yield self.Distance
+
+    def __len__(self):
+        return 2
+
+    def __getitem__(self, index):
+        return [self.WasHit, self.Distance][index]
+
 
 @cache
 def ModularUniformController(throttle: Node, steering: Node, brake: Node):
