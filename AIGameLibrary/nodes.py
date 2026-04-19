@@ -250,6 +250,31 @@ def InitializeSurvival(
     )
 
 
+def InitializeDemoDerby(
+    name: str,
+    country: countryNames,
+    skin_color: colorNames,
+    body_style: int | float,
+    hair_style: int | float,
+    hair_color: colorNames,
+    facial_hair_style: int | float,
+    car_color: colorNames,
+    custom_texture: str,
+):
+    """Initialize modular car and driver cosmetics for the Demo Derby simulation (delegates to `InitializeParking`)."""
+    return InitializeParking(
+        name,
+        country,
+        skin_color,
+        body_style,
+        hair_style,
+        hair_color,
+        facial_hair_style,
+        car_color,
+        custom_texture,
+    )
+
+
 @cache
 def InitializeParking(
     name: str,
@@ -986,9 +1011,34 @@ class HitInfoComponents:
         return [self.WasHit, self.Distance][index]
 
 
+class GetCarPartComponents:
+    """Multi-output helper for `GetCarPart` (`Transform1` world location, `Float1` health 0–100 %)."""
+
+    def __init__(self, baseNode: Node):
+        self._baseNode = baseNode
+
+    @property
+    def PartTransform(self) -> Node:
+        return Node(self._baseNode.data, 1)
+
+    @property
+    def HealthPercent(self) -> Node:
+        return Node(self._baseNode.data, 2)
+
+    def __iter__(self):
+        yield self.PartTransform
+        yield self.HealthPercent
+
+    def __len__(self):
+        return 2
+
+    def __getitem__(self, index):
+        return [self.PartTransform, self.HealthPercent][index]
+
+
 @cache
 def ModularUniformController(throttle: Node, steering: Node, brake: Node):
-    """Destination node: sends throttle/steering/brake to the parking car."""
+    """Destination node: sends throttle/steering/brake to the modular car (Parking and Demo Derby)."""
     baseNode = AddNode("ModularCarController")
     inputTypes = ["Float", "Float", "Float"]
     connectInputNodes(baseNode, inputTypes, [throttle, steering, brake])
@@ -1007,7 +1057,7 @@ def ConstructModularUniformProperties(
     carColor: colorNames,
     outfitUrl: str,
 ):
-    """Destination node: sets cosmetic options for the parking car."""
+    """Destination node: sets cosmetic options for the modular car (Parking and Demo Derby)."""
     baseNode = AddNode("UniformModularCarProperties")
     inputTypes = ["String", "Country", "Color", "Float", "Float", "Color", "Float", "Color", "String"]
     connectInputNodes(
@@ -1020,7 +1070,7 @@ def ConstructModularUniformProperties(
 
 @cache
 def Spherecast(radius: Node, distance: Node):
-    """Defines the Spherecast radius/distance used for `CarRaycasts` sensors."""
+    """Defines the Spherecast radius/distance used for `CarRaycasts` (Parking and Demo Derby)."""
     baseNode = AddNode("Spherecast")
     inputTypes = ["Float", "Float"]
     connectInputNodes(baseNode, inputTypes, [radius, distance])
@@ -1029,7 +1079,7 @@ def Spherecast(radius: Node, distance: Node):
 
 @cache
 def CarRaycasts(spherecast: Node) -> RaycastHitComponents:
-    """Sends sensors out around the parking car and returns `RaycastHit1..8`."""
+    """Sends sensors out around the modular car and returns `RaycastHit1..8` (Parking and Demo Derby)."""
     baseNode = AddNode("CarRaycasts")
     inputTypes = ["Spherecast"]
     connectInputNodes(baseNode, inputTypes, [spherecast])
@@ -1043,6 +1093,53 @@ def HitInfo(raycastHit: Node) -> HitInfoComponents:
     inputTypes = ["RaycastHit"]
     connectInputNodes(baseNode, inputTypes, [raycastHit])
     return HitInfoComponents(baseNode)
+
+
+@cache
+def DemoDerbyGetTransform(value: int):
+    """Demo Derby: `0` self car body, `1` fixed reference (inspector), `2` random pathable waypoint."""
+    return AddNode("DemoDerbyGetTransform", str(value))
+
+
+@cache
+def DemoDerbyGetCar(mode: int, index_float: Node | None = None):
+    """Demo Derby: outputs a car reference by dropdown mode (`0`..`12`); pass `index_float` when `mode` is `0` (by index, wrapped)."""
+    baseNode = AddNode("DemoDerbyGetCar", str(mode))
+    if index_float is not None:
+        connectInputNodes(baseNode, ["Float"], [index_float])
+    return baseNode
+
+
+@cache
+def CarGetPart(mode: int, car: Node) -> GetCarPartComponents:
+    """Part world transform and health percent for a car; `mode` is dropdown index (see README)."""
+    baseNode = AddNode("GetCarPart", str(mode))
+    connectInputNodes(baseNode, ["Car"], [car])
+    return GetCarPartComponents(baseNode)
+
+
+@cache
+def CarInfo(car: Node):
+    """World velocity (`Vector3`) of the given car."""
+    baseNode = AddNode("CarInfo")
+    connectInputNodes(baseNode, ["Car"], [car])
+    return Node(baseNode.data, 1)
+
+
+@cache
+def Autosteer(goal: Node):
+    """Steering float toward a world target (`Vector3`)."""
+    baseNode = AddNode("Autosteer")
+    connectInputNodes(baseNode, ["Vector3"], [goal])
+    return Node(baseNode.data, 1)
+
+
+@cache
+def Autothrottle(goal: Node, desired_speed: Node):
+    """Throttle float toward `goal` at `desired_speed` (obstacle-aware in Unity)."""
+    baseNode = AddNode("Autothrottle")
+    connectInputNodes(baseNode, ["Vector3", "Float"], [goal, desired_speed])
+    return Node(baseNode.data, 1)
 
 
 @cache

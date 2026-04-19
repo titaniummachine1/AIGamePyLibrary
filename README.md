@@ -659,6 +659,57 @@ Alignment to the stall is encouraged but not required. Colliding with any object
 ---
 
 <details>
+<summary><strong>Demo Derby Simulation</strong></summary>
+
+**Requirements:** Same modular car stack as Parking: `ModularUniformController` drives your car; `ConstructModularUniformProperties` (or `InitializeParking` / `InitializeDemoDerby`) sets cosmetics. `Spherecast`, `CarRaycasts`, and `HitInfo` behave as in Parking.
+
+**Overview:** Maximize damage to other cars. Collisions deal damage; vulnerable parts change handling (front wheels steering; rear wheels, engine, driveshaft acceleration). At **0** engine health a car **explodes** and damages nearby cars.
+
+**Tips:** Raycasts originate at the car **center** (rough width **6**, length **10.8**, same as Parking). JSON node id for auto throttle is **`Autothrottle`** (not `AutoThrottle`).
+
+<details>
+<summary>Initialization</summary>
+
+- **`InitializeDemoDerby(...)`** - Same parameters as `InitializeParking`; delegates to it.
+
+</details>
+
+<details>
+<summary>Controller, cosmetics, sensors</summary>
+
+Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUniformProperties`, `InitializeParking`, `Spherecast`, `CarRaycasts`, `HitInfo` (see **Parking Simulation**).
+
+</details>
+
+<details>
+<summary>Car queries and automation</summary>
+
+- **`DemoDerbyGetTransform(value)`** - `0` self body/controller, `1` fixed reference (inspector), `2` random pathable waypoint.
+
+- **`DemoDerbyGetCar(mode, index_float=None)`** - Returns a **Car** reference. Use **`index_float`** when `mode` is **`0`** (by index, wrapped to vehicle count). Modes **`0`–`12`**: by index; self; nearest / furthest car; lowest / highest health; last damaged; nearest/furthest active; nearest/furthest disabled; nearest/furthest with disabled steering (rear may still drive).
+
+- **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
+
+- **`CarInfo(car)`** - **Car** in, **Vector3** velocity out.
+
+- **`Autosteer(goal)`** - **Vector3** target, **Float** steering out.
+
+- **`Autothrottle(goal, desired_speed)`** - **Vector3** goal, **Float** target speed at goal, **Float** throttle out.
+
+</details>
+
+<details>
+<summary>Unity caveat: ParkingGetFloat / ParkingGetBool in Demo Derby</summary>
+
+Unity’s **Demo Derby Get Float** / **Demo Derby Get Bool** assets still serialize as **`ParkingGetFloat`** and **`ParkingGetBool`**. The current `ParkingGetFloatGate` / `ParkingGetBoolGate` in AIComp expect **parking** (`CarParkingManager`), so they are **not** wired for **`DemoDerbyGameManager`** yet. Python may still emit those nodes for Parking graphs or future Unity builds; for derby logic today prefer **`DemoDerbyGetTransform`**, **`DemoDerbyGetCar`**, **`CarGetPart`**, **`CarInfo`**, **`Autosteer`**, and **`Autothrottle`**.
+
+</details>
+
+</details>
+
+---
+
+<details>
 <summary><strong>Slime Volleyball Simulation</strong></summary>
 
 <details>

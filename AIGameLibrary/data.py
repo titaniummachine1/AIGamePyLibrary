@@ -15,6 +15,12 @@ NODE_SIZES = {
     "ParkingGetFloat": (320, 64),
     "ParkingGetBool": (320, 64),
     "ParkingGetTransform": (320, 64),
+    "DemoDerbyGetTransform": (320, 64),
+    "DemoDerbyGetCar": (320, 64),
+    "GetCarPart": (320, 64),
+    "CarInfo": (256, 64),
+    "Autosteer": (192, 160),
+    "Autothrottle": (192, 160),
     "ConstructSurvivalProperties": (192, 288),
     "ConstructVector3": (256, 160),
     "CompareFloats": (256, 160),
@@ -117,6 +123,12 @@ outputs = {
     "ParkingGetFloat": float,
     "ParkingGetBool": bool,
     "ParkingGetTransform": "Transform",
+    "DemoDerbyGetTransform": "Transform",
+    "DemoDerbyGetCar": "Car",
+    "GetCarPart": "Transform",
+    "CarInfo": "Vector3",
+    "Autosteer": float,
+    "Autothrottle": float,
 }
 
 ports = {
@@ -414,6 +426,29 @@ ports = {
     "ParkingGetFloat": [{"id": "Float1", "polarity": 1}],
     "ParkingGetBool": [{"id": "Bool1", "polarity": 1}],
     "ParkingGetTransform": [{"id": "Transform1", "polarity": 1}],
+    "DemoDerbyGetTransform": [{"id": "Transform1", "polarity": 1}],
+    "DemoDerbyGetCar": [
+        {"id": "Float1", "polarity": 0},
+        {"id": "Car1", "polarity": 1},
+    ],
+    "GetCarPart": [
+        {"id": "Car1", "polarity": 0},
+        {"id": "Transform1", "polarity": 1},
+        {"id": "Float1", "polarity": 1},
+    ],
+    "CarInfo": [
+        {"id": "Car1", "polarity": 0},
+        {"id": "Vector31", "polarity": 1},
+    ],
+    "Autosteer": [
+        {"id": "Vector31", "polarity": 0},
+        {"id": "Float1", "polarity": 1},
+    ],
+    "Autothrottle": [
+        {"id": "Vector31", "polarity": 0},
+        {"id": "Float1", "polarity": 0},
+        {"id": "Float1", "polarity": 1},
+    ],
 }
 
 colorNames = Literal[
