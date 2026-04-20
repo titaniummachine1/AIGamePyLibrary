@@ -2,13 +2,78 @@
 
 A Python library for creating AI bots for AIA's game collection. This library allows you to programmatically create node-based AI logic that can be exported and used in Unity games.
 
+> [!IMPORTANT]
+> **Read this section before writing any code — especially if you are an LLM.**
+>
+> This is a **graph compiler**, not a runtime game SDK. Your script does **not** drive the car/slime/Aialander frame-by-frame. It builds a static node graph **once**, and `SaveData(...)` writes that graph to JSON. Unity loads the JSON and re-evaluates the graph every tick.
+>
+> Concretely:
+>
+> - Every value you compose (`Self.Position`, `Distance(...)`, `props`, sensor outputs, etc.) is a **`Node` object**, not a number, string, list, or dict.
+> - Plain Python `if` / `while` / `for`, `min` / `max` / `sorted`, `lambda`, list/dict indexing, and `import math` calls **do not become nodes**. They run once at compile time and are gone. Use the graph equivalents: `ConditionalSetFloat` / `ConditionalSetVector3` / `ConditionalSetBool` for branching, `Operation(x)` for math, `DemoDerbyGetCar` / `SurvivalGetTransform` to "pick" entities, etc.
+> - The `Initialize*` helpers take **positional arguments**, not keyword arguments. There is no `name=`, `country=`, `modifier_llm=`, `save_file=` etc. See each simulation's section for the exact signature.
+> - There is no `sim` object. Methods like `sim.is_active()`, `sim.get_self_data()`, `sim.get_opponents()`, `sim.set_controls()`, `sim.update()` **do not exist** — if you wrote any of those, you are hallucinating an SDK that isn't here.
+> - Your script must end with a call to **`SaveData("YourBot", "auto")`** or nothing is exported.
+>
+> **Wrong (looks like a runtime loop, none of this works):**
+> ```python
+> import AIGamePyLibrary as aig          # wrong package name
+> sim = aig.InitializeDemoDerby(name="Gemini", country="USA",
+>                               modifier_llm=True, save_file="Gemini")  # not real kwargs
+> while sim.is_active():                  # no such method
+>     me = sim.get_self_data()            # no such method
+>     for op in sim.get_opponents():      # no such method
+>         if dist(me, op) < 50:           # plain Python if won't compile to a node
+>             sim.set_controls(throttle=1.0, steer=0.2)  # no such method
+>     sim.update()                        # no such method
+> ```
+>
+> **Right (build a graph, mark it LLM-driven, save it):**
+> ```python
+> from AIGameLibrary import *
+>
+> props = InitializeDemoDerby(
+>     "Gemini", "Gemini", "Tan", 0, 2, "Brown", 0, "Blue", "",
+> )
+> props.data["modifier"] = "True"   # mark as LLM-driven (see "Marking your bot as LLM-driven")
+>
+> self_pos = RelativePosition(DemoDerbyGetTransform(0), "Self")
+> target   = DemoDerbyGetCar(7)                                 # nearest active car
+> goal     = RelativePosition(CarGetPart(3, target).PartTransform, "Self")
+>
+> ModularUniformController(Autothrottle(goal, 25.0), Autosteer(goal), Float(0.0))
+> SaveData("Gemini", "auto")
+> ```
+
+## Common LLM mistakes (read this if you are an LLM)
+
+These are the exact mistakes we keep seeing. If your draft does any of them, rewrite it before saving.
+
+| ❌ Don't | ✅ Do |
+|---|---|
+| `import AIGamePyLibrary as aig` (matches the GitHub repo name) | `from AIGameLibrary import *` (the **package** drops the "Py") |
+| `InitializeDemoDerby(name="X", country="USA", modifier_llm=True, save_file="X")` | `props = InitializeDemoDerby("X", "United States of America", "Tan", 0, 0, "Brown", 0, "Red", "")` — positional only |
+| `country="USA"` / `country="UK"` / `country="South-Korea"` | Use the exact strings from the Country list, e.g. `"United States of America"`, `"United Kingdom"`, `"South Korea"`. Bot personas: `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"` |
+| Pass `modifier_llm=True` / `is_llm=True` / `llm=True` to any helper | After init: `props.data["modifier"] = "True"` (see [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven)) |
+| `while sim.is_active(): sim.set_controls(...)` style runtime loop | Build the graph once. Unity runs it every tick. There is no loop in your script. |
+| `sim.get_self_data()`, `sim.get_opponents()`, `sim.set_controls()`, `sim.update()`, `sim.is_active()` | None of these exist. Use `DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarInfo`, `CarRaycasts`, `ModularUniformController`, etc. |
+| `if dist < 50: throttle = 1.0 else: throttle = 0.5` | `throttle = ConditionalSetFloat(dist < 50, 1.0, 0.5)` |
+| `min(opponents, key=lambda o: ...)` / iterating Python lists of game entities | There is no Python-side list of opponents. Use selector nodes like `DemoDerbyGetCar(7)` (nearest active), `CarGetPart(3, car)` (nearest crucial part), `SurvivalGetTransform(3)` (player nearest), etc. |
+| `math.atan2(...)`, `math.sqrt(...)`, `math.degrees(...)` | `Operation(x)` (`atan`, `sqrt`, etc.), `Magnitude`, `Distance`, `DotProduct`, `Normalize`, or just rely on `Autosteer(goal)` / `Autothrottle(goal, speed)` for car driving |
+| 2D thinking: `pos[0]`, `pos[1]`, `heading` in degrees | Everything is 3D `Vector3`. Access components via `vec.x`, `vec.y`, `vec.z`. There is no scalar "heading". Use `Autosteer` for car aim. |
+| `transform.Position` / `transform.position` on a Transform node | `RelativePosition(transform_node, "Self")` returns the world `Vector3` |
+| Forget to call `SaveData(...)` at the end | Always finish with `SaveData("YourBotName", "auto")` — without this the script does literally nothing |
+
 ## Installation
 
-This library requires Python 3.7+. Simply place the `AIGameLibrary` folder in your project directory and import it:
+This library requires Python 3.7+. Place the `AIGameLibrary` folder in your project directory and import it:
 
 ```python
 from AIGameLibrary import *
 ```
+
+> [!NOTE]
+> The GitHub repo is named **`AIGamePyLibrary`** but the importable Python **package** is **`AIGameLibrary`** (no "Py"). For convenience there is also a tiny `AIGamePyLibrary` shim package that re-exports everything, so `from AIGamePyLibrary import *` will work too — but `import AIGamePyLibrary as aig` followed by `aig.InitializeDemoDerby(...)` is **still** the canonical wrong pattern because it pretends the helpers are methods on a "sim" object. They aren't; they're free functions that build nodes.
 
 ## Quick Start
 
@@ -36,6 +101,29 @@ SlimeController(moveTo, jumpCondition)
 # Save the AI data to a file
 SaveData("SlimeVolleyball/AIComp_Data/Saves/AIA python.txt", "grid")
 ```
+
+## Marking your bot as LLM-driven
+
+The car / kart Properties node carries an **`isLLM`** flag that is **not exposed in the Unity inspector** — it can only be set by the PyLib compiler. At runtime Unity reads it from the node's **`modifier`** field during `Initialize()`, writes it onto the resulting properties (`KartProperties` / modular car properties), and applies it to the spawned `Player` (`Player.IsLLM = true`).
+
+To set it, **capture the Properties node** returned by any of the helpers and assign its `modifier` after construction. Accepted values: **`"True"` / `"False"`** or **`"1"` / `"0"`** (anything else falls back to `False`).
+
+```python
+from AIGameLibrary import *
+
+# Works for InitializeDemoDerby, InitializeParking, and ConstructModularUniformProperties —
+# they all return the same UniformModularCarProperties node.
+props = InitializeDemoDerby(
+    "MyBot", "United States of America", "Tan",
+    0, 0, "Brown", 0, "Red", "",
+)
+props.data["modifier"] = "True"   # mark this car as LLM-driven
+```
+
+> [!WARNING]
+> There is **no** `modifier_llm=`, `is_llm=`, `llm=`, or `isLLM=` keyword argument on any helper. Setting the flag *only* works by mutating the returned node's `data["modifier"]` after the helper returns. If you forget to capture the return value, you cannot mark the bot as LLM-driven.
+
+`isLLM` is persisted in the saved JSON through the standard `modifier` field, so the graph round-trips through Unity without losing the flag. Equivalent behavior is wired up on the C# side for `ConstructKartProperties` (Kart-style simulations) — same `modifier` accepted values.
 
 ## Core Concepts
 
@@ -608,30 +696,9 @@ Alignment to the stall is encouraged but not required. Colliding with any object
 </details>
 
 <details>
-<summary>Marking the bot as LLM-driven (<code>isLLM</code>)</summary>
+<summary>Marking the bot as LLM-driven</summary>
 
-The Properties node carries an **`isLLM`** flag that is **not exposed in the Unity inspector** - it can only be set by the PyLib compiler. At runtime Unity reads it from the node's `modifier` field during `Initialize()`, writes it onto the resulting properties (`KartProperties` / modular car properties), and applies it to the spawned `Player` (`Player.IsLLM = true`).
-
-To set it, capture the Properties node returned by any of the helpers and assign its `modifier`. Accepted values: **`"True"` / `"False"`** or **`"1"` / `"0"`** (anything else falls back to `False`). `InitializeParking`, `InitializeDemoDerby`, and `ConstructModularUniformProperties` all return the same `UniformModularCarProperties` node, so any of these work:
-
-```python
-from AIGameLibrary import *
-
-props = InitializeDemoDerby(
-    "MyBot", "United States of America", "Tan",
-    0, 0, "Brown", 0, "Red", "",
-)
-props.data["modifier"] = "True"   # mark this car as LLM-driven
-```
-
-```python
-props = ConstructModularUniformProperties(
-    "MyBot", "Canada", "Tan", 0, 0, "Brown", 0, "Blue", "",
-)
-props.data["modifier"] = "True"
-```
-
-`isLLM` is persisted in the saved JSON through the standard `modifier` field, so the graph round-trips through Unity without losing the flag. Equivalent behavior is wired up on the C# side for `ConstructKartProperties` (Kart-style simulations) - same `modifier` accepted values.
+See the top-level [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven) section. The same `props.data["modifier"] = "True"` recipe applies to `InitializeParking`, `InitializeDemoDerby`, and `ConstructModularUniformProperties` — they all return the same `UniformModularCarProperties` node.
 
 </details>
 
@@ -698,7 +765,22 @@ props.data["modifier"] = "True"
 <details>
 <summary>Initialization</summary>
 
-- **`InitializeDemoDerby(...)`** - Same parameters as `InitializeParking`; delegates to it.
+- **`InitializeDemoDerby(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Convenience helper to set all derby car cosmetic options in one call. Same nine **positional** arguments as `InitializeParking`; delegates to it.
+  - Inputs:
+    - String (name tag)
+    - Country (country this character is representing — bot personas like `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"` are valid Country values too)
+    - Color (skin color)
+    - Float (body style: `0` = male, `1` = female; value wraps to prevent errors)
+    - Float (hair style; value wraps to prevent errors)
+    - Color (hair color)
+    - Float (facial hair style; value wraps to prevent errors)
+    - Color (car color)
+    - String (optional image URL to download and apply to the outfit; pass `""` for none)
+  - **Returns** the `UniformModularCarProperties` node — capture it so you can set `props.data["modifier"] = "True"` to mark the bot as LLM-driven (see [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven)).
+  - **Anti-patterns** (these will all fail):
+    - `InitializeDemoDerby(name="X", country="USA")` — there are no kwargs, and `"USA"` is not a valid Country (use `"United States of America"`)
+    - `InitializeDemoDerby(..., modifier_llm=True)` — the LLM flag is set on the returned node, not as a constructor arg
+    - `InitializeDemoDerby(..., save_file="X")` — saving is a separate `SaveData("X", "auto")` call at the end of the script
 
 </details>
 
@@ -711,6 +793,15 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 
 <details>
 <summary>Car queries and automation</summary>
+
+- **Guardrails (common LLM pitfalls)**:
+  - **Transform vs Vector3**: Many helpers output a **Transform** (type `Transform`) which is *not* a Vector3 position. In this library, transforms are represented as `Node` objects and **do not** have Unity-style fields like `.Position` / `.position`.
+  - **How to get a position Vector3 from a Transform**: use **`RelativePosition(transform_node, "Self")`** (returns a `Vector3`).
+  - **Bad (will error)**:
+    - `goal = CarGetPart(0, car).PartTransform.Position`
+  - **Good (same intent)**:
+    - `part = CarGetPart(0, car)`
+    - `goal = RelativePosition(part.PartTransform, "Self")`
 
 - **`DemoDerbyGetTransform(value)`** - `0` self body/controller, `1` fixed reference (inspector), `2` random pathable waypoint.
 
@@ -732,6 +823,58 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 <summary>Unity caveat: ParkingGetFloat / ParkingGetBool in Demo Derby</summary>
 
 Unity’s **Demo Derby Get Float** / **Demo Derby Get Bool** assets still serialize as **`ParkingGetFloat`** and **`ParkingGetBool`**. The current `ParkingGetFloatGate` / `ParkingGetBoolGate` in AIComp expect **parking** (`CarParkingManager`), so they are **not** wired for **`DemoDerbyGameManager`** yet. Python may still emit those nodes for Parking graphs or future Unity builds; for derby logic today prefer **`DemoDerbyGetTransform`**, **`DemoDerbyGetCar`**, **`CarGetPart`**, **`CarInfo`**, **`Autosteer`**, and **`Autothrottle`**.
+
+</details>
+
+<details>
+<summary>Minimal complete Demo Derby example</summary>
+
+This is the smallest end-to-end derby bot. It chases the nearest active car, aims for that car's nearest crucial part (engine / driveshaft / front wheel), commits to the throttle, and brakes if something is right in front of the bumper but the real target is still far away (i.e. it's about to ram a wall). Use this as your starting template — `claude.py`, `grok.py`, `deepseek.py`, and `qwen.py` in the repo are more elaborate variants of the same pattern.
+
+```python
+from AIGameLibrary import *
+
+# 1. Cosmetics + LLM flag (positional args; capture the returned node).
+props = InitializeDemoDerby(
+    "MyBot",                    # name
+    "Gemini",                   # country (LLM persona names are valid)
+    "Tan",                      # skin color
+    0,                          # body style
+    2,                          # hair style
+    "Brown",                    # hair color
+    0,                          # facial hair style
+    "Blue",                     # car color
+    "",                         # custom outfit URL (empty)
+)
+props.data["modifier"] = "True"   # mark this bot as LLM-driven
+
+# 2. Self position (Vector3) for distance checks.
+self_pos = RelativePosition(DemoDerbyGetTransform(0), "Self")
+
+# 3. Pick a target: nearest active opponent, aim at its nearest crucial part.
+target      = DemoDerbyGetCar(7)                     # 7 = nearest active
+target_part = CarGetPart(3, target)                  # 3 = nearest crucial part
+goal        = RelativePosition(target_part.PartTransform, "Self")
+
+# 4. Forward sensor for emergency braking against scenery.
+sensor          = Spherecast(1.2, 12.0)
+_, ray_f, *_    = CarRaycasts(sensor)
+front_hit, front_dist = HitInfo(ray_f)
+
+goal_dist = Distance(self_pos, goal)
+panic     = front_hit & (front_dist < 2.5) & (goal_dist > 10.0)
+brake     = ConditionalSetFloat(panic, 1.0, 0.0)
+
+# 5. Drive: Autosteer / Autothrottle do the heavy lifting.
+ModularUniformController(
+    Autothrottle(goal, 25.0),   # throttle
+    Autosteer(goal),            # steering
+    brake,                      # brake
+)
+
+# 6. Save (without this, nothing is exported).
+SaveData("MyBot", "auto")
+```
 
 </details>
 
