@@ -18,7 +18,7 @@ NODE_SIZES = {
     "DemoDerbyGetTransform": (320, 64),
     "DemoDerbyGetCar": (320, 64),
     "GetCarPart": (320, 64),
-    "CarInfo": (256, 64),
+    "CarInfo": (192, 224),
     "Autosteer": (192, 160),
     "Autothrottle": (192, 160),
     "GetCarFromTransform": (256, 64),
@@ -440,7 +440,12 @@ ports = {
     ],
     "CarInfo": [
         {"id": "Car1", "polarity": 0},
+        {"id": "Transform1", "polarity": 1},
         {"id": "Vector31", "polarity": 1},
+        {"id": "Bool1", "polarity": 1},
+        {"id": "Bool2", "polarity": 1},
+        {"id": "Float1", "polarity": 1},
+        {"id": "Float2", "polarity": 1},
     ],
     "Autosteer": [
         {"id": "Vector31", "polarity": 0},

@@ -741,7 +741,7 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 
 - **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
 
-- **`CarInfo(car)`** - **Car** in, **Vector3** velocity out.
+- **`CarInfo(car)`** - **Car** in. Multi-output helper. Access **`.CarTransform`** (Transform), **`.Velocity`** (Vector3 world velocity), **`.IsAI`** (Bool — LLM / ML-Agent authored), **`.IsImmobile`** (Bool — derby mobility tracker flagged), **`.Health`** (Float — summed damageable part health), and **`.Rank`** (Float — 1-based derby rank, `0` when unknown). Components unpack in declared order: `car_transform, velocity, is_ai, is_immobile, health, rank = CarInfo(car)`.
 
 - **`GetCarFromTransform(transform)`** - Converts a **Transform** (or `GameObject`/`Component` passed through transform nodes) into a **Car** reference (Unity searches on the transform and parents).
 

@@ -1036,6 +1036,70 @@ class GetCarPartComponents:
         return [self.PartTransform, self.HealthPercent][index]
 
 
+class CarInfoComponents:
+    """Multi-output helper for `CarInfo`. Exposes every port on the Unity
+    `ModularCarInfoGate` / `CarInfo` node in the order they are declared on
+    the `CarInfo` NodeTypeDataSO asset.
+
+    Outputs:
+      - `CarTransform` (Transform1): the input car's transform.
+      - `Velocity` (Vector31): world-space linear velocity of the car.
+      - `IsAI` (Bool1): true if the car was authored by AI (LLM or ML-Agent).
+      - `IsImmobile` (Bool2): true if derby mobility tracking has flagged the car as immobile.
+      - `Health` (Float1): summed current health across all non-detached damageable parts.
+      - `Rank` (Float2): 1-based derby rank (1 = best), 0 when unknown.
+    """
+
+    def __init__(self, baseNode: Node):
+        self._baseNode = baseNode
+
+    @property
+    def CarTransform(self) -> Node:
+        return Node(self._baseNode.data, 1)
+
+    @property
+    def Velocity(self) -> Node:
+        return Node(self._baseNode.data, 2)
+
+    @property
+    def IsAI(self) -> Node:
+        return Node(self._baseNode.data, 3)
+
+    @property
+    def IsImmobile(self) -> Node:
+        return Node(self._baseNode.data, 4)
+
+    @property
+    def Health(self) -> Node:
+        return Node(self._baseNode.data, 5)
+
+    @property
+    def Rank(self) -> Node:
+        return Node(self._baseNode.data, 6)
+
+    def __iter__(self):
+        """Allow tuple unpacking in declared asset order (Transform, Velocity, IsAI, IsImmobile, Health, Rank)."""
+        yield self.CarTransform
+        yield self.Velocity
+        yield self.IsAI
+        yield self.IsImmobile
+        yield self.Health
+        yield self.Rank
+
+    def __len__(self):
+        return 6
+
+    def __getitem__(self, index):
+        return [
+            self.CarTransform,
+            self.Velocity,
+            self.IsAI,
+            self.IsImmobile,
+            self.Health,
+            self.Rank,
+        ][index]
+
+
 @cache
 def ModularUniformController(throttle: Node, steering: Node, brake: Node):
     """Destination node: sends throttle/steering/brake to the modular car (Parking and Demo Derby)."""
@@ -1119,11 +1183,14 @@ def CarGetPart(mode: int, car: Node) -> GetCarPartComponents:
 
 
 @cache
-def CarInfo(car: Node):
-    """World velocity (`Vector3`) of the given car."""
+def CarInfo(car: Node) -> CarInfoComponents:
+    """Multi-output info about a car. Access `.CarTransform` (Transform), `.Velocity`
+    (Vector3 world velocity), `.IsAI` (Bool — LLM / ML-Agent authored), `.IsImmobile`
+    (Bool — derby mobility tracker flagged), `.Health` (Float — summed damageable part
+    health), and `.Rank` (Float — 1-based derby rank, 0 when unknown)."""
     baseNode = AddNode("CarInfo")
     connectInputNodes(baseNode, ["Car"], [car])
-    return Node(baseNode.data, 1)
+    return CarInfoComponents(baseNode)
 
 
 @cache
