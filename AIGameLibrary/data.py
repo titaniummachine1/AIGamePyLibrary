@@ -21,6 +21,7 @@ NODE_SIZES = {
     "CarInfo": (256, 64),
     "Autosteer": (192, 160),
     "Autothrottle": (192, 160),
+    "GetCarFromTransform": (256, 64),
     "ConstructSurvivalProperties": (192, 288),
     "ConstructVector3": (256, 160),
     "CompareFloats": (256, 160),
@@ -129,6 +130,7 @@ outputs = {
     "CarInfo": "Vector3",
     "Autosteer": float,
     "Autothrottle": float,
+    "GetCarFromTransform": "Car",
 }
 
 ports = {
@@ -448,6 +450,10 @@ ports = {
         {"id": "Vector31", "polarity": 0},
         {"id": "Float1", "polarity": 0},
         {"id": "Float1", "polarity": 1},
+    ],
+    "GetCarFromTransform": [
+        {"id": "Transform1", "polarity": 0},
+        {"id": "Car1", "polarity": 1},
     ],
 }
 

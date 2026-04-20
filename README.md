@@ -608,6 +608,38 @@ Alignment to the stall is encouraged but not required. Colliding with any object
 </details>
 
 <details>
+<summary>Marking the bot as LLM-driven (<code>isLLM</code>)</summary>
+
+The Properties node carries an **`isLLM`** flag that is **not exposed in the Unity inspector** - it can only be set by the PyLib compiler. At runtime Unity reads it from the node's `modifier` field during `Initialize()`, writes it onto the resulting properties (`KartProperties` / modular car properties), and applies it to the spawned `Player` (`Player.IsLLM = true`).
+
+To set it, write to the returned node's `modifier` right after constructing the Properties node. Accepted values: **`"True"` / `"False"`** or **`"1"` / `"0"`** (anything else falls back to `False`).
+
+```python
+from AIGameLibrary import *
+
+props = ConstructModularUniformProperties(
+    "MyBot", "United States of America", "Tan",
+    0, 0, "Brown", 0, "Red", "",
+)
+props.data["modifier"] = "True"   # mark this car as LLM-driven
+```
+
+If you prefer the convenience helper, skip `InitializeParking` / `InitializeDemoDerby` (they don't return the Properties node) and call `ConstructModularUniformProperties` directly so you can capture the node and set its modifier:
+
+```python
+props = ConstructModularUniformProperties(
+    "MyBot", "Canada", "Tan", 0, 0, "Brown", 0, "Blue", "",
+)
+props.data["modifier"] = "True"
+```
+
+> Caveat: the cache key includes argument identity (raw values vs pre-wrapped `Node`s). `InitializeParking` wraps the cosmetics with `String(...)`, `Country(...)`, etc. before forwarding them, so calling `ConstructModularUniformProperties(...)` afterwards with raw values would create a **second** Properties node instead of reusing the first. Construct the Properties node yourself when you need to flip `isLLM`.
+
+`isLLM` is persisted in the saved JSON through the standard `modifier` field, so the graph round-trips through Unity without losing the flag. Equivalent behavior is wired up on the C# side for `ConstructKartProperties` (Kart-style simulations) - same `modifier` accepted values.
+
+</details>
+
+<details>
 <summary>Sensors & Raycast Results</summary>
 
 - **`Spherecast(radius, distance)`** - Defines the radius/size and travel distance used for spherecast sensors
@@ -691,6 +723,8 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 - **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
 
 - **`CarInfo(car)`** - **Car** in, **Vector3** velocity out.
+
+- **`GetCarFromTransform(transform)`** - Converts a **Transform** (or `GameObject`/`Component` passed through transform nodes) into a **Car** reference (Unity searches on the transform and parents).
 
 - **`Autosteer(goal)`** - **Vector3** target, **Float** steering out.
 

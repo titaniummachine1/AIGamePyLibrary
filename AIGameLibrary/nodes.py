@@ -1143,6 +1143,14 @@ def Autothrottle(goal: Node, desired_speed: Node):
 
 
 @cache
+def GetCarFromTransform(transform: Node):
+    """Resolves a car controller from an input Transform (Unity searches on the transform and parents)."""
+    baseNode = AddNode("GetCarFromTransform")
+    connectInputNodes(baseNode, ["Transform"], [transform])
+    return baseNode
+
+
+@cache
 def ParkingGetTransform(value: int):
     """Selection of Transform options for the parking simulation."""
     return AddNode("ParkingGetTransform", str(value))
