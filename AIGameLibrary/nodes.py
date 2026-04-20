@@ -261,7 +261,7 @@ def InitializeDemoDerby(
     car_color: colorNames,
     custom_texture: str,
 ):
-    """Initialize modular car and driver cosmetics for the Demo Derby simulation (delegates to `InitializeParking`)."""
+    """Initialize modular car and driver cosmetics for the Demo Derby simulation (delegates to `InitializeParking`). Returns the `UniformModularCarProperties` node so callers can set `node.data["modifier"] = "True"` to mark the car as LLM-driven."""
     return InitializeParking(
         name,
         country,
@@ -287,8 +287,8 @@ def InitializeParking(
     car_color: colorNames,
     custom_texture: str,
 ):
-    """Initialize parking car and driver cosmetics for the Parking simulation."""
-    ConstructModularUniformProperties(
+    """Initialize parking car and driver cosmetics for the Parking simulation. Returns the `UniformModularCarProperties` node so callers can set `node.data["modifier"] = "True"` to mark the car as LLM-driven."""
+    return ConstructModularUniformProperties(
         String(name),
         Country(country),
         Color(skin_color),
