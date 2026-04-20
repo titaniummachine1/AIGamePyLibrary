@@ -654,11 +654,11 @@ See the top-level [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driv
     - `RaycastHit1` forward left
     - `RaycastHit2` forward
     - `RaycastHit3` forward right
-    - `RaycastHit4` rear left
-    - `RaycastHit5` rear
-    - `RaycastHit6` rear right
-    - `RaycastHit7` additional ray output
-    - `RaycastHit8` additional ray output
+    - `RaycastHit4` left
+    - `RaycastHit5` right
+    - `RaycastHit6` rear left
+    - `RaycastHit7` rear
+    - `RaycastHit8` rear right
 
 - **`HitInfo(raycastHit)`** - Extracts collision info from a `RaycastHit`
   - Inputs: RaycastHit (connect one of `RaycastHit1`..`RaycastHit8`)
