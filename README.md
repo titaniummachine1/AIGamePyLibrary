@@ -741,7 +741,11 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 
 - **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
 
+  > ⚠️ **Broken accessor — do not feed `.HealthPercent` into another node yet.** Only **`.PartTransform`** currently wires up correctly. Passing `CarGetPart(...).HealthPercent` to any Float consumer (`ConditionalSetFloat`, `CompareFloats`, `ClampFloat`, arithmetic, `TimePlot`, etc.) raises **`KeyError: 'Float2'`** in `ConnectPorts` — the wrapper asks for port `Float2` but the Unity node only publishes `Float1`. See [Multi-output component accessor bug](#multi-output-component-accessor-bug) below.
+
 - **`CarInfo(car)`** - **Car** in. Multi-output helper. Access **`.CarTransform`** (Transform), **`.Velocity`** (Vector3 world velocity), **`.IsAI`** (Bool — LLM / ML-Agent authored), **`.IsImmobile`** (Bool — derby mobility tracker flagged), **`.Health`** (Float — summed damageable part health), and **`.Rank`** (Float — 1-based derby rank, `0` when unknown). Components unpack in declared order: `car_transform, velocity, is_ai, is_immobile, health, rank = CarInfo(car)`.
+
+  > ⚠️ **Broken accessors — do not feed `.Velocity`, `.IsAI`, `.IsImmobile`, `.Health`, or `.Rank` into another node yet.** Only **`.CarTransform`** currently wires up correctly. Using any of the others (including via tuple unpacking, since the unpacked node is the same object) raises **`KeyError: 'Vector32'`** / **`'Bool3'`** / **`'Bool4'`** / **`'Float5'`** / **`'Float6'`** in `ConnectPorts`. The canonical failure is `Magnitude(CarInfo(car).Velocity)` → `KeyError: 'Vector32'`. See [Multi-output component accessor bug](#multi-output-component-accessor-bug) below.
 
 - **`GetCarFromTransform(transform)`** - Converts a **Transform** (or `GameObject`/`Component` passed through transform nodes) into a **Car** reference (Unity searches on the transform and parents).
 
@@ -761,7 +765,7 @@ Unity’s **Demo Derby Get Float** / **Demo Derby Get Bool** assets still serial
 <details>
 <summary>Minimal complete Demo Derby example</summary>
 
-This is the smallest end-to-end derby bot. It chases the nearest active car, aims for that car's nearest crucial part (engine / driveshaft / front wheel), commits to the throttle, and brakes if something is right in front of the bumper but the real target is still far away (i.e. it's about to ram a wall). Use this as your starting template — `claude.py`, `grok.py`, `deepseek.py`, and `qwen.py` in the repo are more elaborate variants of the same pattern.
+This is the smallest end-to-end derby bot. It chases the nearest active car, aims for that car's nearest crucial part (engine / driveshaft / front wheel), commits to the throttle, and brakes if something is right in front of the bumper but the real target is still far away (i.e. it's about to ram a wall). **Use this as your starting template.** `Grok.py` demonstrates a working sensor-based "heavily blocked" unstick (avoiding the `CarInfo.IsImmobile` → `KeyError: 'Bool4'` bug that previously affected it and `Claude.py`); the other example bots follow the same safe pattern.
 
 ```python
 from AIGameLibrary import *
@@ -975,6 +979,17 @@ The `SaveData` function generates a JSON file that can be imported into Unity fo
 
 This section consolidates everything an LLM (or anyone new to the library) needs to avoid the most common mistakes. Read it in full before writing a script.
 
+> 🛑 **Before you submit a bot, scan it for these six accessor patterns and delete every one of them** — they all currently crash in `ConnectPorts` with a `KeyError` and are the #1 thing we keep seeing LLMs burn on:
+>
+> - `CarInfo(...).Velocity` → `KeyError: 'Vector32'`
+> - `CarInfo(...).IsAI` → `KeyError: 'Bool3'`
+> - `CarInfo(...).IsImmobile` → `KeyError: 'Bool4'`
+> - `CarInfo(...).Health` → `KeyError: 'Float5'`
+> - `CarInfo(...).Rank` → `KeyError: 'Float6'`
+> - `CarGetPart(...).HealthPercent` → `KeyError: 'Float2'`
+>
+> That includes the sneaky **tuple-unpacking** form (`car_tf, velocity, is_ai, is_immobile, health, rank = CarInfo(car)` — the unpacked vars are the same broken nodes) and any arithmetic/comparison that funnels them into another node (`Magnitude(v)`, `v * dt`, `health < 50`, `ConditionalSetFloat(is_immobile, ...)`, etc.). Only **`.CarTransform`** and **`.PartTransform`** are safe. See **[Multi-output component accessor bug](#multi-output-component-accessor-bug)** for replacements.
+
 ## The mental model
 
 This is a **graph compiler**, not a runtime game SDK. Your script does **not** drive the car/slime/Aialander frame-by-frame. It builds a static node graph **once**, and `SaveData(...)` writes that graph to JSON. Unity loads the JSON and re-evaluates the graph every tick.
@@ -988,6 +1003,24 @@ Concretely:
 - The package is **`AIGameLibrary`** (the GitHub repo is `AIGamePyLibrary` — note the extra "Py"). A shim package re-exports under the repo name, but the helpers are free functions, not methods on an object.
 - The LLM-driven flag is set on the **returned** Properties node: `props.data["modifier"] = "True"`. There is **no** `modifier_llm=`, `is_llm=`, `llm=`, or `isLLM=` keyword argument on any helper.
 - Your script must end with a call to **`SaveData("YourBot", "auto")`** or nothing is exported.
+
+## 🚨 CRITICAL: Multi-output Bug (KeyError: 'Bool4', 'Vector32', etc.)
+
+**The most common error LLMs make** when writing Demo Derby bots is using `CarInfo(...).IsImmobile`, `.Velocity`, `.Health`, `.Rank`, or `CarGetPart(...).HealthPercent` in `ConditionalSetFloat`, comparisons, arithmetic, etc.
+
+```python
+# These ALL fail with KeyError in ConnectPorts:
+is_stuck = CarInfo(self_car).IsImmobile                    # → 'Bool4'
+throttle = ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)
+# or: Magnitude(CarInfo(car).Velocity) → 'Vector32'
+```
+
+**Fix:** 
+- Only use `.CarTransform` and `.PartTransform` from these helpers.
+- For stuck detection use **forward raycast sensors** (`HitInfo(ray_f)`) as shown in `Grok.py`.
+- See full details in [Multi-output component accessor bug](#multi-output-component-accessor-bug) below.
+
+**`Grok.py` (and `Claude.py`) have been updated with a working sensor-based unstick workaround.** Older versions will hit this exact error.
 
 ## Common mistakes
 
@@ -1007,6 +1040,7 @@ These are the exact mistakes we keep seeing. If your draft does any of them, rew
 | `math.atan2(...)`, `math.sqrt(...)`, `math.degrees(...)` | `Operation(x)` (`atan`, `sqrt`, etc.), `Magnitude`, `Distance`, `DotProduct`, `Normalize`, or just rely on `Autosteer(goal)` / `Autothrottle(goal, speed)` for car driving |
 | 2D thinking: `pos[0]`, `pos[1]`, `heading` in degrees | Everything is 3D `Vector3`. Access components via `vec.x`, `vec.y`, `vec.z`. There is no scalar "heading". Use `Autosteer` for car aim. |
 | `transform.Position` / `transform.position` on a Transform node | `RelativePosition(transform_node, "Self")` returns the world `Vector3` |
+| `Magnitude(CarInfo(car).Velocity)`, `ClampFloat(CarInfo(car).Health, ...)`, `pos + CarInfo(car).Velocity * dt`, `ConditionalSetFloat(CarGetPart(3, car).HealthPercent < 50, ...)` | **Broken in the current library.** Only `.CarTransform` (on `CarInfo`) and `.PartTransform` (on `CarGetPart`) can be passed to another node — everything else raises `KeyError: 'Vector32'` / `'Bool3'` / `'Bool4'` / `'Float5'` / `'Float6'` / `'Float2'` in `ConnectPorts`. Plan your bot around `Autosteer` / `Autothrottle` + `DemoDerbyGetCar` / `CarGetPart(3, ...).PartTransform` + raycast sensors. See **[Multi-output component accessor bug](#multi-output-component-accessor-bug)**. |
 | Forget to call `SaveData(...)` at the end | Always finish with `SaveData("YourBotName", "auto")` — without this the script does literally nothing |
 
 ## Side-by-side example
@@ -1043,4 +1077,101 @@ ModularUniformController(Autothrottle(goal, 25.0), Autosteer(goal), Float(0.0))
 SaveData("Gemini", "auto")
 ```
 
-For a slightly fuller derby starter (with sensors and a panic brake) see [Minimal complete Demo Derby example](#demo-derby-simulation) inside the Demo Derby section. For more elaborate strategies see `claude.py`, `grok.py`, `deepseek.py`, and `qwen.py` in the repo root.
+For a slightly fuller derby starter (with sensors and a panic brake) see the **[Minimal complete Demo Derby example](#demo-derby-simulation)**. `Grok.py` now demonstrates a safe, aggressive ramming strategy with sensor-based unsticking that avoids the `KeyError: 'Bool4'` (see the new warning at the top of Notes for LLM Authors).
+
+## Multi-output component accessor bug
+
+> This is a **known library bug**, not an LLM mistake. It's documented here so LLM authors stop writing scripts that hit it.
+
+### What breaks
+
+Any of these will raise a `KeyError` inside `AIGameLibrary/lib.py → ConnectPorts` at compile time (when `SaveData(...)` runs, or earlier if the consuming node is constructed first):
+
+```python
+# --- all of these crash ---
+self_info = CarInfo(DemoDerbyGetCar(1))
+self_speed = Magnitude(self_info.Velocity)                          # KeyError: 'Vector32'
+is_alive   = self_info.Health > 0                                   # KeyError: 'Float5'
+if_imm     = ConditionalSetFloat(self_info.IsImmobile, -1.0, 1.0)   # KeyError: 'Bool4'
+rank_ok    = self_info.Rank < 3                                     # KeyError: 'Float6'
+
+# unpacking doesn't save you — the unpacked Nodes are the same broken objects:
+car_tf, velocity, is_ai, is_immobile, health, rank = CarInfo(car)
+Magnitude(velocity)                                                 # still KeyError: 'Vector32'
+
+# GetCarPart has the same shape of bug:
+part = CarGetPart(3, target)
+weak = part.HealthPercent < 30                                      # KeyError: 'Float2'
+```
+
+### Why it breaks
+
+`CarInfoComponents` and `GetCarPartComponents` store each accessor's `outputIndex` as its **global position** in the node's port list, but `ConnectPorts` builds the Unity port name as `f"{inputType}{outputIndex}"` — which must be the **type-local** port number. Unity's `CarInfo` node publishes `Transform1, Vector31, Bool1, Bool2, Float1, Float2` (type-local), but the Python wrappers ask for `Transform1, Vector32, Bool3, Bool4, Float5, Float6`. Only the first port of each multi-output node (`Transform1`, position 1) lines up by accident.
+
+For reference, here's what each accessor currently does and what port id it asks for:
+
+| Accessor | `outputIndex` | Port name built | Actual Unity port | Status |
+|---|---|---|---|---|
+| `CarInfo(...).CarTransform` | 1 | `Transform1` | `Transform1` | ✅ works |
+| `CarInfo(...).Velocity` | 2 | `Vector32` | `Vector31` | ❌ `KeyError` |
+| `CarInfo(...).IsAI` | 3 | `Bool3` | `Bool1` | ❌ `KeyError` |
+| `CarInfo(...).IsImmobile` | 4 | `Bool4` | `Bool2` | ❌ `KeyError` |
+| `CarInfo(...).Health` | 5 | `Float5` | `Float1` | ❌ `KeyError` |
+| `CarInfo(...).Rank` | 6 | `Float6` | `Float2` | ❌ `KeyError` |
+| `CarGetPart(...).PartTransform` | 1 | `Transform1` | `Transform1` | ✅ works |
+| `CarGetPart(...).HealthPercent` | 2 | `Float2` | `Float1` | ❌ `KeyError` |
+
+`HitInfoComponents` sidesteps this by storing `outputIndex=1` for **both** `WasHit` and `Distance` and instead setting `node.type` to `bool` / `float` so the consumer prefixes the right port type — `CarInfoComponents` and `GetCarPartComponents` would need the same kind of fix.
+
+### What to do until it's fixed
+
+LLM authors: **plan your bot so you never pass the broken accessors into another node.** In practice that's easier than it sounds because the library already gives you graph-side alternatives:
+
+- **Don't velocity-lead the aim.** Skip `target_pos + target_vel * dt`. Let **`Autosteer(goal)`** and **`Autothrottle(goal, speed)`** handle aim + speed management — they already compensate for relative motion and obstacles internally.
+- **Don't check self-speed via `Magnitude(CarInfo(...).Velocity)`.** For stuck-recovery, gate on **`CarInfo(self).IsImmobile`**… wait, that's broken too — use `Spherecast` + `CarRaycasts` + `HitInfo` to detect "nose blocked" instead, and flip to reverse on that signal.
+- **Don't branch on opponent `Health` or `Rank` from `CarInfo`.** Use the built-in target selectors that already bake those in: `DemoDerbyGetCar(4)` (lowest health), `DemoDerbyGetCar(7)` (nearest active), `DemoDerbyGetCar(11)` (nearest with disabled steering), etc. Pick the target by mode, then aim at `CarGetPart(3, target).PartTransform` (nearest crucial part).
+- **Don't branch on `CarGetPart(...).HealthPercent`.** `CarGetPart` mode `2` is "weakest part" — use that part's `PartTransform` directly and skip the health comparison.
+- **Do keep using `.CarTransform` and `.PartTransform`.** Both resolve to `Transform1` (index 1) and compile correctly — pipe them through `RelativePosition(..., "Self")` to get a world `Vector3`.
+
+#### Substitution cheat sheet
+
+If you find yourself reaching for one of the broken accessors, swap in the pattern on the right instead. Every example on the right compiles against the current library.
+
+| Broken pattern (crashes in `ConnectPorts`) | Safe replacement |
+|---|---|
+| `speed = Magnitude(CarInfo(self).Velocity)` — reason about own speed | **Skip it.** `Autothrottle(goal, desired_speed)` already manages cruise speed for you. If you absolutely need a "too slow" signal, use `HitInfo(ray_forward)` + `HitInfo(ray_back)` proximity — if the nose is pinned and the rear is clear, you're stuck. |
+| `lead = target_pos + CarInfo(target).Velocity * dt` — predict the target | **Skip it.** `Autosteer(goal)` already tracks a moving `Vector3` goal reasonably well. |
+| `is_stuck = CarInfo(self).IsImmobile` (then `ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)`) | `front_hit, front_dist = HitInfo(ray_forward)`<br>`rear_hit, rear_dist = HitInfo(ray_back)`<br>`nose_wedged = front_hit & (front_dist < 2.0) & (goal_dist > 6.0)`<br>`rear_clear  = ~rear_hit \| (rear_dist > 4.0)`<br>`reverse_mode = nose_wedged & rear_clear` |
+| `finish_them = CarInfo(target).Health < 50` | **Pre-select a weak target instead of branching on health.** `target = DemoDerbyGetCar(4)` (lowest health) or `DemoDerbyGetCar(11)` (nearest with disabled steering). |
+| `winning = CarInfo(self).Rank < 3` | **No safe replacement right now.** Drop the rank-based branching — the built-in target selectors already keep you aggressive. |
+| `is_ai = CarInfo(target).IsAI` (avoid human targets) | **No safe replacement right now.** Drop the filter — the derby is set up to only pit eligible cars against each other. |
+| `weak = CarGetPart(3, target).HealthPercent < 30` | `target_part = CarGetPart(2, target)  # mode 2 = weakest part`<br>`goal = RelativePosition(target_part.PartTransform, "Self")` |
+
+#### Worked example: "`is_stuck = CarInfo(self).IsImmobile`" done right
+
+This is the exact pattern that crashed the reference `claude.py` with `KeyError: 'Bool4'`. Here's the broken version (do not ship) and the raycast-only version (compiles, does the same job):
+
+```python
+# ❌ CRASHES at SaveData time with KeyError: 'Bool4'
+self_info    = CarInfo(DemoDerbyGetCar(1))
+is_stuck     = self_info.IsImmobile                     # outputIndex=4 -> asks for Bool4
+throttle_fwd = Autothrottle(goal, 28.0)
+throttle     = ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)  # boom
+```
+
+```python
+# ✅ Same intent, raycast-only, compiles today
+sensor = Spherecast(1.2, 12.0)
+ray_fl, ray_f, ray_fr, ray_l, ray_r, ray_bl, ray_b, ray_br = CarRaycasts(sensor)
+front_hit, front_dist = HitInfo(ray_f)
+rear_hit,  rear_dist  = HitInfo(ray_b)
+
+nose_wedged  = front_hit & (front_dist < 2.0) & (goal_dist > 6.0)
+rear_clear   = ~rear_hit | (rear_dist > 4.0)
+reverse_mode = nose_wedged & rear_clear
+
+throttle_fwd = Autothrottle(goal, 28.0)
+throttle     = ConditionalSetFloat(reverse_mode, -1.0, throttle_fwd)
+```
+
+Any bot that follows the [Minimal complete Demo Derby example](#demo-derby-simulation) pattern (target car → nearest crucial part → `Autosteer` + `Autothrottle` + a forward raycast for panic-brake, **no `CarInfo` component reads other than `.CarTransform`**) avoids this bug entirely.
