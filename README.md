@@ -737,7 +737,19 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 
 - **`DemoDerbyGetTransform(value)`** - `0` self body/controller, `1` fixed reference (inspector), `2` random pathable waypoint.
 
-- **`DemoDerbyGetCar(mode, index_float=None)`** - Returns a **Car** reference. Use **`index_float`** when `mode` is **`0`** (by index, wrapped to vehicle count). Modes **`0`–`12`**: by index; self; nearest / furthest car; lowest / highest health; last damaged; nearest/furthest active; nearest/furthest disabled; nearest/furthest with disabled steering (rear may still drive).
+- **`DemoDerbyGetCar(mode, index_float=None)`** - Returns a **Car** reference. Pass **`index_float`** when `mode` is **`0`** (by index, wrapped to vehicle count) or **`1`** (by rank, wrapped to ranked-vehicle count; ranking = `DamageDealt` desc, then `HealthNormalized` desc). Modes **`0`–`26`** (match `DemoDerbyGetCarGate.cs`):
+    - **`0`** by index · **`1`** by rank · **`2`** self
+    - **`3`** nearest car · **`4`** furthest car
+    - **`5`** lowest health car · **`6`** highest health car
+    - **`7`** last damaged car
+    - **`8`** nearest active · **`9`** furthest active
+    - **`10`** nearest disabled · **`11`** furthest disabled
+    - **`12`** nearest with disabled steering (rear may still drive) · **`13`** furthest with disabled steering
+    - **`14`** nearest AI-authored (active) · **`15`** lowest health AI · **`16`** highest health AI
+    - **`17`** nearest human-authored (active) · **`18`** lowest health human · **`19`** highest health human
+    - **`20`** highest ranked · **`21`** lowest ranked · **`22`** nearest ranked (rank neighbor of self)
+    - **`23`** highest ranked (not immobilized) · **`24`** highest ranked (immobilized)
+    - **`25`** lowest ranked (not immobilized) · **`26`** lowest ranked (immobilized)
 
 - **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
 
@@ -788,7 +800,7 @@ props.data["modifier"] = "True"   # mark this bot as LLM-driven
 self_pos = RelativePosition(DemoDerbyGetTransform(0), "Self")
 
 # 3. Pick a target: nearest active opponent, aim at its nearest crucial part.
-target      = DemoDerbyGetCar(7)                     # 7 = nearest active
+target      = DemoDerbyGetCar(8)                     # 8 = nearest active
 target_part = CarGetPart(3, target)                  # 3 = nearest crucial part
 goal        = RelativePosition(target_part.PartTransform, "Self")
 
@@ -1036,7 +1048,7 @@ These are the exact mistakes we keep seeing. If your draft does any of them, rew
 | `while sim.is_active(): sim.set_controls(...)` style runtime loop | Build the graph once. Unity runs it every tick. There is no loop in your script. |
 | `sim.get_self_data()`, `sim.get_opponents()`, `sim.set_controls()`, `sim.update()`, `sim.is_active()` | None of these exist. Use `DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarInfo`, `CarRaycasts`, `ModularUniformController`, etc. |
 | `if dist < 50: throttle = 1.0 else: throttle = 0.5` | `throttle = ConditionalSetFloat(dist < 50, 1.0, 0.5)` |
-| `min(opponents, key=lambda o: ...)` / iterating Python lists of game entities | There is no Python-side list of opponents. Use selector nodes like `DemoDerbyGetCar(7)` (nearest active), `CarGetPart(3, car)` (nearest crucial part), `SurvivalGetTransform(3)` (player nearest), etc. |
+| `min(opponents, key=lambda o: ...)` / iterating Python lists of game entities | There is no Python-side list of opponents. Use selector nodes like `DemoDerbyGetCar(8)` (nearest active), `CarGetPart(3, car)` (nearest crucial part), `SurvivalGetTransform(3)` (player nearest), etc. |
 | `math.atan2(...)`, `math.sqrt(...)`, `math.degrees(...)` | `Operation(x)` (`atan`, `sqrt`, etc.), `Magnitude`, `Distance`, `DotProduct`, `Normalize`, or just rely on `Autosteer(goal)` / `Autothrottle(goal, speed)` for car driving |
 | 2D thinking: `pos[0]`, `pos[1]`, `heading` in degrees | Everything is 3D `Vector3`. Access components via `vec.x`, `vec.y`, `vec.z`. There is no scalar "heading". Use `Autosteer` for car aim. |
 | `transform.Position` / `transform.position` on a Transform node | `RelativePosition(transform_node, "Self")` returns the world `Vector3` |
@@ -1070,7 +1082,7 @@ props = InitializeDemoDerby(
 props.data["modifier"] = "True"   # mark as LLM-driven (see "Marking your bot as LLM-driven")
 
 self_pos = RelativePosition(DemoDerbyGetTransform(0), "Self")
-target   = DemoDerbyGetCar(7)                                 # nearest active car
+target   = DemoDerbyGetCar(8)                                 # nearest active car
 goal     = RelativePosition(CarGetPart(3, target).PartTransform, "Self")
 
 ModularUniformController(Autothrottle(goal, 25.0), Autosteer(goal), Float(0.0))
@@ -1089,7 +1101,7 @@ Any of these will raise a `KeyError` inside `AIGameLibrary/lib.py → ConnectPor
 
 ```python
 # --- all of these crash ---
-self_info = CarInfo(DemoDerbyGetCar(1))
+self_info = CarInfo(DemoDerbyGetCar(2))
 self_speed = Magnitude(self_info.Velocity)                          # KeyError: 'Vector32'
 is_alive   = self_info.Health > 0                                   # KeyError: 'Float5'
 if_imm     = ConditionalSetFloat(self_info.IsImmobile, -1.0, 1.0)   # KeyError: 'Bool4'
@@ -1129,7 +1141,7 @@ LLM authors: **plan your bot so you never pass the broken accessors into another
 
 - **Don't velocity-lead the aim.** Skip `target_pos + target_vel * dt`. Let **`Autosteer(goal)`** and **`Autothrottle(goal, speed)`** handle aim + speed management — they already compensate for relative motion and obstacles internally.
 - **Don't check self-speed via `Magnitude(CarInfo(...).Velocity)`.** For stuck-recovery, gate on **`CarInfo(self).IsImmobile`**… wait, that's broken too — use `Spherecast` + `CarRaycasts` + `HitInfo` to detect "nose blocked" instead, and flip to reverse on that signal.
-- **Don't branch on opponent `Health` or `Rank` from `CarInfo`.** Use the built-in target selectors that already bake those in: `DemoDerbyGetCar(4)` (lowest health), `DemoDerbyGetCar(7)` (nearest active), `DemoDerbyGetCar(11)` (nearest with disabled steering), etc. Pick the target by mode, then aim at `CarGetPart(3, target).PartTransform` (nearest crucial part).
+- **Don't branch on opponent `Health` or `Rank` from `CarInfo`.** Use the built-in target selectors that already bake those in: `DemoDerbyGetCar(5)` (lowest health), `DemoDerbyGetCar(8)` (nearest active), `DemoDerbyGetCar(12)` (nearest with disabled steering), `DemoDerbyGetCar(20)` (highest ranked), `DemoDerbyGetCar(21)` (lowest ranked), etc. Pick the target by mode, then aim at `CarGetPart(3, target).PartTransform` (nearest crucial part).
 - **Don't branch on `CarGetPart(...).HealthPercent`.** `CarGetPart` mode `2` is "weakest part" — use that part's `PartTransform` directly and skip the health comparison.
 - **Do keep using `.CarTransform` and `.PartTransform`.** Both resolve to `Transform1` (index 1) and compile correctly — pipe them through `RelativePosition(..., "Self")` to get a world `Vector3`.
 
@@ -1142,7 +1154,7 @@ If you find yourself reaching for one of the broken accessors, swap in the patte
 | `speed = Magnitude(CarInfo(self).Velocity)` — reason about own speed | **Skip it.** `Autothrottle(goal, desired_speed)` already manages cruise speed for you. If you absolutely need a "too slow" signal, use `HitInfo(ray_forward)` + `HitInfo(ray_back)` proximity — if the nose is pinned and the rear is clear, you're stuck. |
 | `lead = target_pos + CarInfo(target).Velocity * dt` — predict the target | **Skip it.** `Autosteer(goal)` already tracks a moving `Vector3` goal reasonably well. |
 | `is_stuck = CarInfo(self).IsImmobile` (then `ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)`) | `front_hit, front_dist = HitInfo(ray_forward)`<br>`rear_hit, rear_dist = HitInfo(ray_back)`<br>`nose_wedged = front_hit & (front_dist < 2.0) & (goal_dist > 6.0)`<br>`rear_clear  = ~rear_hit \| (rear_dist > 4.0)`<br>`reverse_mode = nose_wedged & rear_clear` |
-| `finish_them = CarInfo(target).Health < 50` | **Pre-select a weak target instead of branching on health.** `target = DemoDerbyGetCar(4)` (lowest health) or `DemoDerbyGetCar(11)` (nearest with disabled steering). |
+| `finish_them = CarInfo(target).Health < 50` | **Pre-select a weak target instead of branching on health.** `target = DemoDerbyGetCar(5)` (lowest health) or `DemoDerbyGetCar(12)` (nearest with disabled steering). |
 | `winning = CarInfo(self).Rank < 3` | **No safe replacement right now.** Drop the rank-based branching — the built-in target selectors already keep you aggressive. |
 | `is_ai = CarInfo(target).IsAI` (avoid human targets) | **No safe replacement right now.** Drop the filter — the derby is set up to only pit eligible cars against each other. |
 | `weak = CarGetPart(3, target).HealthPercent < 30` | `target_part = CarGetPart(2, target)  # mode 2 = weakest part`<br>`goal = RelativePosition(target_part.PartTransform, "Self")` |
@@ -1153,7 +1165,7 @@ This is the exact pattern that crashed the reference `claude.py` with `KeyError:
 
 ```python
 # ❌ CRASHES at SaveData time with KeyError: 'Bool4'
-self_info    = CarInfo(DemoDerbyGetCar(1))
+self_info    = CarInfo(DemoDerbyGetCar(2))
 is_stuck     = self_info.IsImmobile                     # outputIndex=4 -> asks for Bool4
 throttle_fwd = Autothrottle(goal, 28.0)
 throttle     = ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)  # boom

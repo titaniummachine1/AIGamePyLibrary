@@ -1167,7 +1167,41 @@ def DemoDerbyGetTransform(value: int):
 
 @cache
 def DemoDerbyGetCar(mode: int, index_float: Node | None = None):
-    """Demo Derby: outputs a car reference by dropdown mode (`0`..`12`); pass `index_float` when `mode` is `0` (by index, wrapped)."""
+    """Demo Derby: outputs a car reference by dropdown `mode` (`0`..`26`).
+
+    Pass `index_float` when `mode` is `0` (by index, wrapped to vehicle count)
+    or `1` (by rank, wrapped to ranked-vehicle count; ranking = DamageDealt desc,
+    then HealthNormalized desc). `index_float` is ignored for all other modes.
+
+    Mode reference (mirrors `DemoDerbyGetCarGate.cs`):
+        0  By index (uses `index_float`)
+        1  By rank (uses `index_float`)
+        2  Self
+        3  Nearest car
+        4  Furthest car
+        5  Lowest health car
+        6  Highest health car
+        7  Last damaged car
+        8  Nearest active car
+        9  Furthest active car
+        10 Nearest disabled car
+        11 Furthest disabled car
+        12 Nearest car with disabled steering (rear may still drive)
+        13 Furthest car with disabled steering (rear may still drive)
+        14 Nearest AI-Authored (active)
+        15 Lowest health AI-Authored (active)
+        16 Highest health AI-Authored (active)
+        17 Nearest Human-Authored (active)
+        18 Lowest health Human-Authored (active)
+        19 Highest health Human-Authored (active)
+        20 Highest ranked car
+        21 Lowest ranked car
+        22 Nearest ranked car (rank neighbor of self)
+        23 Highest ranked (not immobilized)
+        24 Highest ranked (immobilized)
+        25 Lowest ranked (not immobilized)
+        26 Lowest ranked (immobilized)
+    """
     baseNode = AddNode("DemoDerbyGetCar", str(mode))
     if index_float is not None:
         connectInputNodes(baseNode, ["Float"], [index_float])
