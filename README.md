@@ -6,33 +6,38 @@ A Python library for creating AI bots for AIA's game collection. This library al
 
 ## Installation
 
-This library requires Python 3.7+. Place the `AIGameLibrary` folder in your project directory and import it:
+This library requires Python 3.7+. Place the `AIGamePyLibrary` package folder in your project directory and import it:
 
 ```python
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 ```
 
-The GitHub repo is named **`AIGamePyLibrary`** but the importable Python **package** is **`AIGameLibrary`** (no "Py"). A tiny `AIGamePyLibrary` shim package is also installed that re-exports everything, so `from AIGamePyLibrary import *` works too.
+**Aialander PyLib** is the friendly name; the importable Python package matches the [GitHub](https://github.com/theaia/AIGamePyLibrary) repo: **`AIGamePyLibrary`** (one name, no separate “Library” / “PyLibrary” split).
 
 ## Quick Start
 
-Here's a simple example for Slime Volleyball:
+Here's a simple example for **Volleyball**. Everything you read here — positions, velocities, "the ball", "the opponent" — is a **node** you ask the graph for via a simulation-prefixed helper (`VolleyballGetVector3`, `VolleyballGetTransform`, `VolleyballGetBool`, `VolleyballGetFloat`). These match the `VolleyballGet*` / `SlimeGetVector3` node types in `Assets/_Nodes/` (the Vector3 node type id is still `SlimeGetVector3` in Unity; the Python API is `VolleyballGetVector3` so naming stays consistent). There are **no** Unity-style dotted accessors like `something.Position` / `something.Velocity` — always go through the helpers.
 
 ```python
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 
 # Initialize the slime with name, color, country, and stats (speed, acceleration, jump)
 InitializeSlime("AIA", "Yellow", "United States of America", 5, 3, 2)
 
-# Calculate a position offset from the team spawn
-positionSign = RelativePosition(Self.TeamSpawn, "Backward")
+# Grab the world Vector3s from the graph. Every call returns a Node.
+ball_position = VolleyballGetVector3("Ball Position")
+self_position = VolleyballGetVector3("Self Position")
+
+# Team spawn is a Transform; convert to a Vector3 via RelativePosition.
+team_spawn    = VolleyballGetTransform("Self Team Spawn")
+positionSign  = RelativePosition(team_spawn, "Backward")
 
 # Calculate where to move (ball position + offset)
-moveTo = Ball.Position + positionSign * 0.4
+moveTo = ball_position + positionSign * 0.4
 
 # Calculate distance to ball and jump condition
-distanceToBall = Distance(Ball.Position, Self.Position)
-jumpCondition = distanceToBall < 2.25
+distanceToBall = Distance(ball_position, self_position)
+jumpCondition  = distanceToBall < 2.25
 
 # Control the slime (target position, jump condition)
 SlimeController(moveTo, jumpCondition)
@@ -48,7 +53,7 @@ The car / kart Properties node carries an **`isLLM`** flag that is **not exposed
 To set it, **capture the Properties node** returned by any of the helpers and assign its `modifier` after construction. Accepted values: **`"True"` / `"False"`** or **`"1"` / `"0"`** (anything else falls back to `False`).
 
 ```python
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 
 # Works for InitializeDemoDerby, InitializeParking, and ConstructModularUniformProperties —
 # they all return the same UniformModularCarProperties node.
@@ -73,23 +78,25 @@ The library uses a node-based system where operations return `Node` objects. Nod
 
 Example:
 ```python
-distance = Distance(Ball.Position, Self.Position)
+ball_pos = VolleyballGetVector3("Ball Position")
+self_pos = VolleyballGetVector3("Self Position")
+distance   = Distance(ball_pos, self_pos)
 shouldJump = distance < 2.5  # Returns a Node representing the comparison
 ```
 
 ### Vector Operations
 
-Vector3 nodes support component access and operations:
+Vector3 nodes support component access and operations. Always get the Vector3 from a simulation-prefixed helper (`VolleyballGetVector3(...)` in Volleyball, `RelativePosition(transform_node, "Self")` for any Transform node in other sims) — Transforms do **not** have a `.Position` / `.position` attribute.
 
 ```python
-# Access vector components
-ballPos = Ball.Position
+# Access vector components on a Vector3 Node
+ballPos = VolleyballGetVector3("Ball Position")
 x = ballPos.x  # X component
 y = ballPos.y  # Y component
 z = ballPos.z  # Z component
 
-# Vector arithmetic
-offset = Ball.Position - Self.Position
+# Vector arithmetic between Vector3 Nodes
+offset = VolleyballGetVector3("Ball Position") - VolleyballGetVector3("Self Position")
 scaled = offset * 0.5
 ```
 
@@ -780,7 +787,7 @@ Unity’s **Demo Derby Get Float** / **Demo Derby Get Bool** assets still serial
 This is the smallest end-to-end derby bot. It chases the nearest active car, aims for that car's nearest crucial part (engine / driveshaft / front wheel), commits to the throttle, and brakes if something is right in front of the bumper but the real target is still far away (i.e. it's about to ram a wall). **Use this as your starting template.** `Grok.py` demonstrates a working sensor-based "heavily blocked" unstick (avoiding the `CarInfo.IsImmobile` → `KeyError: 'Bool4'` bug that previously affected it and `Claude.py`); the other example bots follow the same safe pattern.
 
 ```python
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 
 # 1. Cosmetics + LLM flag (positional args; capture the returned node).
 props = InitializeDemoDerby(
@@ -831,40 +838,47 @@ SaveData("MyBot", "auto")
 ---
 
 <details>
-<summary><strong>Slime Volleyball Simulation</strong></summary>
+<summary><strong>Volleyball Simulation</strong></summary>
 
 <details>
-<summary>Game Entity Access</summary>
+<summary>Game State Access (node-based)</summary>
 
-The library provides pre-defined game entities for Slime Volleyball:
+Volleyball state is read through four sim-prefixed helpers. Every call returns a `Node` you can pipe into other nodes. Each helper maps to a Unity node type in `Assets/_Nodes/` so the simulation scope is obvious at the call site. There are **no** dotted shortcuts — use these helpers everywhere.
 
-- **`Self`** - Your player entity
-  - `Self.Position` - Current position (Vector3)
-  - `Self.Velocity` - Current velocity (Vector3)
-  - `Self.CanJump` - Whether the player can jump (Bool)
-  - `Self.TeamSpawn` - Team spawn transform
-  - `Self.Score` - Team score (Float)
+- **`VolleyballGetVector3(value)`** — world-space vectors. Python API name; Unity node type id is `SlimeGetVector3` (`Assets/_Nodes/SlimeGetVector3.asset`)
+  - Options: `"Self Position"`, `"Self Velocity"`, `"Opponent Position"`, `"Opponent Velocity"`, `"Ball Position"`, `"Ball Velocity"`
+  - Output: Vector3
 
-- **`Opponent`** - The opponent player entity
-  - Same properties as `Self`
+- **`VolleyballGetTransform(value)`** — Transform references (Unity asset: `Assets/_Nodes/VolleyballGetTransform.asset`). Pipe through `RelativePosition(tf, "Self")` to get a Vector3.
+  - Options: `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
+  - Output: Transform
 
-- **`Ball`** - The ball entity
-  - `Ball.Position` - Current position (Vector3)
-  - `Ball.Velocity` - Current velocity (Vector3)
-  - `Ball.IsSelfSide` - Whether ball is on your side (Bool)
-  - `Ball.TouchesRemaining` - Remaining touches (Float)
+- **`VolleyballGetBool(value)`** — boolean state (Unity asset: `Assets/_Nodes/VolleyballGetBool.asset`)
+  - Options: `"Self Can Jump"`, `"Opponent Can Jump"`, `"Ball Is Self Side"`
+  - Output: Bool
 
-- **`Game`** - Game state information
-  - `Game.DeltaTime` - Time since last frame (Float)
-  - `Game.FixedDeltaTime` - Fixed timestep (Float)
-  - `Game.Gravity` - Gravity value (Float)
-  - `Game.Pi` - Pi constant (Float)
-  - `Game.SimulationDuration` - Simulation duration (Float)
+- **`VolleyballGetFloat(value)`** — scalar state (Unity asset: `Assets/_Nodes/VolleyballGetFloat.asset`)
+  - Options: `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`, `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
+  - Output: Float
+
+> **Do not use these in other sims.** Survival → `SurvivalGetTransform` / `SurvivalGetFloat` / `SurvivalGetBool`. Parking → `ParkingGetTransform` / `ParkingGetFloat` / `ParkingGetBool`. Demo Derby → `DemoDerbyGetTransform` / `DemoDerbyGetCar` / `CarGetPart(...).PartTransform`. The old unprefixed aliases (`GetVector3` / `GetTransform` / `GetBool` / `GetFloat`) still point at these Volleyball helpers for backward-compat, but new code should use the explicit prefixed names.
+
+Example:
+
+```python
+self_pos    = VolleyballGetVector3("Self Position")
+ball_pos    = VolleyballGetVector3("Ball Position")
+opp_vel     = VolleyballGetVector3("Opponent Velocity")
+can_jump    = VolleyballGetBool("Self Can Jump")
+team_score  = VolleyballGetFloat("Team score")
+team_spawn  = VolleyballGetTransform("Self Team Spawn")
+spawn_point = RelativePosition(team_spawn, "Self")  # Transform -> Vector3
+```
 
 </details>
 
 <details>
-<summary>Slime Volleyball Specific Functions</summary>
+<summary>Volleyball-Specific Functions</summary>
 
 - **`InitializeSlime(name, color, country, speed, acceleration, jump)`**
   - Initializes your slime bot with the specified properties
@@ -885,22 +899,23 @@ The library provides pre-defined game entities for Slime Volleyball:
   - Inputs: String, Color, Country, Stat, Stat, Stat
   - Output: None (side effect)
 
-- **`GetVector3(value)`** - Gets Vector3 data from the game
+- **`VolleyballGetVector3(value)`** - Volleyball-only Vector3 accessor. Python name; Unity node type id is `SlimeGetVector3` (`Assets/_Nodes/SlimeGetVector3.asset`)
   - Available values: `"Self Position"`, `"Self Velocity"`, `"Ball Position"`, `"Ball Velocity"`, `"Opponent Position"`, `"Opponent Velocity"`
   - Output: Vector3
 
-- **`GetBool(value)`** - Gets boolean data from the game
+- **`VolleyballGetBool(value)`** - Volleyball-only bool accessor (Unity asset: `Assets/_Nodes/VolleyballGetBool.asset`)
   - Available values: `"Self Can Jump"`, `"Opponent Can Jump"`, `"Ball Is Self Side"`
   - Output: Bool
 
-- **`GetFloat(value)`** - Gets float data from the game
-  - Options (Default/General): `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`
-  - Options (Slime Volleyball): Also includes `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
+- **`VolleyballGetFloat(value)`** - Volleyball-only float accessor (Unity asset: `Assets/_Nodes/VolleyballGetFloat.asset`)
+  - Options: `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`, `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
   - Output: Float
 
-- **`GetTransform(value)`** - Gets transform data from the game
-  - Options (Slime Volleyball): `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
+- **`VolleyballGetTransform(value)`** - Volleyball-only transform accessor (Unity asset: `Assets/_Nodes/VolleyballGetTransform.asset`)
+  - Options: `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
   - Output: Transform
+
+> The unprefixed names (`GetVector3` / `GetBool` / `GetFloat` / `GetTransform`) are kept as backward-compat aliases for these four helpers and **only** build Volleyball nodes. New code should call the prefixed helpers so the simulation scope is obvious.
 
 - **`RelativePosition(transform, direction)`** - Gets a relative position vector
   - `transform`: Transform node
@@ -947,23 +962,27 @@ The library provides pre-defined game entities for Slime Volleyball:
 ## Example: Advanced Bot
 
 ```python
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 
 # Initialize bot
 InitializeSlime("MyBot", "Blue", "Canada", 6, 4, 3)
 
+# Pull world state from the graph helpers (no dotted accessors anywhere).
+ball_position = VolleyballGetVector3("Ball Position")
+self_position = VolleyballGetVector3("Self Position")
+
 # Calculate direction to ball
-directionToBall = Ball.Position - Self.Position
-distanceToBall = Magnitude(directionToBall)
+directionToBall = ball_position - self_position
+distanceToBall  = Magnitude(directionToBall)
 
 # Normalize direction and add offset
 normalizedDir = Normalize(directionToBall)
-targetOffset = normalizedDir * 0.3
-moveTo = Ball.Position + targetOffset
+targetOffset  = normalizedDir * 0.3
+moveTo        = ball_position + targetOffset
 
-# Jump when close to ball and ball is above us
-ballAbove = Ball.Position.y > Self.Position.y
-closeToBall = distanceToBall < 2.0
+# Jump when close to ball and ball is above us (component access on Vector3 Nodes)
+ballAbove     = ball_position.y > self_position.y
+closeToBall   = distanceToBall < 2.0
 jumpCondition = closeToBall & ballAbove
 
 # Control the slime
@@ -1008,11 +1027,18 @@ This is a **graph compiler**, not a runtime game SDK. Your script does **not** d
 
 Concretely:
 
-- Every value you compose (`Self.Position`, `Distance(...)`, `props`, sensor outputs, etc.) is a **`Node` object**, not a number, string, list, or dict.
+- Every value you compose (`VolleyballGetVector3("Self Position")`, `Distance(...)`, `props`, sensor outputs, etc.) is a **`Node` object**, not a number, string, list, or dict.
 - Plain Python `if` / `while` / `for`, `min` / `max` / `sorted`, `lambda`, list/dict indexing, and `import math` calls **do not become nodes**. They run once at compile time and are gone. Use the graph equivalents: `ConditionalSetFloat` / `ConditionalSetVector3` / `ConditionalSetBool` for branching, `Operation(x)` for math, `DemoDerbyGetCar` / `SurvivalGetTransform` to "pick" entities, etc.
+- **Nodes have no Unity-style dotted accessors.** There is no `something.Position` / `something.Velocity` / `something.Transform` / `something.DeltaTime` anywhere in this library. To read world state you always call a **simulation-prefixed** helper that matches the Unity asset for that sim:
+  - Volleyball → `VolleyballGetVector3(...)` / `VolleyballGetTransform(...)` / `VolleyballGetBool(...)` / `VolleyballGetFloat(...)` (Vector3 node type in Unity: `SlimeGetVector3`; other nodes: `VolleyballGetTransform`, etc. — see `Assets/_Nodes/`).
+  - Survival → `SurvivalGetTransform(...)` / `SurvivalGetFloat(...)` / `SurvivalGetBool(...)`.
+  - Parking → `ParkingGetTransform(...)` / `ParkingGetFloat(...)` / `ParkingGetBool(...)`.
+  - Demo Derby → `DemoDerbyGetTransform(...)` / `DemoDerbyGetCar(...)` / `CarGetPart(...).PartTransform` / `CarInfo(...).CarTransform`.
+  - The unprefixed aliases (`GetVector3` / `GetTransform` / `GetBool` / `GetFloat`) are **Volleyball only** — they exist purely for backward-compat with old scripts. Using them in any other sim's graph produces the wrong Unity node and won't deserialize correctly.
+  - To turn any `Transform` node into a world-space `Vector3`, wrap it in `RelativePosition(transform_node, "Self")`.
 - The `Initialize*` helpers take **positional arguments**, not keyword arguments. There is no `name=`, `country=`, `modifier_llm=`, `save_file=` etc. See each simulation's section for the exact signature.
 - There is no `sim` object. Methods like `sim.is_active()`, `sim.get_self_data()`, `sim.get_opponents()`, `sim.set_controls()`, `sim.update()` **do not exist** — if you wrote any of those, you are hallucinating an SDK that isn't here.
-- The package is **`AIGameLibrary`** (the GitHub repo is `AIGamePyLibrary` — note the extra "Py"). A shim package re-exports under the repo name, but the helpers are free functions, not methods on an object.
+- The **`AIGamePyLibrary`** import exposes helpers as **free functions**, not methods on a module object you treat like a `sim` runtime. (**Aialander PyLib** is the same project under that friendly name.)
 - The LLM-driven flag is set on the **returned** Properties node: `props.data["modifier"] = "True"`. There is **no** `modifier_llm=`, `is_llm=`, `llm=`, or `isLLM=` keyword argument on any helper.
 - Your script must end with a call to **`SaveData("YourBot", "auto")`** or nothing is exported.
 
@@ -1040,7 +1066,7 @@ These are the exact mistakes we keep seeing. If your draft does any of them, rew
 
 | ❌ Don't | ✅ Do |
 |---|---|
-| `import AIGamePyLibrary as aig` then `aig.InitializeDemoDerby(...)` (treats helpers as methods on a sim object) | `from AIGameLibrary import *` and call helpers as free functions |
+| `import AIGamePyLibrary as aig` then `aig.InitializeDemoDerby(...)` (treats helpers as methods on a sim object) | `from AIGamePyLibrary import *` and call helpers as free functions |
 | `InitializeDemoDerby(name="X", country="USA", modifier_llm=True, save_file="X")` | `props = InitializeDemoDerby("X", "United States of America", "Tan", 0, 0, "Brown", 0, "Red", "")` — positional only |
 | `country="USA"` / `country="UK"` / `country="South-Korea"` | Use the exact strings from the Country list, e.g. `"United States of America"`, `"United Kingdom"`, `"South Korea"`. Bot personas: `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"` |
 | Pass `modifier_llm=True` / `is_llm=True` / `llm=True` to any helper | After init: `props.data["modifier"] = "True"` (see [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven)) |
@@ -1052,6 +1078,8 @@ These are the exact mistakes we keep seeing. If your draft does any of them, rew
 | `math.atan2(...)`, `math.sqrt(...)`, `math.degrees(...)` | `Operation(x)` (`atan`, `sqrt`, etc.), `Magnitude`, `Distance`, `DotProduct`, `Normalize`, or just rely on `Autosteer(goal)` / `Autothrottle(goal, speed)` for car driving |
 | 2D thinking: `pos[0]`, `pos[1]`, `heading` in degrees | Everything is 3D `Vector3`. Access components via `vec.x`, `vec.y`, `vec.z`. There is no scalar "heading". Use `Autosteer` for car aim. |
 | `transform.Position` / `transform.position` on a Transform node | `RelativePosition(transform_node, "Self")` returns the world `Vector3` |
+| `Self.Position` / `Ball.Position` / `entity.Velocity` / `Self.TeamSpawn` / `Game.DeltaTime` — dotted accessors on a game entity | **Use the simulation-prefixed node helpers everywhere.** Volleyball: `VolleyballGetVector3("Self Position")`, `VolleyballGetVector3("Ball Velocity")`, `VolleyballGetTransform("Self Team Spawn")`, `VolleyballGetBool("Self Can Jump")`, `VolleyballGetFloat("Delta time")`. Other sims have their own helpers (`DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarGetPart(...).PartTransform`, `SurvivalGetTransform`, `ParkingGetTransform`, etc.). Never assume `.Position` / `.Velocity` / `.Transform` exists on a Node — it does not, and examples that used to show that shortcut have been rewritten. |
+| `GetTransform(...)` / `GetBool(...)` / `GetFloat(...)` / `GetVector3(...)` used in Survival / Parking / Demo Derby graphs | Those unprefixed names are **Volleyball-only** backward-compat aliases. In other sims you'll silently build the wrong Unity node. Use the sim prefix: `SurvivalGetTransform` / `ParkingGetTransform` / `DemoDerbyGetTransform`, `SurvivalGetFloat` / `ParkingGetFloat` / `DemoDerbyGetCar` + `CarGetPart(...).PartTransform`, etc. |
 | `Magnitude(CarInfo(car).Velocity)`, `ClampFloat(CarInfo(car).Health, ...)`, `pos + CarInfo(car).Velocity * dt`, `ConditionalSetFloat(CarGetPart(3, car).HealthPercent < 50, ...)` | **Broken in the current library.** Only `.CarTransform` (on `CarInfo`) and `.PartTransform` (on `CarGetPart`) can be passed to another node — everything else raises `KeyError: 'Vector32'` / `'Bool3'` / `'Bool4'` / `'Float5'` / `'Float6'` / `'Float2'` in `ConnectPorts`. Plan your bot around `Autosteer` / `Autothrottle` + `DemoDerbyGetCar` / `CarGetPart(3, ...).PartTransform` + raycast sensors. See **[Multi-output component accessor bug](#multi-output-component-accessor-bug)**. |
 | Forget to call `SaveData(...)` at the end | Always finish with `SaveData("YourBotName", "auto")` — without this the script does literally nothing |
 
@@ -1074,7 +1102,7 @@ while sim.is_active():                  # no such method
 **Right (build a graph, mark it LLM-driven, save it):**
 
 ```python
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 
 props = InitializeDemoDerby(
     "Gemini", "Gemini", "Tan", 0, 2, "Brown", 0, "Blue", "",
@@ -1097,7 +1125,7 @@ For a slightly fuller derby starter (with sensors and a panic brake) see the **[
 
 ### What breaks
 
-Any of these will raise a `KeyError` inside `AIGameLibrary/lib.py → ConnectPorts` at compile time (when `SaveData(...)` runs, or earlier if the consuming node is constructed first):
+Any of these will raise a `KeyError` inside `AIGamePyLibrary/lib.py → ConnectPorts` at compile time (when `SaveData(...)` runs, or earlier if the consuming node is constructed first):
 
 ```python
 # --- all of these crash ---

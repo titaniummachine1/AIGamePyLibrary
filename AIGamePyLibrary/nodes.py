@@ -56,32 +56,32 @@ class GameEntity:
 
     @property
     def Position(self) -> Node:
-        return GetVector3(f"{self.entityType} Position")
+        return VolleyballGetVector3(f"{self.entityType} Position")
 
     @property
     def Velocity(self) -> Node:
-        return GetVector3(f"{self.entityType} Velocity")
+        return VolleyballGetVector3(f"{self.entityType} Velocity")
 
     @property
     def Transform(self) -> Node:
-        return GetTransform(self.entityType)
+        return VolleyballGetTransform(self.entityType)
 
 
 class PlayerEntity(GameEntity):
     @property
     def CanJump(self) -> Node:
-        return GetBool(f"{self.entityType} Can Jump")
+        return VolleyballGetBool(f"{self.entityType} Can Jump")
 
     @property
     def TeamSpawn(self) -> Node:
-        return GetTransform(f"{self.entityType} Team Spawn")
+        return VolleyballGetTransform(f"{self.entityType} Team Spawn")
 
     @property
     def Score(self) -> Node:
         if self.entityType == "Self":
-            return GetFloat("Team score")
+            return VolleyballGetFloat("Team score")
         if self.entityType == "Opponent":
-            return GetFloat("Opponent score")
+            return VolleyballGetFloat("Opponent score")
 
 
 class BallClass(GameEntity):
@@ -90,33 +90,33 @@ class BallClass(GameEntity):
 
     @property
     def IsSelfSide(self) -> Node:
-        return GetBool("Ball Is Self Side")
+        return VolleyballGetBool("Ball Is Self Side")
 
     @property
     def TouchesRemaining(self) -> Node:
-        return GetFloat("Ball touches remaining")
+        return VolleyballGetFloat("Ball touches remaining")
 
 
 class GameClass:
     @property
     def DeltaTime(self) -> Node:
-        return GetFloat("Delta time")
+        return VolleyballGetFloat("Delta time")
 
     @property
     def FixedDeltaTime(self) -> Node:
-        return GetFloat("Fixed delta time")
+        return VolleyballGetFloat("Fixed delta time")
 
     @property
     def Gravity(self) -> Node:
-        return GetFloat("Gravity")
+        return VolleyballGetFloat("Gravity")
 
     @property
     def Pi(self) -> Node:
-        return GetFloat("Pi")
+        return VolleyballGetFloat("Pi")
 
     @property
     def SimulationDuration(self) -> Node:
-        return GetFloat("Simulation duration")
+        return VolleyballGetFloat("Simulation duration")
 
 
 Self = PlayerEntity("Self")
@@ -590,13 +590,19 @@ def Keypress(value: int):
 
 
 @cache
-def GetBool(value: Literal["Self Can Jump", "Opponent Can Jump", "Ball Is Self Side"]):
+def VolleyballGetBool(
+    value: Literal["Self Can Jump", "Opponent Can Jump", "Ball Is Self Side"],
+):
+    """Volleyball bool accessor. Maps to the `VolleyballGetBool` Unity node
+    (see `Assets/_Nodes/VolleyballGetBool.asset`). Only valid inside a
+    Volleyball graph — other sims use `SurvivalGetBool` / `ParkingGetBool` /
+    `DemoDerbyGetBool`."""
     value = ["Self Can Jump", "Opponent Can Jump", "Ball Is Self Side"].index(value)
     return AddNode("VolleyballGetBool", value)
 
 
 @cache
-def GetFloat(
+def VolleyballGetFloat(
     value: Literal[
         "Delta time",
         "Fixed delta time",
@@ -608,6 +614,10 @@ def GetFloat(
         "Ball touches remaining",
     ],
 ):
+    """Volleyball float accessor. Maps to the `VolleyballGetFloat` Unity
+    node (see `Assets/_Nodes/VolleyballGetFloat.asset`). Only valid inside a
+    Volleyball graph — other sims use `SurvivalGetFloat` /
+    `ParkingGetFloat` / `DemoDerbyGetFloat`."""
     value = [
         "Delta time",
         "Fixed delta time",
@@ -622,11 +632,15 @@ def GetFloat(
 
 
 @cache
-def GetTransform(
+def VolleyballGetTransform(
     value: Literal[
         "Self", "Opponent", "Ball", "Self Team Spawn", "Opponent Team Spawn"
     ],
 ):
+    """Volleyball transform accessor. Maps to the `VolleyballGetTransform`
+    Unity node (see `Assets/_Nodes/VolleyballGetTransform.asset`). Only valid
+    inside a Volleyball graph — other sims use `SurvivalGetTransform` /
+    `ParkingGetTransform` / `DemoDerbyGetTransform`."""
     value = [
         "Self",
         "Opponent",
@@ -638,7 +652,7 @@ def GetTransform(
 
 
 @cache
-def GetVector3(
+def VolleyballGetVector3(
     value: Literal[
         "Self Position",
         "Self Velocity",
@@ -648,6 +662,13 @@ def GetVector3(
         "Opponent Velocity",
     ],
 ):
+    """Volleyball Vector3 accessor. Emits the Unity node type
+    ``SlimeGetVector3`` (see `Assets/_Nodes/SlimeGetVector3.asset` — the
+    on-disk / serialization name is historical). Only valid inside a Volleyball
+    graph — other sims expose Vector3s via
+    `RelativePosition(transform_node, "Self")` on sim-specific transform
+    helpers (`SurvivalGetTransform`, `DemoDerbyGetTransform`,
+    `CarGetPart(...).PartTransform`, etc.)."""
     value = [
         "Self Position",
         "Self Velocity",
@@ -657,6 +678,23 @@ def GetVector3(
         "Opponent Velocity",
     ].index(value)
     return AddNode("SlimeGetVector3", value)
+
+
+# ---------------------------------------------------------------------------
+# Deprecated Volleyball / generic aliases.
+# The generic names `GetBool` / `GetFloat` / `GetTransform` / `GetVector3` were
+# originally Volleyball-specific but the unprefixed names led people to
+# assume they worked across simulations (they don't — each sim has its own
+# `Survival*` / `Parking*` / `DemoDerby*` helpers wired to its own Unity asset).
+# `SlimeGetVector3` was renamed to `VolleyballGetVector3` so the public API
+# does not mix "Slime" and "Volleyball" naming. Old scripts still work; new code
+# should use the explicit Volleyball* names.
+# ---------------------------------------------------------------------------
+GetBool = VolleyballGetBool
+GetFloat = VolleyballGetFloat
+GetTransform = VolleyballGetTransform
+GetVector3 = VolleyballGetVector3
+SlimeGetVector3 = VolleyballGetVector3
 
 
 @cache

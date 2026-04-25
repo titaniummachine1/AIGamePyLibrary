@@ -1,4 +1,4 @@
-from AIGameLibrary import *
+from AIGamePyLibrary import *
 
 # 1 to 1 recreation of the AIA survival bot from the visual graph
 # - Eat when hunger < 50%
