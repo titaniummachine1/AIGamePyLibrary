@@ -114,208 +114,805 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <details>
 <summary>Basic Types</summary>
 
-- **`Float(value)`** - Represents a real number
-  - Input: `value` (int, float, or str)
-  - Output: Float
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>Float(value)</code></td>
+      <td valign="top">Represents a real number</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The typed value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Bool(value)</code></td>
+      <td valign="top">Represents a true/false or “boolean” value</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The selected value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>String(value)</code></td>
+      <td valign="top">Represents a text value</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String1</code></a> — <sub>The typed value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Color(value)</code></td>
+      <td valign="top">Outputs the color value selected in the dropdown</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The selected value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#color-options">See <code>Color</code> options</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Country(value)</code></td>
+      <td valign="top">Outputs the country value selected in the dropdown</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-country"><code>Country1</code></a> — <sub>The selected value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#country-options">See <code>Country</code> options</a></td>
+    </tr>
+  </tbody>
+</table>
 
-- **`Bool(value)`** - Represents a true/false or "boolean" value
-  - Input: `value` (bool)
-  - Output: Bool
+<details id="color-options">
+<summary><strong>Color</strong> options</summary>
 
-- **`String(value)`** - Represents a text value
-  - Input: `value` (str)
-  - Output: String
+`"Auburn"`, `"Black"`, `"Blonde"`, `"Blue"`, `"Brown"`, `"Dark Brown"`, `"Dark Green"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"Tan"`, `"White"`, `"Yellow"`
 
-- **`Color(value)`** - Outputs the color value selected in the dropdown
-  - Options: `"Auburn"`, `"Black"`, `"Blonde"`, `"Blue"`, `"Brown"`, `"Dark Brown"`, `"Dark Green"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"Tan"`, `"White"`, `"Yellow"`
-  - Output: Color
+</details>
 
-- **`Country(value)`** - Outputs the country value selected in the dropdown
-  - Options: `"Unknown"`, `"Afghanistan"`, `"Albania"`, `"Algeria"`, `"Andorra"`, `"Angola"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Azerbaijan"`, `"Bahamas"`, `"Bahrain"`, `"Bangladesh"`, `"Barbados"`, `"Belarus"`, `"Belgium"`, `"Bermuda"`, `"Bohemia"`, `"Botswana"`, `"Brazil"`, `"Bulgaria"`, `"Burkina Faso"`, `"Burundi"`, `"Cameroon"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Costa Rica"`, `"Croatia"`, `"Cuba"`, `"Cyprus"`, `"Czechia"`, `"Côte d'Ivoire"`, `"Denmark"`, `"Djibouti"`, `"Dominican Republic"`, `"DR Congo"`, `"Ecuador"`, `"Egypt"`, `"Eritrea"`, `"Estonia"`, `"Ethiopia"`, `"Fiji"`, `"Finland"`, `"France"`, `"Gabon"`, `"Georgia"`, `"Germany"`, `"Ghana"`, `"Greece"`, `"Grenada"`, `"Guatemala"`, `"Guyana"`, `"Haiti"`, `"Hong Kong"`, `"Hungary"`, `"Iceland"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Jamaica"`, `"Japan"`, `"Jordan"`, `"Kazakhstan"`, `"Kenya"`, `"Kosovo"`, `"Kuwait"`, `"Kyrgyzstan"`, `"Latvia"`, `"Lebanon"`, `"Lithuania"`, `"Luxembourg"`, `"Malaysia"`, `"Mauritius"`, `"Mexico"`, `"Moldova"`, `"Mongolia"`, `"Montenegro"`, `"Morocco"`, `"Mozambique"`, `"Myanmar"`, `"Namibia"`, `"Netherlands"`, `"New Zealand"`, `"Niger"`, `"Nigeria"`, `"North Korea"`, `"North Macedonia"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Panama"`, `"Paraguay"`, `"Peru"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"Russia"`, `"Samoa"`, `"San Marino"`, `"Saudi Arabia"`, `"Scotland"`, `"Senegal"`, `"Serbia"`, `"Singapore"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sri Lanka"`, `"Sudan"`, `"Suriname"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Taiwan"`, `"Tajikistan"`, `"Tanzania"`, `"Thailand"`, `"Togo"`, `"Tonga"`, `"Trinidad and Tobago"`, `"Tunisia"`, `"Turkey"`, `"Turkmenistan"`, `"Uganda"`, `"Ukraine"`, `"United Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Uruguay"`, `"Uzbekistan"`, `"Venezuela"`, `"Vietnam"`, `"Virgin Islands"`, `"Yemen"`, `"Zambia"`, `"Zimbabwe"`, `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"`
-  - Output: Country
+<details id="country-options">
+<summary><strong>Country</strong> options</summary>
+
+`"Unknown"`, `"Afghanistan"`, `"Albania"`, `"Algeria"`, `"Andorra"`, `"Angola"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Azerbaijan"`, `"Bahamas"`, `"Bahrain"`, `"Bangladesh"`, `"Barbados"`, `"Belarus"`, `"Belgium"`, `"Bermuda"`, `"Bohemia"`, `"Botswana"`, `"Brazil"`, `"Bulgaria"`, `"Burkina Faso"`, `"Burundi"`, `"Cameroon"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Costa Rica"`, `"Croatia"`, `"Cuba"`, `"Cyprus"`, `"Czechia"`, `"Côte d'Ivoire"`, `"Denmark"`, `"Djibouti"`, `"Dominican Republic"`, `"DR Congo"`, `"Ecuador"`, `"Egypt"`, `"Eritrea"`, `"Estonia"`, `"Ethiopia"`, `"Fiji"`, `"Finland"`, `"France"`, `"Gabon"`, `"Georgia"`, `"Germany"`, `"Ghana"`, `"Greece"`, `"Grenada"`, `"Guatemala"`, `"Guyana"`, `"Haiti"`, `"Hong Kong"`, `"Hungary"`, `"Iceland"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Jamaica"`, `"Japan"`, `"Jordan"`, `"Kazakhstan"`, `"Kenya"`, `"Kosovo"`, `"Kuwait"`, `"Kyrgyzstan"`, `"Latvia"`, `"Lebanon"`, `"Lithuania"`, `"Luxembourg"`, `"Malaysia"`, `"Mauritius"`, `"Mexico"`, `"Moldova"`, `"Mongolia"`, `"Montenegro"`, `"Morocco"`, `"Mozambique"`, `"Myanmar"`, `"Namibia"`, `"Netherlands"`, `"New Zealand"`, `"Niger"`, `"Nigeria"`, `"North Korea"`, `"North Macedonia"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Panama"`, `"Paraguay"`, `"Peru"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"Russia"`, `"Samoa"`, `"San Marino"`, `"Saudi Arabia"`, `"Scotland"`, `"Senegal"`, `"Serbia"`, `"Singapore"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sri Lanka"`, `"Sudan"`, `"Suriname"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Taiwan"`, `"Tajikistan"`, `"Tanzania"`, `"Thailand"`, `"Togo"`, `"Tonga"`, `"Trinidad and Tobago"`, `"Tunisia"`, `"Turkey"`, `"Turkmenistan"`, `"Uganda"`, `"Ukraine"`, `"United Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Uruguay"`, `"Uzbekistan"`, `"Venezuela"`, `"Vietnam"`, `"Virgin Islands"`, `"Yemen"`, `"Zambia"`, `"Zimbabwe"`, `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"`
+
+</details>
 
 </details>
 
 <details>
 <summary>Arithmetic Operations</summary>
 
-- **`AddFloats(a, b)`** or `a + b` - Performs an addition operation between two numbers
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`SubtractFloats(a, b)`** or `a - b` - Performs a subtract operation between two numbers
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`MultiplyFloats(a, b)`** or `a * b` - Performs a multiplication operation between two numbers
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`DivideFloats(a, b)`** or `a / b` - Performs a divide operation between two numbers
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`Modulo(a, b)`** or `a % b` - Divides a number by another number and returns any remainder
-  - Inputs: Float, Float
-  - Output: Float
-
-- **`ClampFloat(value, min, max)`** - Limits or "clamps" a number between a minimum and maximum value
-  - Inputs: Float, Float, Float
-  - Output: Float
-
-- **`RandomFloat(min, max)`** - Returns a random number value between two values (changes every Update)
-  - Inputs: Float, Float
-  - Output: Float
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Alias</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>AddFloats(a, b)</code></td>
+      <td valign="top"><code>a + b</code></td>
+      <td valign="top">Performs an addition operation between two numbers</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Left operand</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Right operand</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Sum</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SubtractFloats(a, b)</code></td>
+      <td valign="top"><code>a - b</code></td>
+      <td valign="top">Performs a subtract operation between two numbers</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Left operand</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Right operand</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Difference</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>MultiplyFloats(a, b)</code></td>
+      <td valign="top"><code>a * b</code></td>
+      <td valign="top">Performs a multiplication operation between two numbers</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Left operand</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Right operand</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Product</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>DivideFloats(a, b)</code></td>
+      <td valign="top"><code>a / b</code></td>
+      <td valign="top">Performs a divide operation between two numbers</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Numerator</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Denominator</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Quotient</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Modulo(a, b)</code></td>
+      <td valign="top"><code>a % b</code></td>
+      <td valign="top">Divides a number by another number and returns any remainder</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Dividend</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Divisor</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Remainder</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ClampFloat(value, min, max)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Limits (clamps) a number between a minimum and maximum value</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Value</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Minimum</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float3</code></a> — <sub>Maximum</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Clamped value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>RandomFloat(min, max)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Returns a random number value between two values (changes every Update)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Minimum</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Maximum</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Random value</sub></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 </details>
 
 <details>
 <summary>Math Functions</summary>
 
-- **`Abs(x)`** or `AbsFloat(x)` - Convert a number to its unsigned or absolute value
-  - Input: Float
-  - Output: Float
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Alias</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>AbsFloat(x)</code></td>
+      <td valign="top"><code>Abs(x)</code></td>
+      <td valign="top">Convert a number to it’s unsigned / absolute value</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The number to perform the function on</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Operation(x)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Performs the selected operation on the input number</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The number to perform the operation on</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#operation-options">Operations</a></td>
+    </tr>
+  </tbody>
+</table>
 
-- **`Operation(x)`** - Performs the selected operation on the input number
-  - Options: `abs`, `round`, `floor`, `ceil`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sqrt`, `sign`, `ln`, `log10`, `e^`, `10^`
-  - Input: Float
-  - Output: Float
+<details id="operation-options">
+<summary><strong>Operation</strong> options</summary>
+
+`abs`, `round`, `floor`, `ceil`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sqrt`, `sign`, `ln`, `log10`, `e^`, `10^`
+
+</details>
 
 </details>
 
 <details>
 <summary>Vector Operations</summary>
 
-- **`AddVector3(a, b)`** or `a + b` - Adds two three-dimensional vectors to each other
-  - Inputs: Vector3, Vector3
-  - Output: Vector3
-
-- **`SubtractVector3(a, b)`** or `a - b` - Performs a subtract operation between two Vector3's
-  - Inputs: Vector3, Vector3
-  - Output: Vector3
-
-- **`ScaleVector3(vec, scalar)`** or `vec * scalar` - Multiplies a Vector3 by a number
-  - Inputs: Vector3, Float
-  - Output: Vector3
-
-- **`DotProduct(a, b)`** or `a @ b` - Returns the dot product between two inputs. 1 = same direction, 0 = perpendicular, -1 = opposite direction
-  - Inputs: Vector3, Vector3
-  - Output: Float
-
-- **`CrossProduct(a, b)`** - Calculates the cross product of two Vector3. Result is perpendicular to both inputs
-  - Inputs: Vector3, Vector3
-  - Output: Vector3
-
-- **`Magnitude(vec)`** - Returns the length of the input Vector
-  - Input: Vector3
-  - Output: Float
-
-- **`Normalize(vec)`** - Returns a vector with the same direction as the input but with a magnitude of 1
-  - Input: Vector3
-  - Output: Vector3
-
-- **`Distance(pos1, pos2)`** - Calculates the distance between two points
-  - Inputs: Vector3, Vector3
-  - Output: Float
-
-- **`Vector3Split(vec)`** - Splits a Vector3 into its three corresponding x, y, and z values
-  - Input: Vector3
-  - Output: Float (x), Float (y), Float (z)
-
-- **`Vector3(x, y, z)`** or `ConstructVector3(x, y, z)` - Creates a Vector3 data type from three input numbers
-  - Inputs: Float, Float, Float
-  - Output: Vector3
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Alias</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>AddVector3(a, b)</code></td>
+      <td valign="top"><code>a + b</code></td>
+      <td valign="top">Adds two three-dimensional vectors to each other</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The first Vector3 value</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>The second Vector3 value to add to the first</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SubtractVector3(a, b)</code></td>
+      <td valign="top"><code>a - b</code></td>
+      <td valign="top">Subtracts the second Vector3 from the first (component-wise)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The first input</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>The second input</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ScaleVector3(vec, scalar)</code></td>
+      <td valign="top"><code>vec * scalar</code></td>
+      <td valign="top">Multiplies a Vector3 by a number</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The value to scale</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The amount to uniformly scale by</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>DotProduct(a, b)</code></td>
+      <td valign="top"><code>a @ b</code></td>
+      <td valign="top">Returns the dot product between two vectors</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The first input vector</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>The second input vector</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>CrossProduct(a, b)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Calculates the cross product (result perpendicular to both inputs)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The first input vector</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>The second input vector</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Magnitude(vec)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Returns the length of the input vector</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The input value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Normalize(vec)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Returns a vector with the same direction but magnitude 1</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The input value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Distance(pos1, pos2)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Calculates the distance between two points</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The first point</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>The second point</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Vector3Split(vec)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Splits a Vector3 into x, y, z components</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The Vector3 to be split into it’s components</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The x component of the input Vector3</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>The y component of the input Vector3</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float3</code></a> — <sub>The z component of the input Vector3</sub></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConstructVector3(x, y, z)</code></td>
+      <td valign="top"><code>Vector3(x, y, z)</code></td>
+      <td valign="top">Creates a Vector3 from three numbers</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>x component</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>y component</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float3</code></a> — <sub>z component</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 </details>
 
 <details>
 <summary>Comparison & Logic Operations</summary>
 
-- **`CompareFloats(a, b, operator)`** or `a < b`, `a > b`, etc. - Evaluates two float values against the operation selected in the dropdown
-  - Options: `==`, `<`, `>`, `<=`, `>=`
-  - Inputs: Float, Float
-  - Output: Bool
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Alias</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>CompareFloats(a, b, operator)</code></td>
+      <td valign="top"><code>a &lt; b</code>, <code>a &gt; b</code>, …</td>
+      <td valign="top">Evaluates two float values against the selected operator</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The number representing the left side of the comparison</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>The number representing the right side of the comparison</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#comparefloats-operators">Operators</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>CompareBool(a, b, operator)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Evaluates two boolean values against the selected operator</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The first value</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool2</code></a> — <sub>The value to compare to the first</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#comparebool-operators">Operators</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Not(condition)</code></td>
+      <td valign="top"><code>~condition</code></td>
+      <td valign="top">Toggles the input boolean (TRUE↔FALSE)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The input value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConditionalSetFloat(condition, trueValue, falseValue)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Selects between two Float values based on a condition</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The value to compare against the dropdown selection</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>If TRUE, this value will be set as the result</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>If FALSE, this value will be set as the result</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#conditionalsetfloat-options">Dropdown</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConditionalSetVector3(condition, trueValue, falseValue)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Selects between two Vector3 values based on a condition</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The value to compare against the dropdown selection</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>If TRUE, this value will be set as the result</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>If FALSE, this value will be set as the result</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#conditionalset-options">Dropdown</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConditionalSetBool(condition, trueValue, falseValue)</code></td>
+      <td valign="top">—</td>
+      <td valign="top">Selects between two Bool values based on a condition</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The value to compare against the dropdown selection</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool2</code></a> — <sub>If TRUE, this value will be set as the result</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool3</code></a> — <sub>If FALSE, this value will be set as the result</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#conditionalset-options">Dropdown</a></td>
+    </tr>
+  </tbody>
+</table>
 
-- **`CompareBool(a, b, operator)`** - Evaluates two boolean values against the operation selected in the dropdown
-  - Options: `AND`, `OR`, `EQUAL TO`, `XOR`, `NOR`, `NAND`, `XNOR`
-  - Inputs: Bool, Bool
-  - Output: Bool
+<details id="comparefloats-operators">
+<summary><strong>CompareFloats</strong> operators</summary>
 
-- **`Not(condition)`** or `~condition` - Toggles the value of the input boolean (TRUE↔FALSE)
-  - Input: Bool
-  - Output: Bool
+`==`, `<`, `>`, `<=`, `>=`
 
-- **`ConditionalSetFloat(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different number values
-  - Options: `True` (use trueValue when condition is true), `False` (use trueValue when condition is false)
-  - Inputs: Bool, Float, Float
-  - Output: Float
+</details>
 
-- **`ConditionalSetVector3(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different Vector3 values
-  - Options: `True`, `False` (same as ConditionalSetFloat)
-  - Inputs: Bool, Vector3, Vector3
-  - Output: Vector3
+<details id="comparebool-operators">
+<summary><strong>CompareBool</strong> operators</summary>
 
-- **`ConditionalSetBool(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different boolean values
-  - Options: `True`, `False` (same as ConditionalSetFloat)
-  - Inputs: Bool, Bool, Bool
-  - Output: Bool
+`AND`, `OR`, `EQUAL TO`, `XOR`, `NOR`, `NAND`, `XNOR`
+
+</details>
+
+<details id="conditionalsetfloat-options">
+<summary><strong>ConditionalSetFloat</strong> dropdown</summary>
+
+`True` (use trueValue when condition is true), `False` (use trueValue when condition is false)
+
+</details>
+
+<details id="conditionalset-options">
+<summary><strong>ConditionalSetBool / ConditionalSetVector3</strong> dropdown</summary>
+
+`True`, `False`
+
+</details>
 
 </details>
 
 <details>
 <summary>Variables & Utilities</summary>
 
-- **`SetVariable(value)`** - Saves the input value so that it can be used by any GetVariable nodes with a corresponding typed value
-  - Input: Any
-  - Output: None (destination node)
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>SetVariable(value)</code></td>
+      <td valign="top">Saves the input value so it can be used by matching <code>GetVariable</code> nodes</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-any"><code>Any1</code></a> — <sub>An input of any data type</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Destination node</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>GetVariable(name)</code></td>
+      <td valign="top">Outputs the value from the corresponding <code>SetVariable</code> node with the same typed name</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-any"><code>Any1</code></a> — <sub>The result of the Set Variable matching the same typed name</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Relay(value)</code></td>
+      <td valign="top">Passes through data from input to output (useful for organization)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-any"><code>Any1</code></a> — <sub>Input of any data type to pass through</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-any"><code>Any1</code></a> — <sub>The passed-through value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>IsNull(value)</code></td>
+      <td valign="top">Checks if the input is null</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-any"><code>Any1</code></a> — <sub>A connection of any data type</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Keypress(key)</code></td>
+      <td valign="top">Indicates whether the selected key is currently pressed</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>Is the key pressed</sub></li>
+        </ul>
+      </td>
+      <td valign="top">Key is selected in dropdown</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>RelativePosition(transform, direction)</code></td>
+      <td valign="top">Gets a world-space position relative to the input Transform and selected direction</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The transform to extract the position from</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#relativeposition-options">Directions</a></td>
+    </tr>
+  </tbody>
+</table>
 
-- **`GetVariable(name)`** - Outputs the value from the corresponding SetVariable node with the same typed value
-  - Output: Any
+<details id="relativeposition-options">
+<summary><strong>RelativePosition</strong> options</summary>
 
-- **`Relay(value)`** - Passes through data from input to output. Useful for organizing connections and keeping the graph readable
-  - Input: Any
-  - Output: Any
+`Self`, `Self + Forward`, `Self + Backward`, `Self + Left`, `Self + Right`, `Self + Up`, `Self + Down`, `Forward`, `Backward`, `Left`, `Right`, `Up`, `Down`
 
-- **`IsNull(value)`** - Checks if the input is a null value
-  - Input: Any
-  - Output: Bool
-
-- **`Keypress(key)`** - Indicates whether the selected key is currently pressed
-  - Output: Bool
-
-- **`RelativePosition(transform, direction)`** - Gets the world position relative to the input Transform and based on the selected option
-  - Options: `Self`, `Self + Forward`, `Self + Backward`, `Self + Left`, `Self + Right`, `Self + Up`, `Self + Down`, `Forward`, `Backward`, `Left`, `Right`, `Up`, `Down`
-  - Input: Transform
-  - Output: Vector3
+</details>
 
 </details>
 
 <details>
 <summary>Debug & Visualization</summary>
 
-- **`Debug(value)`** - Displays the real-time value of the output connection
-  - Input: Any
-  - Output: None (destination node)
-
-- **`DebugDrawLine(start, end, width, color)`** - Draws a 2D line in worldspace. Useful for debugging and visualizing information
-  - Inputs: Vector3, Vector3, Float, Color
-  - Output: None (destination node)
-
-- **`DebugDrawDisc(center, radius, height, color)`** - Draws a 2D disc in worldspace on the XY plane
-  - Inputs: Vector3, Float, Float, Color
-  - Output: None (destination node)
-
-- **`TimePlot(name, color, iconUrl, value)`** - Adds a value to the time plot graph during a simulation (toggle with F1)
-  - Inputs: String, Color, String, Float
-  - Output: None (destination node)
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>Debug(value)</code></td>
+      <td valign="top">Displays the real-time value of the connected output</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-any"><code>Any1</code></a> — <sub>An input of any data type</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>DebugDrawLine(start, end, width, color)</code></td>
+      <td valign="top">Draws a 2D line in worldspace (debug visualization)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The start point of the line</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector32</code></a> — <sub>The end point of the line</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The thickness of the line</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The color of the line</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>DebugDrawDisc(center, radius, height, color)</code></td>
+      <td valign="top">Draws a 2D disc in worldspace on the XY plane (debug visualization)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The centerpoint of the drawn disc</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The radius of the drawn disc</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>The thickness of the drawn disc</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The color to set the disc</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>TimePlot(name, color, iconUrl, value)</code></td>
+      <td valign="top">Adds a value to the time plot graph during a simulation (toggle with F1)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String1</code></a> — <sub>The name to be assigned to the Aialander name tag</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The color of the line to plot</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String2</code></a> — <sub>A URL of a custom icon to use for the graph</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The value to set on the graph for the current tick</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+  </tbody>
+</table>
 
 </details>
 
 <details>
 <summary>Organization</summary>
 
-- **`Region`** - Groups nodes visually for organization. Does not affect logic.
-  - No inputs/outputs
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>Region</code></td>
+      <td valign="top">Groups nodes visually for organization (does not affect logic)</td>
+      <td valign="top">—</td>
+      <td valign="top">—</td>
+    </tr>
+  </tbody>
+</table>
 
 </details>
 
@@ -326,14 +923,150 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <details>
 <summary><strong>Survival Simulation</strong></summary>
 
-**Requirements:** The SurvivalController is the required destination to control a single 3d character. ConstructSurvivalProperties sets that character's aesthetic.
-
-**Overview:** Aialanders are trapped on a deserted island with apple trees and other inhabitants. Each Aialander has a storage container they can put food. Tree count and location can vary per simulation. The number of competitors and their stategies will vary per simulation.  The maximum number of total players is 7.
-
-**Objective:** To survive on the island given the available food. Other inhabitants may be friendly or aggressive, you can choose any personality you want. Ending with the highest rank will give you the most clout but it's your decision if that's important to you or not.
+<div style="margin-left: 1em;">
 
 <details>
-<summary>Customization</summary>
+<summary><strong>Overview</strong></summary>
+
+Aialanders are trapped on a deserted island with apple trees and other inhabitants. Each Aialander has a storage container they can put food. Tree count and location can vary per simulation. The number of competitors and their strategies will vary per simulation. The maximum number of total players is 7.
+
+**Objective:** Survive on the island given the available food. Other inhabitants may be friendly or aggressive — choose any personality you want.
+
+</details>
+
+<details>
+<summary><strong>Requirements</strong></summary>
+
+- The `SurvivalController(...)` node is the required destination to control a single 3D character.
+- `ConstructSurvivalProperties(...)` sets that character’s aesthetic.
+
+</details>
+
+<details>
+<summary><strong>Nodes</strong></summary>
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options / Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>SurvivalController(targetPosition, state, sprint, emote)</code></td>
+      <td valign="top">Controls an Aialander’s brain (navigation uses pathfinding)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The target world position to move the character to</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-survivalstate"><code>SurvivalState1</code></a> — <sub>The current state of the character which will control its behavior</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>Whether the character should attempt to sprint (requires stamina)</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-survivalemote"><code>SurvivalEmote1</code></a> — <sub>Optional emote; performing an emote stops movement</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Destination node</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConstructSurvivalProperties(...)</code></td>
+      <td valign="top">Sets cosmetic options for this Aialander</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String1</code></a> — <sub>The name to be assigned to the Aialander name tag</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-country"><code>Country1</code></a> — <sub>The country this Aialander is representing</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The color of the Aialander’s skin</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Body style (0 = male, 1 = female). Value wraps to prevent errors</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Hair style. Value wraps to prevent errors</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color2</code></a> — <sub>Hair color</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float3</code></a> — <sub>Facial hair style. Value wraps to prevent errors</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String2</code></a> — <sub>Optional outfit image URL</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Customization options are documented under <a href="#survival-customization"><strong>Details → Customization</strong></a>.</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SurvivalGetTransform(value)</code></td>
+      <td valign="top">Select a Transform representing a current location / entity in the sim</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The selected value</sub></li></ul></td>
+      <td valign="top"><a href="#survivalgettransform-options">Options</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SurvivalGetFloat(value)</code></td>
+      <td valign="top">Select a Float representing a current simulation parameter</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The selected value</sub></li></ul></td>
+      <td valign="top"><a href="#survivalgetfloat-options">Options</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SurvivalGetBool(value)</code></td>
+      <td valign="top">Select a Bool representing a current simulation parameter</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The selected value</sub></li></ul></td>
+      <td valign="top"><a href="#survivalgetbool-options">Options</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SurvivalState(value)</code></td>
+      <td valign="top">Select a SurvivalState value</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-survivalstate"><code>SurvivalState1</code></a> — <sub>The selected value</sub></li></ul></td>
+      <td valign="top"><code>Passive</code>, <code>Gather</code>, <code>Eat</code>, <code>Attack</code>, <code>Steal</code>, <code>Dead</code></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SurvivalEmote(value)</code></td>
+      <td valign="top">Select an emote</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-survivalemote"><code>SurvivalEmote1</code></a> — <sub>The selected value</sub></li></ul></td>
+      <td valign="top"><code>None</code>, <code>Hi</code>, <code>Talk</code>, <code>Bored</code>, <code>Wave</code></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SurvivalAutoPosition(state)</code></td>
+      <td valign="top">Automatically decide where to move based on a given state</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-survivalstate"><code>SurvivalState1</code></a> — <sub>The state from which the position will be determined</sub></li></ul></td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li></ul></td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConditionalSetSurvivalState(condition, trueValue, falseValue)</code></td>
+      <td valign="top">Select between two SurvivalState values based on a condition</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The value to compare against the dropdown selection</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-survivalstate"><code>SurvivalState1</code></a> — <sub>If TRUE, this value will be set as the result</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-survivalstate"><code>SurvivalState2</code></a> — <sub>If FALSE, this value will be set as the result</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-survivalstate"><code>SurvivalState1</code></a> — <sub>The resulting value</sub></li></ul></td>
+      <td valign="top"><code>True</code>, <code>False</code></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConditionalSetSurvivalEmote(condition, trueValue, falseValue)</code></td>
+      <td valign="top">Select between two SurvivalEmote values based on a condition</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The value to compare against the dropdown selection</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-survivalemote"><code>SurvivalEmote1</code></a> — <sub>If TRUE, this value will be set as the result</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-survivalemote"><code>SurvivalEmote2</code></a> — <sub>If FALSE, this value will be set as the result</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-survivalemote"><code>SurvivalEmote1</code></a> — <sub>The resulting value</sub></li></ul></td>
+      <td valign="top"><code>True</code>, <code>False</code></td>
+    </tr>
+  </tbody>
+</table>
+
+</details>
+
+<details>
+<summary><strong>Details</strong></summary>
+
+<a id="survival-customization"></a>
+
+### Customization
 
 **Body Type**
 - `0` Pants and shorts
@@ -364,12 +1097,9 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 The properties node has a custom outfit at the bottom that can take a URL string to an image. You can upload the image to something like imgur and then copy the image URL.
 
 If you want, here's the PSD to make a custom outfit texture for your character:
-https://github.com/theaia/AIGamePyLibrary/blob/main/CustomOutfit.psd
+`https://github.com/theaia/AIGamePyLibrary/blob/main/CustomOutfit.psd`
 
-</details>
-
-<details>
-<summary>Container Information</summary>
+### Container Information
 
 **Health**
 - Each player starts with a designated container with 250 health.
@@ -382,17 +1112,11 @@ https://github.com/theaia/AIGamePyLibrary/blob/main/CustomOutfit.psd
 - I'll be running the sim with both abundant and scarce resources. Adjust your strategy appropriately.
 - After being harvested, fruit respawn after 190 seconds. Each tree starts with and has a maximum of 3 fruit.
 
-</details>
-
-<details>
-<summary>Ranking</summary>
+### Ranking
 
 Players are sorted by Survival Time, then Most Health, then Hunger, then stored apple count. When a player dies, their survival time stops at the time they die.
 
-</details>
-
-<details>
-<summary>Player Information</summary>
+### Player Information
 
 **Abilities**
 - Standard move speed is 5.
@@ -425,162 +1149,108 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 - Stealing from an alive player's container will increase aggression by .25.
 - Stealing from a dead player's inventory does not affect a player's aggression level.
 
-</details>
-
-<details>
-<summary>Player States</summary>
+### Player States
 
 - **Passive** - The player will not perform any actions during this state.
-
 - **Gathering** - If not carrying any food a player will search for nearby food to gather and automatically pick it from trees or off the ground. When carrying food the player will automatically deposit it into its own storage container if nearby.
-
 - **Eating** - If not carrying any food a player will search for nearby food to gather and automatically pick it from trees, off of the ground, or from its own container. When carrying food the player will automatically consume it.
-
 - **Attack** - If not carrying any food a player will search for nearby players and containers and will automatically attack them when in range. When carrying food the player will automatically drop it.
-
 - **Steal** - If not carrying any food a player will search for nearby containers they do not own to steal from. When carrying food the player will automatically deposit it into its own storage container if nearby.
-
 - **Dead** - The player will not perform any actions during this state.
 
-</details>
+<a id="survivalgettransform-options"></a>
 
-<details>
-<summary>Nodes</summary>
+### SurvivalGetTransform options
 
-<details>
-<summary>Controller & Properties</summary>
+- `0` Self
+- `1` Player Last Damaged By
+- `2` Player Last Attacking (Global)
+- `3` Player Nearest
+- `4` Player 2nd Nearest
+- `5` Player Farthest
+- `6` Player with Highest Health
+- `7` Player with Lowest Health
+- `8` Player with Highest Hunger
+- `9` Player with Lowest Hunger
+- `10` Player with Highest Stamina
+- `11` Player with Lowest Stamina
+- `12` Player Last Stolen From Self Container
+- `13` Player Last Stealing (Global)
+- `14` Player with Highest Score
+- `15` Player with Lowest Score
+- `16` Player of Closest Score
+- `17` Player with Most Aggression
+- `18` Player with Lowest Aggression
+- `19` Player Nearest with Aggression
+- `20` Player Nearest with No Aggression
+- `21` Player with Most Stored Fruit
+- `22` Player with Least Stored Fruit
+- `23` Container Self
+- `24` Container Closest (excluding self)
+- `25` Container Farthest (excluding self)
+- `26` Container of Last Attacker
+- `27` Container of Last Global Attacker
+- `28` Container of Most Stored Fruit
+- `29` Container of Nearest Dead Player
+- `30` Container of Nearest Dead Player (with Food)
+- `31` Container of Highest Aggression Player
+- `32` Container of Lowest Aggression Player
+- `33` Container of Player with Closest Rank
+- `34` Fruit Nearest
+- `35` Fruit Farthest
+- `36` Fruit Nearest Self Container
+- `37` Fruit (Random)
+- `38` Tree Nearest
 
-- **`SurvivalController(targetPosition, state, sprint, emote)`** - Controls an Aialander's brain. Navigation uses pathfinding to find the nearest viable point to the input target position
-  - Inputs: Vector3 (target), SurvivalState, Bool (sprint), SurvivalEmote (optional)
-  - Output: None (destination node)
+<a id="survivalgetfloat-options"></a>
 
-- **`ConstructSurvivalProperties(...)`** - Sets cosmetic options for this Aialander (name, country, skin color, body type, hair style, etc.)
-  - Inputs: String, Country, Color, Float (body type), Float (hair style), Color, Float, String (outfit URL)
-  - Output: None (destination node)
-  - See Customization section for body type and hair style option numbers
+### SurvivalGetFloat options
 
-</details>
+- `0` Health Percentage
+- `1` Hunger Percentage
+- `2` Stamina Percentage
+- `3` Current Rank
+- `4` Stored Food Count
+- `5` Distance to Nearest Player
+- `6` Distance to Nearest Aggressive Player
+- `7` Distance to Last Attacker
+- `8` Distance to Nearest Container
+- `9` Distance to Nearest Fruit Tree
+- `10` Player Count Remaining
+- `11` Current Simulation Time
+- `12` Max Simulation Time
+- `13` Simulation Time Remaining
+- `14` Delta time
+- `15` Fixed delta time
+- `16` Pi
+- `17` Self Gathers
+- `18` Self Food Consumed
+- `19` Self Steals
+- `20` Self Damage Dealt
+- `21` Self Kills
+- `22` Self Aggression Level
+- `23` Available Fruit Count
+- `24` Player Count Without Stored Food
+- `25` Average Player Health
+- `26` Average Player Hunger
+- `27` Average Player Stamina
+- `28` Average Player Aggression Level
+- `29` Total Possible Fruit
+- `30` Distance Traveled
 
-<details>
-<summary>Data Access</summary>
+<a id="survivalgetbool-options"></a>
 
-- **`SurvivalGetTransform(value)`** - Selection of Transform options representing current locations in the simulation
-  - Options:
-    - `0` Self
-    - `1` Player Last Damaged By
-    - `2` Player Last Attacking (Global)
-    - `3` Player Nearest
-    - `4` Player 2nd Nearest
-    - `5` Player Farthest
-    - `6` Player with Highest Health
-    - `7` Player with Lowest Health
-    - `8` Player with Highest Hunger
-    - `9` Player with Lowest Hunger
-    - `10` Player with Highest Stamina
-    - `11` Player with Lowest Stamina
-    - `12` Player Last Stolen From Self Container
-    - `13` Player Last Stealing (Global)
-    - `14` Player with Highest Score
-    - `15` Player with Lowest Score
-    - `16` Player of Closest Score
-    - `17` Player with Most Aggression
-    - `18` Player with Lowest Aggression
-    - `19` Player Nearest with Aggression
-    - `20` Player Nearest with No Aggression
-    - `21` Player with Most Stored Fruit
-    - `22` Player with Least Stored Fruit
-    - `23` Container Self
-    - `24` Container Closest (excluding self)
-    - `25` Container Farthest (excluding self)
-    - `26` Container of Last Attacker
-    - `27` Container of Last Global Attacker
-    - `28` Container of Most Stored Fruit
-    - `29` Container of Nearest Dead Player
-    - `30` Container of Nearest Dead Player (with Food)
-    - `31` Container of Highest Aggression Player
-    - `32` Container of Lowest Aggression Player
-    - `33` Container of Player with Closest Rank
-    - `34` Fruit Nearest
-    - `35` Fruit Farthest
-    - `36` Fruit Nearest Self Container
-    - `37` Fruit (Random)
-    - `38` Tree Nearest
-  - Output: Transform
+### SurvivalGetBool options
 
-- **`SurvivalGetFloat(value)`** - Selection of global number-based options representing current parameters in the simulation
-  - Options:
-    - `0` Health Percentage
-    - `1` Hunger Percentage
-    - `2` Stamina Percentage
-    - `3` Current Rank
-    - `4` Stored Food Count
-    - `5` Distance to Nearest Player
-    - `6` Distance to Nearest Aggressive Player
-    - `7` Distance to Last Attacker
-    - `8` Distance to Nearest Container
-    - `9` Distance to Nearest Fruit Tree
-    - `10` Player Count Remaining
-    - `11` Current Simulation Time
-    - `12` Max Simulation Time
-    - `13` Simulation Time Remaining
-    - `14` Delta time
-    - `15` Fixed delta time
-    - `16` Pi
-    - `17` Self Gathers
-    - `18` Self Food Consumed
-    - `19` Self Steals
-    - `20` Self Damage Dealt
-    - `21` Self Kills
-    - `22` Self Aggression Level
-    - `23` Available Fruit Count
-    - `24` Player Count Without Stored Food
-    - `25` Average Player Health
-    - `26` Average Player Hunger
-    - `27` Average Player Stamina
-    - `28` Average Player Aggression Level
-    - `29` Total Possible Fruit
-    - `30` Distance Traveled
-  - Output: Float
-
-- **`SurvivalGetBool(value)`** - Selection of global True/False options representing current parameters in the simulation
-  - Options:
-    - `0` Is Carrying Resource
-    - `1` Container has Health
-    - `2` Container Was Attacked
-    - `3` Container Was Stolen From
-    - `4` Self Was Attacked
-  - Output: Bool
+- `0` Is Carrying Resource
+- `1` Container has Health
+- `2` Container Was Attacked
+- `3` Container Was Stolen From
+- `4` Self Was Attacked
 
 </details>
 
-<details>
-<summary>States & Emotes</summary>
-
-- **`SurvivalState(value)`** - Selection of states Aialanders can be in. States determine what automatic behaviors Aialanders take
-  - Options: `Passive`, `Gather`, `Eat`, `Attack`, `Steal`, `Dead`
-  - Output: SurvivalState
-
-- **`SurvivalEmote(value)`** - Selection of emotes Aialanders can perform
-  - Options: `None`, `Hi`, `Talk`, `Bored`, `Wave`
-  - Output: SurvivalEmote
-
-- **`SurvivalAutoPosition(state)`** - Automatically decide where to move an Aialander based on predetermined rules for a given state
-  - Input: SurvivalState
-  - Output: Vector3
-
-- **`ConditionalSetSurvivalState(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different state values
-  - Options: `True`, `False` (same as ConditionalSetFloat)
-  - Inputs: Bool, SurvivalState, SurvivalState
-  - Output: SurvivalState
-
-- **`ConditionalSetSurvivalEmote(condition, trueValue, falseValue)`** - Evaluates the input bool to toggle between two different emote values
-  - Options: `True`, `False` (same as ConditionalSetFloat)
-  - Inputs: Bool, SurvivalEmote, SurvivalEmote
-  - Output: SurvivalEmote
-
-</details>
-
-</details>
+</div>
 
 </details>
 
@@ -589,52 +1259,174 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 <details>
 <summary><strong>Parking Simulation</strong></summary>
 
-**Requirements:** The ModularUniformController is the required destination to control a single car. ConstructModularUniformProperties sets that car's aesthetic. CarRaycasts casts rays out in 8 directions and returns HitInfo.
+<div style="margin-left: 1em;">
 
-**Overview:** The goal of the simulation is to navigate the car to a target parking stall and have it sit inside the stall for 3 seconds. After that, the player progresses to a new level with the same goal but from a different local position and with a different target parking stall.
+<details>
+<summary><strong>Overview</strong></summary>
+
+The goal of the simulation is to navigate the car to a target parking stall and have it sit inside the stall for 3 seconds. After that, the player progresses to a new level with the same goal but from a different local position and with a different target parking stall.
 
 Alignment to the stall is encouraged but not required. Colliding with any objects will reset the player to the starting position.
 
-**Tips**
-
-- Raycasts all extend from the **center** of the car. The car width is roughly **6**; the car length is roughly **10.8**.
-- Stepping on the **brake** while setting **throttle** to **`-1`** will almost instantly stop the car—worth using when an obstacle is very close.
+</details>
 
 <details>
-<summary>Controller & Properties</summary>
+<summary><strong>Requirements</strong></summary>
 
-- **`ModularUniformController(throttle, steering, brake)`** - Sends inputs to the car to control it
-  - Inputs:
-    - Float (throttle: `1` is forward, `-1` is reverse)
-    - Float (steering: `-1` is left, `1` is right)
-    - Float (brake: any value over `0` applies brake)
-  - Output: None (destination node)
+- You must drive your car via the destination node: `ModularUniformController(...)`
+- Use `ConstructModularUniformProperties(...)` / `InitializeParking(...)` to set cosmetics
+- Sensors are built from `Spherecast(...)` → `CarRaycasts(...)` → `HitInfo(...)`
 
-- **`InitializeParking(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Convenience helper to set all parking car cosmetic options in one call
-  - Inputs:
-    - String (name tag)
-    - Country (country this character is representing)
-    - Color (skin color)
-    - Float (body style: `0` = male, `1` = female; value wraps to prevent errors)
-    - Float (hair style; value wraps to prevent errors)
-    - Color (hair color)
-    - Float (facial hair style; value wraps to prevent errors)
-    - Color (car color)
-    - String (optional image URL to download and apply to the outfit)
-  - Output: None (side effect)
+</details>
 
-- **`ConstructModularUniformProperties(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Sets cosmetic options for this car
-  - Inputs:
-    - String (name tag)
-    - Country (country this character is representing)
-    - Color (skin color)
-    - Float (body style: `0` = male, `1` = female; value wraps to prevent errors)
-    - Float (hair style; value wraps to prevent errors)
-    - Color (hair color)
-    - Float (facial hair style; value wraps to prevent errors)
-    - Color (car color)
-    - String (optional image URL to download and apply to the outfit)
-  - Output: None (destination node)
+<details>
+<summary><strong>Nodes</strong></summary>
+
+<!-- Single consolidated node table for Parking -->
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>ModularUniformController(throttle, steering, brake)</code></td>
+      <td valign="top">Sends inputs to the car to control it</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Throttle (1 is forward, -1 is reverse)</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Steering (-1 is left, 1 is right)</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float3</code></a> — <sub>Brake (any value over 0 will apply brake)</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Destination node</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConstructModularUniformProperties(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)</code></td>
+      <td valign="top">Sets cosmetic options for this car</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String1</code></a> — <sub>The name to be assigned to the Aialander name tag</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-country"><code>Country1</code></a> — <sub>The country this Aialander is representing</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The color of the Aialander’s skin</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Body style (0 = male, 1 = female). Value wraps to prevent errors</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Hair style. Value wraps to prevent errors</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color2</code></a> — <sub>Hair color</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float3</code></a> — <sub>Facial hair style. Value wraps to prevent errors</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color3</code></a> — <sub>Car color</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String2</code></a> — <sub>Optional image URL to download and apply to the outfit</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Destination node</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Spherecast(radius, distance)</code></td>
+      <td valign="top">Defines the radius and travel distance used for spherecast sensors</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The radius of the spherecast to be sent out</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>The maximum distance to check for collisions from the origin</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-spherecast"><code>Spherecast1</code></a> — <sub>The spherecast that will check for collisions</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>CarRaycasts(spherecast)</code></td>
+      <td valign="top">Sends 8 sensors out around the car (spherecasts)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-spherecast"><code>Spherecast1</code></a> — <sub>The length/size of spherecasts to send out as sensors</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit1</code></a> — <sub>Data from the forward left spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit2</code></a> — <sub>Data from the forward spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit3</code></a> — <sub>Data from the forward right spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit4</code></a> — <sub>Data from the left spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit5</code></a> — <sub>Data from the right spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit6</code></a> — <sub>Data from the rear left spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit7</code></a> — <sub>Data from the rear spherecast</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit8</code></a> — <sub>Data from the rear right spherecast</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>HitInfo(raycastHit)</code></td>
+      <td valign="top">Extracts collision info from a RaycastHit</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-raycasthit"><code>RaycastHit1</code></a> — <sub>The raycast being checked</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>Was a collision detected?</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The collision distance (infinity if no collision)</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ParkingGetTransform(value)</code></td>
+      <td valign="top">Selection of Transform options that represent a current location in the simulation</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The selected value</sub></li></ul>
+      </td>
+      <td valign="top"><code>Self</code>, <code>Target Parking Stall</code></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ParkingGetFloat(value)</code></td>
+      <td valign="top">Selection of number-based options that represent a current simulation parameter</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The selected value</sub></li></ul>
+      </td>
+      <td valign="top"><code>Speed</code>, <code>Target Stall Width</code>, <code>Target Stall Depth</code>, <code>Current Level</code>, <code>Fail Count</code>, <code>Current Simulation Time</code>, <code>Max Simulation Time</code>, <code>Delta Time</code>, <code>Fixed Delta Time</code>, <code>Pi</code></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ParkingGetBool(value)</code></td>
+      <td valign="top">Selection of True/False options that represent a current simulation parameter</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The result of the selected value</sub></li></ul>
+      </td>
+      <td valign="top"><code>Is Partially in Target Parking Stall</code>, <code>Is Fully in Target Parking Stall</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<details>
+<summary><code>InitializeParking(...)</code> (convenience helper)</summary>
+
+Same nine positional arguments as <code>ConstructModularUniformProperties(...)</code>, but applies them as a convenience initialization helper.
+
+</details>
+
+</details>
+
+<details>
+<summary><strong>Details</strong></summary>
+
+<details>
+<summary>Tips</summary>
+
+- Raycasts originate from the car’s **center**. Approx width **6**, length **10.8**.
+- Stepping on the **brake** while setting **throttle** to **`-1`** will almost instantly stop the car.
 
 </details>
 
@@ -645,52 +1437,9 @@ See the top-level [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driv
 
 </details>
 
-<details>
-<summary>Sensors & Raycast Results</summary>
-
-- **`Spherecast(radius, distance)`** - Defines the radius/size and travel distance used for spherecast sensors
-  - Inputs:
-    - Float (radius)
-    - Float (distance)
-  - Output: Spherecast
-
-- **`CarRaycasts(spherecast)`** - Sends sensors out into the world around the car to detect information about the world
-  - Inputs:
-    - Spherecast (length/size of spherecasts to send out as sensors)
-  - Outputs:
-    - `RaycastHit1` forward left
-    - `RaycastHit2` forward
-    - `RaycastHit3` forward right
-    - `RaycastHit4` left
-    - `RaycastHit5` right
-    - `RaycastHit6` rear left
-    - `RaycastHit7` rear
-    - `RaycastHit8` rear right
-
-- **`HitInfo(raycastHit)`** - Extracts collision info from a `RaycastHit`
-  - Inputs: RaycastHit (connect one of `RaycastHit1`..`RaycastHit8`)
-  - Outputs:
-    - Bool (was a collision detected?)
-    - Float (distance to the collision; returns infinity if no collision)
-
 </details>
 
-<details>
-<summary>Game State Access</summary>
-
-- **`ParkingGetTransform(value)`** - Selection of Transform options that represent a current location in the simulation
-  - Options: `Self`, `Target Parking Stall`
-  - Output: Transform
-
-- **`ParkingGetFloat(value)`** - Selection of global number-based options that represent a current parameter in the simulation
-  - Options: `Speed`, `Target Stall Width`, `Target Stall Depth`, `Current Level`, `Fail Count`, `Current Simulation Time`, `Max Simulation Time`, `Delta Time`, `Fixed Delta Time`, `Pi`
-  - Output: Float
-
-- **`ParkingGetBool(value)`** - Selection of global True/False based options that represent a current parameter in the simulation
-  - Options: `Is Partially in Target Parking Stall`, `Is Fully in Target Parking Stall`
-  - Output: Bool
-
-</details>
+</div>
 
 </details>
 
@@ -699,97 +1448,272 @@ See the top-level [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driv
 <details>
 <summary><strong>Demo Derby Simulation</strong></summary>
 
-**Requirements:** Same modular car stack as Parking: `ModularUniformController` drives your car; `ConstructModularUniformProperties` (or `InitializeParking` / `InitializeDemoDerby`) sets cosmetics. `Spherecast`, `CarRaycasts`, and `HitInfo` behave as in Parking.
-
-**Overview:** Maximize damage to other cars. Collisions deal damage; vulnerable parts change handling (front wheels steering; rear wheels, engine, driveshaft acceleration). At **0** engine health a car **explodes** and damages nearby cars.
-
-**Tips:** Raycasts originate at the car **center** (rough width **6**, length **10.8**, same as Parking). JSON node id for auto throttle is **`Autothrottle`** (not `AutoThrottle`).
+<div style="margin-left: 1em;">
 
 <details>
-<summary>Initialization</summary>
+<summary><strong>Overview</strong></summary>
 
-- **`InitializeDemoDerby(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)`** - Convenience helper to set all derby car cosmetic options in one call. Same nine **positional** arguments as `InitializeParking`; delegates to it.
-  - Inputs:
-    - String (name tag)
-    - Country (country this character is representing — bot personas like `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"` are valid Country values too)
-    - Color (skin color)
-    - Float (body style: `0` = male, `1` = female; value wraps to prevent errors)
-    - Float (hair style; value wraps to prevent errors)
-    - Color (hair color)
-    - Float (facial hair style; value wraps to prevent errors)
-    - Color (car color)
-    - String (optional image URL to download and apply to the outfit; pass `""` for none)
-  - **Returns** the `UniformModularCarProperties` node — capture it so you can set `props.data["modifier"] = "True"` to mark the bot as LLM-driven (see [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven)).
+Maximize damage to other cars. Collisions deal damage; vulnerable parts change handling (front wheels steering; rear wheels, engine, driveshaft acceleration). At **0** engine health a car **explodes** and damages nearby cars.
 
 </details>
 
 <details>
-<summary>Controller, cosmetics, sensors</summary>
+<summary><strong>Requirements</strong></summary>
 
-Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUniformProperties`, `InitializeParking`, `Spherecast`, `CarRaycasts`, `HitInfo` (see **Parking Simulation**).
-
-</details>
-
-<details>
-<summary>Nodes</summary>
-
-- **`DemoDerbyGetTransform(value)`** - `0` self body/controller, `1` fixed reference (inspector), `2` random pathable waypoint.
-
-- **`DemoDerbyGetCar(mode, index_float=None)`** - Returns a **Car** reference. Pass **`index_float`** when `mode` is **`0`** (by index, wrapped to vehicle count) or **`1`** (by rank, wrapped to ranked-vehicle count; ranking = `DamageDealt` desc, then `HealthNormalized` desc). Modes **`0`–`26`** (match `DemoDerbyGetCarGate.cs`):
-    - **`0`** by index · 
-    - **`1`** by rank · 
-    - **`2`** self
-    - **`3`** nearest car · 
-    - **`4`** furthest car
-    - **`5`** lowest health car · 
-    - **`6`** highest health car
-    - **`7`** last damaged car
-    - **`8`** nearest active · 
-    - **`9`** furthest active
-    - **`10`** nearest disabled · 
-    - **`11`** furthest disabled
-    - **`12`** nearest with disabled steering (rear may still drive) · 
-    - **`13`** furthest with disabled steering
-    - **`14`** nearest AI-authored (active) · **`15`** lowest health AI · 
-    - **`16`** highest health AI
-    - **`17`** nearest human-authored (active) · 
-    - **`18`** lowest health human · 
-    - **`19`** highest health human
-    - **`20`** highest ranked · 
-    - **`21`** lowest ranked · 
-    - **`22`** nearest ranked (rank neighbor of self)
-    - **`23`** highest ranked (not immobilized) · 
-    - **`24`** highest ranked (immobilized)
-    - **`25`** lowest ranked (not immobilized) · 
-    - **`26`** lowest ranked (immobilized)
-
-- **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
-
-  > ⚠️ **Broken accessor — do not feed `.HealthPercent` into another node yet.** Only **`.PartTransform`** currently wires up correctly. Passing `CarGetPart(...).HealthPercent` to any Float consumer (`ConditionalSetFloat`, `CompareFloats`, `ClampFloat`, arithmetic, `TimePlot`, etc.) raises **`KeyError: 'Float2'`** in `ConnectPorts` — the wrapper asks for port `Float2` but the Unity node only publishes `Float1`. See [Multi-output component accessor bug](#multi-output-component-accessor-bug) below.
-
-- **`CarInfo(car)`** - **Car** in. Multi-output helper. Access **`.CarTransform`** (Transform), **`.Velocity`** (Vector3 world velocity), **`.IsAI`** (Bool — LLM / ML-Agent authored), **`.IsImmobile`** (Bool — derby mobility tracker flagged), **`.Health`** (Float — summed damageable part health), and **`.Rank`** (Float — 1-based derby rank, `0` when unknown). Components unpack in declared order: `car_transform, velocity, is_ai, is_immobile, health, rank = CarInfo(car)`.
-
-  > ⚠️ **Broken accessors — do not feed `.Velocity`, `.IsAI`, `.IsImmobile`, `.Health`, or `.Rank` into another node yet.** Only **`.CarTransform`** currently wires up correctly. Using any of the others (including via tuple unpacking, since the unpacked node is the same object) raises **`KeyError: 'Vector32'`** / **`'Bool3'`** / **`'Bool4'`** / **`'Float5'`** / **`'Float6'`** in `ConnectPorts`. The canonical failure is `Magnitude(CarInfo(car).Velocity)` → `KeyError: 'Vector32'`. See [Multi-output component accessor bug](#multi-output-component-accessor-bug) below.
-
-- **`GetCarFromTransform(transform)`** - Converts a **Transform** (or `GameObject`/`Component` passed through transform nodes) into a **Car** reference (Unity searches on the transform and parents).
-
-- **`Autosteer(goal)`** - **Vector3** target, **Float** steering out.
-
-- **`Autothrottle(goal, desired_speed)`** - **Vector3** goal, **Float** target speed at goal, **Float** throttle out.
+- Same modular car stack as Parking:
+  - Drive with `ModularUniformController(...)`
+  - Cosmetics with `ConstructModularUniformProperties(...)` / `InitializeParking(...)` / `InitializeDemoDerby(...)`
+  - Sensors via `Spherecast(...)` → `CarRaycasts(...)` → `HitInfo(...)`
 
 </details>
 
 <details>
-<summary>Unity caveat: ParkingGetFloat / ParkingGetBool in Demo Derby</summary>
+<summary><strong>Nodes</strong></summary>
 
-Unity’s **Demo Derby Get Float** / **Demo Derby Get Bool** assets still serialize as **`ParkingGetFloat`** and **`ParkingGetBool`**. The current `ParkingGetFloatGate` / `ParkingGetBoolGate` in AIComp expect **parking** (`CarParkingManager`), so they are **not** wired for **`DemoDerbyGameManager`** yet. Python may still emit those nodes for Parking graphs or future Unity builds; for derby logic today prefer **`DemoDerbyGetTransform`**, **`DemoDerbyGetCar`**, **`CarGetPart`**, **`CarInfo`**, **`Autosteer`**, and **`Autothrottle`**.
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options / Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>InitializeDemoDerby(name, country, skinColor, bodyStyle, hairStyle, hairColor, facialHairStyle, carColor, outfitUrl)</code></td>
+      <td valign="top">Convenience helper to set derby cosmetics (delegates to <code>InitializeParking</code>)</td>
+      <td valign="top">See <code>ConstructModularUniformProperties(...)</code> in <strong>Parking Simulation</strong></td>
+      <td valign="top">—</td>
+      <td valign="top">Returns <code>UniformModularCarProperties</code>; set <code>props.data["modifier"] = "True"</code> to mark as LLM-driven</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>DemoDerbyGetTransform(value)</code></td>
+      <td valign="top">Get key transforms used in the derby sim</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The selected value</sub></li></ul></td>
+      <td valign="top">
+        <div><strong>Values</strong>:</div>
+        <div><code>0</code> self</div>
+        <div><code>1</code> fixed ref (inspector)</div>
+        <div><code>2</code> random pathable waypoint</div>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>DemoDerbyGetCar(mode, index_float=None)</code></td>
+      <td valign="top">Select a car reference by mode (nearest, ranked, etc.)</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-car"><code>Car1</code></a> — <sub>The selected car</sub></li></ul></td>
+      <td valign="top">
+        <div><strong>Modes</strong>:</div>
+        <div><code>0</code> by index</div>
+        <div><code>1</code> by rank</div>
+        <div><code>2</code> self</div>
+        <div><code>3</code> nearest car</div>
+        <div><code>4</code> furthest car</div>
+        <div><code>5</code> lowest health car</div>
+        <div><code>6</code> highest health car</div>
+        <div><code>7</code> last damaged car</div>
+        <div><code>8</code> nearest active</div>
+        <div><code>9</code> furthest active</div>
+        <div><code>10</code> nearest disabled</div>
+        <div><code>11</code> furthest disabled</div>
+        <div><code>12</code> nearest with disabled steering (rear may still drive)</div>
+        <div><code>13</code> furthest with disabled steering</div>
+        <div><code>14</code> nearest AI-authored (active)</div>
+        <div><code>15</code> lowest health AI</div>
+        <div><code>16</code> highest health AI</div>
+        <div><code>17</code> nearest human-authored (active)</div>
+        <div><code>18</code> lowest health human</div>
+        <div><code>19</code> highest health human</div>
+        <div><code>20</code> highest ranked</div>
+        <div><code>21</code> lowest ranked</div>
+        <div><code>22</code> nearest ranked (rank neighbor of self)</div>
+        <div><code>23</code> highest ranked (not immobilized)</div>
+        <div><code>24</code> highest ranked (immobilized)</div>
+        <div><code>25</code> lowest ranked (not immobilized)</div>
+        <div><code>26</code> lowest ranked (immobilized)</div>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>CarGetPart(mode, car)</code></td>
+      <td valign="top">Pick a part of a car (aim point, weakpoint, etc.)</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-car"><code>Car1</code></a> — <sub>The car to query</sub></li></ul></td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>Part transform</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Health percent (0–100)</sub></li>
+        </ul>
+      </td>
+      <td valign="top">
+        <div><strong>Modes</strong>:</div>
+        <div><code>0</code> average of all parts</div>
+        <div><code>1</code> nearest part</div>
+        <div><code>2</code> weakest part</div>
+        <div><code>3</code> nearest crucial part</div>
+        <div><code>4</code> WheelFL</div>
+        <div><code>5</code> WheelFR</div>
+        <div><code>6</code> WheelRL</div>
+        <div><code>7</code> WheelRR</div>
+        <div><code>8</code> AxleFL</div>
+        <div><code>9</code> AxleFR</div>
+        <div><code>10</code> AxleRL</div>
+        <div><code>11</code> AxleRR</div>
+        <div><code>12</code> Engine</div>
+        <div><code>13</code> Driveshaft</div>
+        <div><code>14</code> SuspensionFL</div>
+        <div><code>15</code> SuspensionFR</div>
+        <div><code>16</code> SuspensionRL</div>
+        <div><code>17</code> SuspensionRR</div>
+        <div><code>18</code> Hood</div>
+        <div><code>19</code> Trunk</div>
+        <div><code>20</code> BumperFront</div>
+        <div><code>21</code> BumperRear</div>
+        <div><code>22</code> LicensePlateFront</div>
+        <div><code>23</code> LicensePlateRear</div>
+        <div><code>24</code> FenderFL</div>
+        <div><code>25</code> FenderFR</div>
+        <div><code>26</code> DoorL</div>
+        <div><code>27</code> DoorR</div>
+        <div><code>28</code> DoorRL</div>
+        <div><code>29</code> DoorRR</div>
+        <div><code>30</code> TurnSignalFL</div>
+        <div><code>31</code> TurnSignalFR</div>
+        <div><code>32</code> HeadlightL</div>
+        <div><code>33</code> HeadlightR</div>
+        <div><code>34</code> TaillightL</div>
+        <div><code>35</code> TaillightR</div>
+        <div><code>36</code> WindshieldWipers</div>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><code>CarInfo(car)</code></td>
+      <td valign="top">Multi-output car info helper</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-car"><code>Car1</code></a> — <sub>The car to query</sub></li></ul></td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>Car transform</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>Velocity</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>Is AI-authored</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool2</code></a> — <sub>Is immobile</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Health</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Rank</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><a href="#carinfo-accessor-warnings"><strong>Notes</strong></a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>GetCarFromTransform(transform)</code></td>
+      <td valign="top">Convert a Transform into a Car reference</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The transform to resolve</sub></li></ul></td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-car"><code>Car1</code></a> — <sub>The resolved car</sub></li></ul></td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Autosteer(goal)</code></td>
+      <td valign="top">Steer toward a world-space goal</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>Target position</sub></li></ul></td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Steering output</sub></li></ul></td>
+      <td valign="top">—</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Autothrottle(goal, desired_speed)</code></td>
+      <td valign="top">Throttle toward a goal with a target speed</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>Target position</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>Desired speed at goal</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float2</code></a> — <sub>Throttle output</sub></li></ul></td>
+      <td valign="top">—</td>
+    </tr>
+  </tbody>
+</table>
 
 </details>
 
 <details>
-<summary>Minimal complete Demo Derby example</summary>
+<summary><strong>Details</strong></summary>
 
-This is the smallest end-to-end derby bot. It chases the nearest active car, aims for that car's nearest crucial part (engine / driveshaft / front wheel), commits to the throttle, and brakes if something is right in front of the bumper but the real target is still far away (i.e. it's about to ram a wall). **Use this as your starting template.** `Grok.py` demonstrates a working sensor-based "heavily blocked" unstick (avoiding the `CarInfo.IsImmobile` → `KeyError: 'Bool4'` bug that previously affected it and `Claude.py`); the other example bots follow the same safe pattern.
+### Guardrails (common LLM pitfalls)
+
+- **Transform vs Vector3**: Many helpers output a **Transform** (type `Transform`) which is *not* a Vector3 position. In this library, transforms are represented as `Node` objects and **do not** have Unity-style fields like `.Position` / `.position`.
+- **How to get a position Vector3 from a Transform**: use **`RelativePosition(transform_node, "Self")`** (returns a `Vector3`).
+- **Bad (will error)**: `goal = CarGetPart(0, car).PartTransform.Position`
+- **Good**:
+  - `part = CarGetPart(0, car)`
+  - `part_tf, _health = CarGetPart(0, car)`
+  - `goal = RelativePosition(part_tf, "Self")`
+
+<a id="demoderbygetcar-modes"></a>
+
+### DemoDerbyGetCar modes
+
+- **`0`** by index · **`1`** by rank · **`2`** self
+- **`3`** nearest car · **`4`** furthest car
+- **`5`** lowest health car · **`6`** highest health car
+- **`7`** last damaged car
+- **`8`** nearest active · **`9`** furthest active
+- **`10`** nearest disabled · **`11`** furthest disabled
+- **`12`** nearest with disabled steering (rear may still drive) · **`13`** furthest with disabled steering
+- **`14`** nearest AI-authored (active) · **`15`** lowest health AI · **`16`** highest health AI
+- **`17`** nearest human-authored (active) · **`18`** lowest health human · **`19`** highest health human
+- **`20`** highest ranked · **`21`** lowest ranked · **`22`** nearest ranked (rank neighbor of self)
+- **`23`** highest ranked (not immobilized) · **`24`** highest ranked (immobilized)
+- **`25`** lowest ranked (not immobilized) · **`26`** lowest ranked (immobilized)
+
+<a id="cargetpart-modes"></a>
+
+### CarGetPart modes
+
+- Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part
+- Modes **`4`–`36`** select a specific part:
+  - `4` WheelFL
+  - `5` WheelFR
+  - `6` WheelRL
+  - `7` WheelRR
+  - `8` AxleFL
+  - `9` AxleFR
+  - `10` AxleRL
+  - `11` AxleRR
+  - `12` Engine
+  - `13` Driveshaft
+  - `14` SuspensionFL
+  - `15` SuspensionFR
+  - `16` SuspensionRL
+  - `17` SuspensionRR
+  - `18` Hood
+  - `19` Trunk
+  - `20` BumperFront
+  - `21` BumperRear
+  - `22` LicensePlateFront
+  - `23` LicensePlateRear
+  - `24` FenderFL
+  - `25` FenderFR
+  - `26` DoorL
+  - `27` DoorR
+  - `28` DoorRL
+  - `29` DoorRR
+  - `30` TurnSignalFL
+  - `31` TurnSignalFR
+  - `32` HeadlightL
+  - `33` HeadlightR
+  - `34` TaillightL
+  - `35` TaillightR
+  - `36` WindshieldWipers
+
+<a id="carinfo-accessor-warnings"></a>
+
+### Multi-output accessor warnings (current limitation)
+
+- **CarGetPart**: only output **`Transform1`** currently wires up correctly. Using the health output (published as `Float2`) in another node currently raises `KeyError: 'Float2'`.
+- **CarInfo**: only output **`Transform1`** currently wires up correctly. Using `Vector32` / `Bool3` / `Bool4` / `Float5` / `Float6` in another node currently raises `KeyError` (commonly `Vector32` / `Bool3` / `Bool4` / `Float5` / `Float6`).
+
+### Minimal complete Demo Derby example
+
+This is the smallest end-to-end derby bot. It chases the nearest active car, aims for that car's nearest crucial part, commits to the throttle, and brakes if something is right in front of the bumper but the real target is still far away.
 
 ```python
 from AIGamePyLibrary import *
@@ -813,8 +1737,8 @@ self_pos = RelativePosition(DemoDerbyGetTransform(0), "Self")
 
 # 3. Pick a target: nearest active opponent, aim at its nearest crucial part.
 target      = DemoDerbyGetCar(8)                     # 8 = nearest active
-target_part = CarGetPart(3, target)                  # 3 = nearest crucial part
-goal        = RelativePosition(target_part.PartTransform, "Self")
+target_tf, _target_part_health = CarGetPart(3, target)  # 3 = nearest crucial part
+goal                          = RelativePosition(target_tf, "Self")
 
 # 4. Forward sensor for emergency braking against scenery.
 sensor          = Spherecast(1.2, 12.0)
@@ -836,7 +1760,14 @@ ModularUniformController(
 SaveData("MyBot", "auto")
 ```
 
+### Tips
+
+- Raycasts originate at the car **center** (rough width **6**, length **10.8**, same as Parking).
+- JSON node id for auto throttle is **`Autothrottle`** (not `AutoThrottle`).
+
 </details>
+
+</div>
 
 </details>
 
@@ -845,101 +1776,199 @@ SaveData("MyBot", "auto")
 <details>
 <summary><strong>Volleyball Simulation</strong></summary>
 
+<blockquote>
+
 <details>
-<summary>Game State Access (node-based)</summary>
+<summary><strong>Overview</strong></summary>
 
-Volleyball state is read through four sim-prefixed helpers. Every call returns a `Node` you can pipe into other nodes. Each helper maps to a Unity node type in `Assets/_Nodes/` so the simulation scope is obvious at the call site. There are **no** dotted shortcuts — use these helpers everywhere.
-
-- **`VolleyballGetVector3(value)`** — world-space vectors. Python API name; Unity node type id is `SlimeGetVector3` (`Assets/_Nodes/SlimeGetVector3.asset`)
-  - Options: `"Self Position"`, `"Self Velocity"`, `"Opponent Position"`, `"Opponent Velocity"`, `"Ball Position"`, `"Ball Velocity"`
-  - Output: Vector3
-
-- **`VolleyballGetTransform(value)`** — Transform references (Unity asset: `Assets/_Nodes/VolleyballGetTransform.asset`). Pipe through `RelativePosition(tf, "Self")` to get a Vector3.
-  - Options: `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
-  - Output: Transform
-
-- **`VolleyballGetBool(value)`** — boolean state (Unity asset: `Assets/_Nodes/VolleyballGetBool.asset`)
-  - Options: `"Self Can Jump"`, `"Opponent Can Jump"`, `"Ball Is Self Side"`
-  - Output: Bool
-
-- **`VolleyballGetFloat(value)`** — scalar state (Unity asset: `Assets/_Nodes/VolleyballGetFloat.asset`)
-  - Options: `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`, `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
-  - Output: Float
-
-> **Do not use these in other sims.** Survival → `SurvivalGetTransform` / `SurvivalGetFloat` / `SurvivalGetBool`. Parking → `ParkingGetTransform` / `ParkingGetFloat` / `ParkingGetBool`. Demo Derby → `DemoDerbyGetTransform` / `DemoDerbyGetCar` / `CarGetPart(...).PartTransform`. The old unprefixed aliases (`GetVector3` / `GetTransform` / `GetBool` / `GetFloat`) still point at these Volleyball helpers for backward-compat, but new code should use the explicit prefixed names.
-
-Example:
-
-```python
-self_pos    = VolleyballGetVector3("Self Position")
-ball_pos    = VolleyballGetVector3("Ball Position")
-opp_vel     = VolleyballGetVector3("Opponent Velocity")
-can_jump    = VolleyballGetBool("Self Can Jump")
-team_score  = VolleyballGetFloat("Team score")
-team_spawn  = VolleyballGetTransform("Self Team Spawn")
-spawn_point = RelativePosition(team_spawn, "Self")  # Transform -> Vector3
-```
+Volleyball bots control a slime character to move and jump based on the current world state (self/opponent/ball positions and velocities, scores, etc.).
 
 </details>
 
 <details>
-<summary>Volleyball-Specific Functions</summary>
+<summary><strong>Requirements</strong></summary>
 
-- **`InitializeSlime(name, color, country, speed, acceleration, jump)`**
-  - Initializes your slime bot with the specified properties
-  - `name`: String name for the bot
-  - `color`: Color name (see available colors below)
-  - `country`: Country name (see available countries below)
-  - `speed`, `acceleration`, `jump`: Numeric stat values
-  - Output: None (side effect)
-
-- **`SlimeController(targetPosition, jumpCondition)`**
-  - Controls the slime's movement
-  - `targetPosition`: Vector3 Node representing where to move
-  - `jumpCondition`: Bool Node representing when to jump
-  - Output: None (side effect)
-
-- **`ConstructSlimeProperties(name, color, country, speedStat, accelerationStat, jumpStat)`**
-  - Low-level function to construct slime properties
-  - Inputs: String, Color, Country, Stat, Stat, Stat
-  - Output: None (side effect)
-
-- **`VolleyballGetVector3(value)`** - Volleyball-only Vector3 accessor. Python name; Unity node type id is `SlimeGetVector3` (`Assets/_Nodes/SlimeGetVector3.asset`)
-  - Available values: `"Self Position"`, `"Self Velocity"`, `"Ball Position"`, `"Ball Velocity"`, `"Opponent Position"`, `"Opponent Velocity"`
-  - Output: Vector3
-
-- **`VolleyballGetBool(value)`** - Volleyball-only bool accessor (Unity asset: `Assets/_Nodes/VolleyballGetBool.asset`)
-  - Available values: `"Self Can Jump"`, `"Opponent Can Jump"`, `"Ball Is Self Side"`
-  - Output: Bool
-
-- **`VolleyballGetFloat(value)`** - Volleyball-only float accessor (Unity asset: `Assets/_Nodes/VolleyballGetFloat.asset`)
-  - Options: `"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`, `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
-  - Output: Float
-
-- **`VolleyballGetTransform(value)`** - Volleyball-only transform accessor (Unity asset: `Assets/_Nodes/VolleyballGetTransform.asset`)
-  - Options: `"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
-  - Output: Transform
-
-> The unprefixed names (`GetVector3` / `GetBool` / `GetFloat` / `GetTransform`) are kept as backward-compat aliases for these four helpers and **only** build Volleyball nodes. New code should call the prefixed helpers so the simulation scope is obvious.
-
-- **`RelativePosition(transform, direction)`** - Gets a relative position vector
-  - `transform`: Transform node
-  - `direction`: One of `"Self"`, `"Self + Forward"`, `"Self + Backward"`, `"Self + Left"`, `"Self + Right"`, `"Self + Up"`, `"Self + Down"`, `"Forward"`, `"Backward"`, `"Left"`, `"Right"`, `"Up"`, `"Down"`
-  - Output: Vector3
-
-- **`Stat(value)`** - Creates a stat node (used for slime stats)
-  - Input: `value` (int or str)
-  - Output: Stat
-
-- **`Color(value)`** - Creates a color node
-  - Options: `"Auburn"`, `"Black"`, `"Blonde"`, `"Blue"`, `"Brown"`, `"Dark Brown"`, `"Dark Green"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"Tan"`, `"White"`, `"Yellow"`
-  - Output: Color
-
-- **`Country(value)`** - Creates a country node
-  - Options: `"Unknown"`, `"Afghanistan"`, `"Albania"`, `"Algeria"`, `"Andorra"`, `"Angola"`, `"Argentina"`, `"Armenia"`, `"Australia"`, `"Austria"`, `"Azerbaijan"`, `"Bahamas"`, `"Bahrain"`, `"Bangladesh"`, `"Barbados"`, `"Belarus"`, `"Belgium"`, `"Bermuda"`, `"Bohemia"`, `"Botswana"`, `"Brazil"`, `"Bulgaria"`, `"Burkina Faso"`, `"Burundi"`, `"Cameroon"`, `"Canada"`, `"Chile"`, `"China"`, `"Colombia"`, `"Costa Rica"`, `"Croatia"`, `"Cuba"`, `"Cyprus"`, `"Czechia"`, `"Côte d'Ivoire"`, `"Denmark"`, `"Djibouti"`, `"Dominican Republic"`, `"DR Congo"`, `"Ecuador"`, `"Egypt"`, `"Eritrea"`, `"Estonia"`, `"Ethiopia"`, `"Fiji"`, `"Finland"`, `"France"`, `"Gabon"`, `"Georgia"`, `"Germany"`, `"Ghana"`, `"Greece"`, `"Grenada"`, `"Guatemala"`, `"Guyana"`, `"Haiti"`, `"Hong Kong"`, `"Hungary"`, `"Iceland"`, `"India"`, `"Indonesia"`, `"Iran"`, `"Iraq"`, `"Ireland"`, `"Israel"`, `"Italy"`, `"Jamaica"`, `"Japan"`, `"Jordan"`, `"Kazakhstan"`, `"Kenya"`, `"Kosovo"`, `"Kuwait"`, `"Kyrgyzstan"`, `"Latvia"`, `"Lebanon"`, `"Lithuania"`, `"Luxembourg"`, `"Malaysia"`, `"Mauritius"`, `"Mexico"`, `"Moldova"`, `"Mongolia"`, `"Montenegro"`, `"Morocco"`, `"Mozambique"`, `"Myanmar"`, `"Namibia"`, `"Netherlands"`, `"New Zealand"`, `"Niger"`, `"Nigeria"`, `"North Korea"`, `"North Macedonia"`, `"Norway"`, `"Oman"`, `"Pakistan"`, `"Palestine"`, `"Panama"`, `"Paraguay"`, `"Peru"`, `"Philippines"`, `"Poland"`, `"Portugal"`, `"Puerto Rico"`, `"Qatar"`, `"Romania"`, `"Russia"`, `"Samoa"`, `"San Marino"`, `"Saudi Arabia"`, `"Scotland"`, `"Senegal"`, `"Serbia"`, `"Singapore"`, `"Slovakia"`, `"Slovenia"`, `"Somolia"`, `"South Africa"`, `"South Korea"`, `"Spain"`, `"Sri Lanka"`, `"Sudan"`, `"Suriname"`, `"Sweden"`, `"Switzerland"`, `"Syria"`, `"Taiwan"`, `"Tajikistan"`, `"Tanzania"`, `"Thailand"`, `"Togo"`, `"Tonga"`, `"Trinidad and Tobago"`, `"Tunisia"`, `"Turkey"`, `"Turkmenistan"`, `"Uganda"`, `"Ukraine"`, `"United Arab Emirates"`, `"United Kingdom"`, `"United States of America"`, `"Uruguay"`, `"Uzbekistan"`, `"Venezuela"`, `"Vietnam"`, `"Virgin Islands"`, `"Yemen"`, `"Zambia"`, `"Zimbabwe"`, `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"`
-  - Output: Country
+- Drive the slime via the destination node: `SlimeController(targetPosition, jumpCondition)`
+- Read world state via sim-prefixed helpers: `VolleyballGetVector3` / `VolleyballGetTransform` / `VolleyballGetBool` / `VolleyballGetFloat`
 
 </details>
+
+<details>
+<summary><strong>Nodes</strong></summary>
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Node</th>
+      <th align="left">Purpose</th>
+      <th align="left">Inputs</th>
+      <th align="left">Outputs</th>
+      <th align="left">Options / Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td valign="top"><code>VolleyballGetVector3(value)</code></td>
+      <td valign="top">World-space vectors (Unity node type id: <code>SlimeGetVector3</code>)</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value from the selection</sub></li></ul>
+      </td>
+      <td valign="top"><a href="#volleyballgetvector3-values">Values</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>VolleyballGetTransform(value)</code></td>
+      <td valign="top">Transform references (convert to Vector3 via <code>RelativePosition(tf, \"Self\")</code>)</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The selected value</sub></li></ul>
+      </td>
+      <td valign="top"><a href="#volleyballgettransform-values">Values</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>VolleyballGetBool(value)</code></td>
+      <td valign="top">Boolean state</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>The selected value</sub></li></ul>
+      </td>
+      <td valign="top"><a href="#volleyballgetbool-values">Values</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>VolleyballGetFloat(value)</code></td>
+      <td valign="top">Scalar state</td>
+      <td valign="top">—</td>
+      <td valign="top">
+        <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The selected value</sub></li></ul>
+      </td>
+      <td valign="top"><a href="#volleyballgetfloat-values">Values</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>InitializeSlime(name, color, country, speed, acceleration, jump)</code></td>
+      <td valign="top">Initialize your slime bot with the specified properties</td>
+      <td valign="top">See <code>ConstructSlimeProperties(...)</code> below</td>
+      <td valign="top">—</td>
+      <td valign="top">Convenience helper</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>SlimeController(targetPosition, jumpCondition)</code></td>
+      <td valign="top">Drive the slime (movement + jump)</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>Target world position</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-bool"><code>Bool1</code></a> — <sub>Jump condition</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Destination node</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>ConstructSlimeProperties(name, color, country, speedStat, accelerationStat, jumpStat)</code></td>
+      <td valign="top">Low-level slime cosmetics + stat initialization</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-string"><code>String1</code></a> — <sub>Name tag</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>Slime color</sub></li>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-country"><code>Country1</code></a> — <sub>Country / persona</sub></li>
+          <li style="margin: 0 0 8px 0;"><code>Stat1</code> — <sub>Speed stat</sub></li>
+          <li style="margin: 0 0 8px 0;"><code>Stat2</code> — <sub>Acceleration stat</sub></li>
+          <li style="margin: 0 0 8px 0;"><code>Stat3</code> — <sub>Jump stat</sub></li>
+        </ul>
+      </td>
+      <td valign="top">—</td>
+      <td valign="top">Destination node</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>RelativePosition(transform, direction)</code></td>
+      <td valign="top">Convert a Transform reference into a world-space Vector3</td>
+      <td valign="top">
+        <ul>
+          <li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>Transform to query</sub></li>
+        </ul>
+      </td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>World-space position</sub></li></ul></td>
+      <td valign="top">Direction: see <a href="#relativeposition-directions">values</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Stat(value)</code></td>
+      <td valign="top">Create a Stat node (used for slime properties)</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><code>Stat1</code> — <sub>The stat</sub></li></ul></td>
+      <td valign="top"><code>value</code> can be <code>int</code> or <code>str</code></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Color(value)</code></td>
+      <td valign="top">Create a Color node</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-color"><code>Color1</code></a> — <sub>The selected color</sub></li></ul></td>
+      <td valign="top">See <a href="#volleyball-color-values">values</a></td>
+    </tr>
+    <tr>
+      <td valign="top"><code>Country(value)</code></td>
+      <td valign="top">Create a Country node</td>
+      <td valign="top">—</td>
+      <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-country"><code>Country1</code></a> — <sub>The selected country / persona</sub></li></ul></td>
+      <td valign="top">See <a href="#volleyball-country-values">values</a></td>
+    </tr>
+  </tbody>
+</table>
+ 
+</details>
+
+<details>
+<summary><strong>Details</strong></summary>
+
+<a id="volleyballgetvector3-values"></a>
+
+### VolleyballGetVector3 values
+
+`"Self Position"`, `"Self Velocity"`, `"Opponent Position"`, `"Opponent Velocity"`, `"Ball Position"`, `"Ball Velocity"`
+
+<a id="volleyballgettransform-values"></a>
+
+### VolleyballGetTransform values
+
+`"Self"`, `"Opponent"`, `"Ball"`, `"Self Team Spawn"`, `"Opponent Team Spawn"`
+
+<a id="volleyballgetbool-values"></a>
+
+### VolleyballGetBool values
+
+`"Self Can Jump"`, `"Opponent Can Jump"`, `"Ball Is Self Side"`
+
+<a id="volleyballgetfloat-values"></a>
+
+### VolleyballGetFloat values
+
+`"Delta time"`, `"Fixed delta time"`, `"Gravity"`, `"Pi"`, `"Simulation duration"`, `"Team score"`, `"Opponent score"`, `"Ball touches remaining"`
+
+<a id="relativeposition-directions"></a>
+
+### RelativePosition directions
+
+`"Self"`, `"Self + Forward"`, `"Self + Backward"`, `"Self + Left"`, `"Self + Right"`, `"Self + Up"`, `"Self + Down"`, `"Forward"`, `"Backward"`, `"Left"`, `"Right"`, `"Up"`, `"Down"`
+
+<a id="volleyball-color-values"></a>
+
+### Color values
+
+`"Auburn"`, `"Black"`, `"Blonde"`, `"Blue"`, `"Brown"`, `"Dark Brown"`, `"Dark Green"`, `"Green"`, `"Hot Pink"`, `"Light Blue"`, `"Light Grey"`, `"Medium Grey"`, `"Orange"`, `"Pink"`, `"Purple"`, `"Red"`, `"Tan"`, `"White"`, `"Yellow"`
+
+<a id="volleyball-country-values"></a>
+
+### Country values
+
+See the full list in the Country node docs above (same list used across simulations).
+
+### Access rules (important)
+
+- There are **no** Unity-style dotted shortcuts. Always use the sim-prefixed helpers.
+- The unprefixed aliases (`GetVector3` / `GetTransform` / `GetBool` / `GetFloat`) are Volleyball-only backward-compat; prefer the explicit `VolleyballGet*` names.
+- Transform → world position: `RelativePosition(transform_node, "Self")`.
+
+</details>
+
+</blockquote>
 
 </details>
 
@@ -1011,7 +2040,157 @@ The `SaveData` function generates a JSON file that can be imported into Unity fo
 
 ---
 
-# Notes for LLM Authors
+## Data types
+
+This section is the “type dictionary” that port keys link to (for example: clicking `Float1` jumps you here).
+
+<details>
+<summary><strong>Float</strong></summary>
+
+<a id="datatype-float"></a>
+
+- **Type**: Float
+- **Ports**: `Float1`, `Float2`, `Float3`, ...
+- **Meaning**: A numeric scalar value.
+
+</details>
+
+<details>
+<summary><strong>Bool</strong></summary>
+
+<a id="datatype-bool"></a>
+
+- **Type**: Bool
+- **Ports**: `Bool1`, `Bool2`, ...
+- **Meaning**: A true/false scalar value.
+
+</details>
+
+<details>
+<summary><strong>String</strong></summary>
+
+<a id="datatype-string"></a>
+
+- **Type**: String
+- **Ports**: `String1`, `String2`, ...
+- **Meaning**: A text value.
+
+</details>
+
+<details>
+<summary><strong>Color</strong></summary>
+
+<a id="datatype-color"></a>
+
+- **Type**: Color
+- **Ports**: `Color1`, `Color2`, ...
+- **Meaning**: A dropdown-selected color value.
+
+</details>
+
+<details>
+<summary><strong>Country</strong></summary>
+
+<a id="datatype-country"></a>
+
+- **Type**: Country
+- **Ports**: `Country1`, `Country2`, ...
+- **Meaning**: A dropdown-selected country value.
+
+</details>
+
+<details>
+<summary><strong>RaycastHit</strong></summary>
+
+<a id="datatype-raycasthit"></a>
+
+- **Type**: RaycastHit
+- **Ports**: `RaycastHit1`, `RaycastHit2`, ...
+- **Meaning**: A ray/spherecast hit result container (used by sensors).
+
+</details>
+
+<details>
+<summary><strong>Spherecast</strong></summary>
+
+<a id="datatype-spherecast"></a>
+
+- **Type**: Spherecast
+- **Ports**: `Spherecast1`, `Spherecast2`, ...
+- **Meaning**: A sensor definition that configures the size/length of spherecast sensors.
+
+</details>
+
+<details>
+<summary><strong>Any</strong></summary>
+
+<a id="datatype-any"></a>
+
+- **Type**: Any
+- **Ports**: `Any1`, `Any2`, ...
+- **Meaning**: Generic “wildcard” type. Carries through whatever concrete type you connect.
+
+</details>
+
+<details>
+<summary><strong>Vector3</strong></summary>
+
+<a id="datatype-vector3"></a>
+
+- **Type**: Vector3
+- **Ports**: `Vector31`, `Vector32`, ...
+- **Meaning**: A 3D vector. Supports `.x`, `.y`, `.z` component access in the graph.
+
+</details>
+
+<details>
+<summary><strong>Transform</strong></summary>
+
+<a id="datatype-transform"></a>
+
+- **Type**: Transform
+- **Ports**: `Transform1`, `Transform2`, ...
+- **Meaning**: A Unity Transform reference (position/rotation container). Use `RelativePosition(transform, "Self")` to convert to a world-space Vector3.
+
+</details>
+
+<details>
+<summary><strong>SurvivalState</strong></summary>
+
+<a id="datatype-survivalstate"></a>
+
+- **Type**: SurvivalState
+- **Ports**: `SurvivalState1`, `SurvivalState2`, ...
+- **Meaning**: Survival simulation state enum.
+
+</details>
+
+<details>
+<summary><strong>SurvivalEmote</strong></summary>
+
+<a id="datatype-survivalemote"></a>
+
+- **Type**: SurvivalEmote
+- **Ports**: `SurvivalEmote1`, `SurvivalEmote2`, ...
+- **Meaning**: Survival simulation emote enum.
+
+</details>
+
+<details>
+<summary><strong>Car</strong></summary>
+
+<a id="datatype-car"></a>
+
+- **Type**: Car
+- **Ports**: `Car1`, `Car2`, ...
+- **Meaning**: Demo Derby car reference (selected via `DemoDerbyGetCar(...)` or derived from a Transform).
+
+</details>
+
+---
+
+<details>
+<summary><strong>Notes for LLM Authors</strong></summary>
 
 This section consolidates everything an LLM (or anyone new to the library) needs to avoid the most common mistakes. Read it in full before writing a script.
 
@@ -1220,3 +2399,5 @@ throttle     = ConditionalSetFloat(reverse_mode, -1.0, throttle_fwd)
 ```
 
 Any bot that follows the [Minimal complete Demo Derby example](#demo-derby-simulation) pattern (target car → nearest crucial part → `Autosteer` + `Autothrottle` + a forward raycast for panic-brake, **no `CarInfo` component reads other than `.CarTransform`**) avoids this bug entirely.
+
+</details>
