@@ -58,6 +58,36 @@ DEFAULT_NODE_COLOR = {"r": 0.21960784494876862, "g": 0.21960784494876862, "b": 0
 DEFAULT_CONNECTION_COLOR = {"r": 0.98, "g": 0.94, "b": 0.84, "a": 1}
 CAP_COLOR = {"r": 1, "g": 0.81, "b": 0.3, "a": 1}
 
+# Dropdown / selection modifier options for nodes whose `modifier` field
+# represents a Unity dropdown selection index. Keys are node IDs.
+# Values are ordered display labels (index = dropdown value).
+#
+# This is used by the Python "compiler" (SaveData JSON serializer) to:
+# - validate user-provided string selections
+# - convert them to the correct dropdown index expected by Unity nodes
+DROPDOWN_OPTIONS: dict[str, tuple[str, ...]] = {
+    # Parking simulation
+    "ParkingGetTransform": ("Self", "Target Parking Stall"),
+    "ParkingGetBool": (
+        "Is Partially in Target Parking Stall",
+        "Is Fully in Target Parking Stall",
+    ),
+    "ParkingGetFloat": (
+        "Speed",
+        "Distance to Stall (based on pathfinding)",
+        "Target Stall Width",
+        "Target Stall Depth",
+        "Current Level",
+        "Fail Count",
+        "Current Simulation Time",
+        "Max Simulation Time",
+        "Delta Time",
+        "Fixed Delta Time",
+        "Pi",
+        "Signed Speed (forward +, reverse −)",
+    ),
+}
+
 outputs = {
     "AddVector3": "Vector3",
     "AddFloats": float,

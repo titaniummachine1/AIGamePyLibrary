@@ -811,7 +811,7 @@ Node configurations determine which nodes are available in the Unity editor. Eac
           <li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>The resulting value</sub></li>
         </ul>
       </td>
-      <td valign="top"><a href="#relativeposition-options">Directions</a></td>
+      <td valign="top"><code>Self</code>, <code>Self + Forward</code>, <code>Self + Backward</code>, <code>Self + Left</code>, <code>Self + Right</code>, <code>Self + Up</code>, <code>Self + Down</code>, <code>Forward</code>, <code>Backward</code>, <code>Left</code>, <code>Right</code>, <code>Up</code>, <code>Down</code>, <code>World</code></td>
     </tr>
   </tbody>
 </table>
@@ -819,7 +819,9 @@ Node configurations determine which nodes are available in the Unity editor. Eac
 <details id="relativeposition-options">
 <summary><strong>RelativePosition</strong> options</summary>
 
-`Self`, `Self + Forward`, `Self + Backward`, `Self + Left`, `Self + Right`, `Self + Up`, `Self + Down`, `Forward`, `Backward`, `Left`, `Right`, `Up`, `Down`
+`Self`, `Self + Forward`, `Self + Backward`, `Self + Left`, `Self + Right`, `Self + Up`, `Self + Down`, `Forward`, `Backward`, `Left`, `Right`, `Up`, `Down`, `World`
+
+Note: `World` exists in the Unity dropdown; currently it behaves the same as `Self` unless/until the Unity gate assigns it a distinct meaning.
 
 </details>
 
@@ -1382,7 +1384,7 @@ Alignment to the stall is encouraged but not required. Colliding with any object
     </tr>
     <tr>
       <td valign="top"><code>ParkingGetTransform(value)</code></td>
-      <td valign="top">Selection of Transform options that represent a current location in the simulation</td>
+      <td valign="top">Selection of Transform options that represent a current location in the simulation. <code>value</code> may be a dropdown index (<code>0</code>, <code>1</code>, …) or one of the exact labels shown in the options column; the saved graph stores the dropdown <em>index</em> in the node’s <code>modifier</code> field.</td>
       <td valign="top">—</td>
       <td valign="top">
         <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-transform"><code>Transform1</code></a> — <sub>The selected value</sub></li></ul>
@@ -1396,7 +1398,7 @@ Alignment to the stall is encouraged but not required. Colliding with any object
       <td valign="top">
         <ul><li style="margin: 0 0 8px 0;"><a href="#datatype-float"><code>Float1</code></a> — <sub>The selected value</sub></li></ul>
       </td>
-      <td valign="top"><code>Speed</code>, <code>Target Stall Width</code>, <code>Target Stall Depth</code>, <code>Current Level</code>, <code>Fail Count</code>, <code>Current Simulation Time</code>, <code>Max Simulation Time</code>, <code>Delta Time</code>, <code>Fixed Delta Time</code>, <code>Pi</code></td>
+      <td valign="top"><code>Speed</code>, <code>Distance to Stall (based on pathfinding)</code>, <code>Target Stall Width</code>, <code>Target Stall Depth</code>, <code>Current Level</code>, <code>Fail Count</code>, <code>Current Simulation Time</code>, <code>Max Simulation Time</code>, <code>Delta Time</code>, <code>Fixed Delta Time</code>, <code>Pi</code>, <code>Signed Speed (forward +, reverse −)</code></td>
     </tr>
     <tr>
       <td valign="top"><code>ParkingGetBool(value)</code></td>
@@ -1887,7 +1889,7 @@ Volleyball bots control a slime character to move and jump based on the current 
         </ul>
       </td>
       <td valign="top"><ul><li style="margin: 0 0 8px 0;"><a href="#datatype-vector3"><code>Vector31</code></a> — <sub>World-space position</sub></li></ul></td>
-      <td valign="top">Direction: see <a href="#relativeposition-directions">values</a></td>
+      <td valign="top"><code>Self</code>, <code>Self + Forward</code>, <code>Self + Backward</code>, <code>Self + Left</code>, <code>Self + Right</code>, <code>Self + Up</code>, <code>Self + Down</code>, <code>Forward</code>, <code>Backward</code>, <code>Left</code>, <code>Right</code>, <code>Up</code>, <code>Down</code>, <code>World</code></td>
     </tr>
     <tr>
       <td valign="top"><code>Stat(value)</code></td>
@@ -1946,7 +1948,7 @@ Volleyball bots control a slime character to move and jump based on the current 
 
 ### RelativePosition directions
 
-`"Self"`, `"Self + Forward"`, `"Self + Backward"`, `"Self + Left"`, `"Self + Right"`, `"Self + Up"`, `"Self + Down"`, `"Forward"`, `"Backward"`, `"Left"`, `"Right"`, `"Up"`, `"Down"`
+`"Self"`, `"Self + Forward"`, `"Self + Backward"`, `"Self + Left"`, `"Self + Right"`, `"Self + Up"`, `"Self + Down"`, `"Forward"`, `"Backward"`, `"Left"`, `"Right"`, `"Up"`, `"Down"`, `"World"`
 
 <a id="volleyball-color-values"></a>
 

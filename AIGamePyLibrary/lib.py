@@ -15,6 +15,7 @@ from .data import (
     CAP_COLOR,
     SERIALIZE_SIZE_DELTA_NODES,
     SERIALIZE_COLOR_NODES,
+    DROPDOWN_OPTIONS,
 )
 from .utils import Position2, Position3, generateId
 
@@ -503,6 +504,55 @@ def _default_line():
     }
 
 
+def _normalize_modifier(node_name: str, node_value):
+    """
+    Normalize `modifier` for nodes whose modifier is a dropdown selection.
+
+    - Accepts either an int index or a string label.
+    - Validates against `DROPDOWN_OPTIONS` when available.
+    - Converts to a stringified index, because Unity nodes store dropdown
+      selections in the `modifier` field as a string.
+    """
+    options = DROPDOWN_OPTIONS.get(node_name)
+    if not options:
+        return node_value
+
+    if isinstance(node_value, bool):
+        # Avoid treating bool as int.
+        return node_value
+
+    if isinstance(node_value, int):
+        if 0 <= node_value < len(options):
+            return str(node_value)
+        raise ValueError(
+            f"{node_name} dropdown index out of range: {node_value}. "
+            f"Valid range: 0..{len(options) - 1} ({', '.join(options)})"
+        )
+
+    if isinstance(node_value, str):
+        value_str = node_value.strip()
+        if value_str.isdigit():
+            idx = int(value_str)
+            if 0 <= idx < len(options):
+                return str(idx)
+            raise ValueError(
+                f"{node_name} dropdown index out of range: {value_str}. "
+                f"Valid range: 0..{len(options) - 1} ({', '.join(options)})"
+            )
+
+        lowered = value_str.casefold()
+        for i, opt in enumerate(options):
+            if opt.casefold() == lowered:
+                return str(i)
+
+        raise ValueError(
+            f"{node_name} invalid selection: {node_value!r}. "
+            f"Valid selections: {', '.join(options)}"
+        )
+
+    return node_value
+
+
 def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
     node = {}
 
@@ -515,7 +565,7 @@ def AddNode(nodeName, nodeValue="", includePorts=True, position=None):
     node["serializableRectTransform"] = _rect_transform(position, size, nodeName)
     node["id"] = nodeName
     node["sID"] = nodeId
-    node["modifier"] = nodeValue
+    node["modifier"] = _normalize_modifier(nodeName, nodeValue)
     if nodeName in SERIALIZE_COLOR_NODES:
         node["serializeColor"] = True
         node["serializeSizeDelta"] = True
