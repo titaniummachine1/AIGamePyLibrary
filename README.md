@@ -731,32 +731,37 @@ Use the same helpers as Parking: `ModularUniformController`, `ConstructModularUn
 </details>
 
 <details>
-<summary>Car queries and automation</summary>
-
-- **Guardrails (common LLM pitfalls)**:
-  - **Transform vs Vector3**: Many helpers output a **Transform** (type `Transform`) which is *not* a Vector3 position. In this library, transforms are represented as `Node` objects and **do not** have Unity-style fields like `.Position` / `.position`.
-  - **How to get a position Vector3 from a Transform**: use **`RelativePosition(transform_node, "Self")`** (returns a `Vector3`).
-  - **Bad (will error)**:
-    - `goal = CarGetPart(0, car).PartTransform.Position`
-  - **Good (same intent)**:
-    - `part = CarGetPart(0, car)`
-    - `goal = RelativePosition(part.PartTransform, "Self")`
+<summary>Nodes</summary>
 
 - **`DemoDerbyGetTransform(value)`** - `0` self body/controller, `1` fixed reference (inspector), `2` random pathable waypoint.
 
 - **`DemoDerbyGetCar(mode, index_float=None)`** - Returns a **Car** reference. Pass **`index_float`** when `mode` is **`0`** (by index, wrapped to vehicle count) or **`1`** (by rank, wrapped to ranked-vehicle count; ranking = `DamageDealt` desc, then `HealthNormalized` desc). Modes **`0`–`26`** (match `DemoDerbyGetCarGate.cs`):
-    - **`0`** by index · **`1`** by rank · **`2`** self
-    - **`3`** nearest car · **`4`** furthest car
-    - **`5`** lowest health car · **`6`** highest health car
+    - **`0`** by index · 
+    - **`1`** by rank · 
+    - **`2`** self
+    - **`3`** nearest car · 
+    - **`4`** furthest car
+    - **`5`** lowest health car · 
+    - **`6`** highest health car
     - **`7`** last damaged car
-    - **`8`** nearest active · **`9`** furthest active
-    - **`10`** nearest disabled · **`11`** furthest disabled
-    - **`12`** nearest with disabled steering (rear may still drive) · **`13`** furthest with disabled steering
-    - **`14`** nearest AI-authored (active) · **`15`** lowest health AI · **`16`** highest health AI
-    - **`17`** nearest human-authored (active) · **`18`** lowest health human · **`19`** highest health human
-    - **`20`** highest ranked · **`21`** lowest ranked · **`22`** nearest ranked (rank neighbor of self)
-    - **`23`** highest ranked (not immobilized) · **`24`** highest ranked (immobilized)
-    - **`25`** lowest ranked (not immobilized) · **`26`** lowest ranked (immobilized)
+    - **`8`** nearest active · 
+    - **`9`** furthest active
+    - **`10`** nearest disabled · 
+    - **`11`** furthest disabled
+    - **`12`** nearest with disabled steering (rear may still drive) · 
+    - **`13`** furthest with disabled steering
+    - **`14`** nearest AI-authored (active) · **`15`** lowest health AI · 
+    - **`16`** highest health AI
+    - **`17`** nearest human-authored (active) · 
+    - **`18`** lowest health human · 
+    - **`19`** highest health human
+    - **`20`** highest ranked · 
+    - **`21`** lowest ranked · 
+    - **`22`** nearest ranked (rank neighbor of self)
+    - **`23`** highest ranked (not immobilized) · 
+    - **`24`** highest ranked (immobilized)
+    - **`25`** lowest ranked (not immobilized) · 
+    - **`26`** lowest ranked (immobilized)
 
 - **`CarGetPart(mode, car)`** - **Car** in. Access **`.PartTransform`** (Transform) and **`.HealthPercent`** (Float 0–100). Modes **`0`–`3`**: average of all parts; nearest part; weakest part; nearest crucial part. Modes **`4`+** follow Unity `DamageableVehiclePart.PartType` order: `4` WheelFL … through **`36`** WindshieldWipers.
 
