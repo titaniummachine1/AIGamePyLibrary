@@ -32,3 +32,19 @@ def GetSurvivalSavePath(
         filename = filename + ".txt"
     base = os.environ.get("USERPROFILE", os.path.expanduser("~"))
     return os.path.join(base, "AppData", "LocalLow", company, product, "Saves", "Survival", filename)
+
+
+def GetSoccerSavePath(
+    filename: str,
+    company: str = "Unicorn One",
+    product: str = "AIComp",
+) -> str:
+    """
+    Returns the full path for a Soccer save file, matching Unity's persistentDataPath.
+    Use this so Python-generated saves appear where the AIComp game loads them from.
+    Example: GetSoccerSavePath("AIATest.txt") -> .../AppData/LocalLow/Unicorn One/AIComp/Saves/Soccer/AIATest.txt
+    """
+    if not filename.endswith(".txt"):
+        filename = filename + ".txt"
+    base = os.environ.get("USERPROFILE", os.path.expanduser("~"))
+    return os.path.join(base, "AppData", "LocalLow", company, product, "Saves", "Soccer", filename)

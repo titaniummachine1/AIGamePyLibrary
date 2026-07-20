@@ -3,7 +3,7 @@ from typing import Literal
 
 from .data import colorNames, countryNames
 from .lib import AddNode, ConnectPorts, Node, SaveData, data
-from .utils import Color, GetSurvivalSavePath, Position3
+from .utils import Color, GetSoccerSavePath, GetSurvivalSavePath, Position3
 
 
 def parseLiteral(value):
@@ -951,6 +951,202 @@ def SurvivalGetTransform(value: int):
 def SurvivalState(value: str):
     """Selection of states. Use enum name: 'Passive', 'Gather', 'Eat', 'Attack', 'Steal', 'Dead'."""
     return AddNode("SurvivalState", value)
+
+
+@cache
+def InitializeSoccer(
+    name,
+    country: countryNames,
+    kickoff1: Node,
+    kickoff2: Node,
+    kickoff3: Node,
+    kickoff4: Node,
+):
+    """Initialize soccer team with name, country, and kickoff positions for players 1-4."""
+    return ConstructSoccerProperties(name, country, kickoff1, kickoff2, kickoff3, kickoff4)
+
+
+@cache
+def ConstructSoccerProperties(
+    name_node_or_str,
+    country,
+    v1: Node,
+    v2: Node,
+    v3: Node,
+    v4: Node,
+):
+    """Sets team name, country, and kickoff positions for players 1-4."""
+    name = String(name_node_or_str) if isinstance(name_node_or_str, str) else name_node_or_str
+    baseNode = AddNode("ConstructSoccerProperties")
+    inputTypes = ["String", "Country", "Vector3", "Vector3", "Vector3", "Vector3"]
+    connectInputNodes(baseNode, inputTypes, [name, country, v1, v2, v3, v4])
+    return baseNode
+
+
+def _soccer_controller(player: int, sprint: Node, move_to: Node, interact: Node):
+    baseNode = AddNode(f"SoccerController{player}")
+    inputTypes = ["Bool", "Vector3", "Bool"]
+    connectInputNodes(baseNode, inputTypes, [sprint, move_to, interact])
+    return baseNode
+
+
+@cache
+def SoccerController1(sprint: Node, move_to: Node, interact: Node):
+    """Controls player 1 (striker). Inputs: sprint, move target, interact."""
+    return _soccer_controller(1, sprint, move_to, interact)
+
+
+@cache
+def SoccerController2(sprint: Node, move_to: Node, interact: Node):
+    """Controls player 2 (playmaker). Inputs: sprint, move target, interact."""
+    return _soccer_controller(2, sprint, move_to, interact)
+
+
+@cache
+def SoccerController3(sprint: Node, move_to: Node, interact: Node):
+    """Controls player 3 (defender). Inputs: sprint, move target, interact."""
+    return _soccer_controller(3, sprint, move_to, interact)
+
+
+@cache
+def SoccerController4(sprint: Node, move_to: Node, interact: Node):
+    """Controls player 4 (goalie). Inputs: sprint, move target, interact."""
+    return _soccer_controller(4, sprint, move_to, interact)
+
+
+@cache
+def SoccerGetBool(
+    value: Literal[
+        "Ball On Team Side",
+        "Is Active Graph",
+        "Is Ball Loose",
+        "Is Ball Nearby Team Player 1",
+        "Is Ball Nearby Team Player 2",
+        "Is Ball Nearby Team Player 3",
+        "Is Ball Nearby Team Player 4",
+        "Is Home Team",
+        "Is Team Kicking off",
+        "Is Team Player 1 Closest Teammate to Ball",
+        "Is Team Player 2 Closest Teammate to Ball",
+        "Is Team Player 3 Closest Teammate to Ball",
+        "Is Team Player 4 Closest Teammate to Ball",
+        "Opponent Has Ball",
+        "Team Has Ball",
+        "Team Player 1 Has Ball",
+        "Team Player 2 Has Ball",
+        "Team Player 3 Has Ball",
+        "Team Player 4 Has Ball",
+    ],
+):
+    """Soccer bool accessor. Modifier is the exact label string (not a dropdown index)."""
+    return AddNode("SoccerGetBool", value)
+
+
+@cache
+def SoccerGetFloat(
+    value: Literal[
+        "Ball Carrier Shot Charge",
+        "Ball Carrier Stamina",
+        "Distance from Team Player 1 to nearest Opponent",
+        "Distance from Team Player 2 to nearest Opponent",
+        "Distance from Team Player 3 to nearest Opponent",
+        "Distance from Team Player 4 to nearest Opponent",
+        "Opponent Score",
+        "Player Interact Radius",
+        "Stamina of last defending opponent",
+        "Team Player 1 Stamina",
+        "Team Player 2 Stamina",
+        "Team Player 3 Stamina",
+        "Team Player 4 Stamina",
+        "Team Score",
+    ],
+):
+    """Soccer float accessor. Modifier is the exact label string (not a dropdown index)."""
+    return AddNode("SoccerGetFloat", value)
+
+
+@cache
+def SoccerGetTransform(
+    value: Literal[
+        "Ball",
+        "Opponent Goal Center",
+        "Team Goal Left Post",
+        "Team Goal Right Post",
+        "Team Player 1",
+        "Team Player 2",
+        "Team Player 3",
+        "Team Player 4",
+    ],
+):
+    """Soccer transform accessor. World position via RelativePosition(tf, \"Self\")."""
+    return AddNode("SoccerGetTransform", value)
+
+
+@cache
+def SoccerGetVector3(
+    value: Literal[
+        "Ball Velocity",
+        "Clear direction from Teammate 1",
+        "Clear direction from Teammate 2",
+        "Clear direction from Teammate 3",
+        "Clear direction from Teammate 4",
+        "Clear direction from team carrier",
+        "Clear direction from team carrier (avoid all walls)",
+        "Clear direction from team carrier (avoid goal lines)",
+        "Clear direction from team carrier (avoid sidelines)",
+        "Direction of clear teammate from Teammate 1",
+        "Direction of clear teammate from Teammate 2",
+        "Direction of clear teammate from Teammate 3",
+        "Direction of clear teammate from Teammate 4",
+        "Direction of opponent goal from Teammate 1",
+        "Direction of opponent goal from Teammate 2",
+        "Direction of opponent goal from Teammate 3",
+        "Direction of opponent goal from Teammate 4",
+        "Lower Corner Opposing Side",
+        "Lower Midfield",
+        "Upper Corner Opposing Side",
+        "Upper Midfield",
+    ],
+):
+    """Soccer Vector3 accessor. Modifier is the exact label string (not a dropdown index)."""
+    return AddNode("SoccerGetVector3", value)
+
+
+def _soccer_sensor_modifier(enabled: str | bool) -> str:
+    if isinstance(enabled, bool):
+        return "True" if enabled else "False"
+    return str(enabled)
+
+
+def _soccer_player_sensors(player: int, spherecast_node: Node, enabled: str | bool = "False"):
+    baseNode = AddNode(f"SoccerPlayerSensors{player}", _soccer_sensor_modifier(enabled))
+    inputTypes = ["Spherecast"]
+    connectInputNodes(baseNode, inputTypes, [spherecast_node])
+    return RaycastHitComponents(baseNode)
+
+
+@cache
+def SoccerPlayerSensors1(spherecast_node: Node, enabled: str | bool = "False"):
+    """Player 1 spherecast sensors. Returns RaycastHit1..8."""
+    return _soccer_player_sensors(1, spherecast_node, enabled)
+
+
+@cache
+def SoccerPlayerSensors2(spherecast_node: Node, enabled: str | bool = "False"):
+    """Player 2 spherecast sensors. Returns RaycastHit1..8."""
+    return _soccer_player_sensors(2, spherecast_node, enabled)
+
+
+@cache
+def SoccerPlayerSensors3(spherecast_node: Node, enabled: str | bool = "False"):
+    """Player 3 spherecast sensors. Returns RaycastHit1..8."""
+    return _soccer_player_sensors(3, spherecast_node, enabled)
+
+
+@cache
+def SoccerPlayerSensors4(spherecast_node: Node, enabled: str | bool = "False"):
+    """Player 4 spherecast sensors. Returns RaycastHit1..8."""
+    return _soccer_player_sensors(4, spherecast_node, enabled)
 
 
 class RaycastHitComponents:

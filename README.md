@@ -2220,6 +2220,7 @@ Concretely:
   - Survival → `SurvivalGetTransform(...)` / `SurvivalGetFloat(...)` / `SurvivalGetBool(...)`.
   - Parking → `ParkingGetTransform(...)` / `ParkingGetFloat(...)` / `ParkingGetBool(...)`.
   - Demo Derby → `DemoDerbyGetTransform(...)` / `DemoDerbyGetCar(...)` / `CarGetPart(...).PartTransform` / `CarInfo(...).CarTransform`.
+  - Soccer → `SoccerGetBool(...)` / `SoccerGetFloat(...)` / `SoccerGetTransform(...)` / `SoccerGetVector3(...)` (modifier is the exact label string). Save with `GetSoccerSavePath(...)`.
   - The unprefixed aliases (`GetVector3` / `GetTransform` / `GetBool` / `GetFloat`) are **Volleyball only** — they exist purely for backward-compat with old scripts. Using them in any other sim's graph produces the wrong Unity node and won't deserialize correctly.
   - To turn any `Transform` node into a world-space `Vector3`, wrap it in `RelativePosition(transform_node, "Self")`.
 - The `Initialize*` helpers take **positional arguments**, not keyword arguments. There is no `name=`, `country=`, `modifier_llm=`, `save_file=` etc. See each simulation's section for the exact signature.
