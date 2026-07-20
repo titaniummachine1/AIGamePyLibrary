@@ -1085,7 +1085,9 @@ def SoccerGetTransform(
 @cache
 def SoccerGetVector3(
     value: Literal[
+        "Backwards clear direction from team carrier",
         "Ball Velocity",
+        "Center Field",
         "Clear direction from Teammate 1",
         "Clear direction from Teammate 2",
         "Clear direction from Teammate 3",
@@ -1094,6 +1096,8 @@ def SoccerGetVector3(
         "Clear direction from team carrier (avoid all walls)",
         "Clear direction from team carrier (avoid goal lines)",
         "Clear direction from team carrier (avoid sidelines)",
+        "Direction of ball from Teammate 2",
+        "Direction of clear teammate from Opponent 1",
         "Direction of clear teammate from Teammate 1",
         "Direction of clear teammate from Teammate 2",
         "Direction of clear teammate from Teammate 3",
@@ -1102,13 +1106,30 @@ def SoccerGetVector3(
         "Direction of opponent goal from Teammate 2",
         "Direction of opponent goal from Teammate 3",
         "Direction of opponent goal from Teammate 4",
+        "Direction of team goal from Teammate 2",
+        "Direction of teammate from Team Player 1",
+        "Get furthest open opponent",
+        "Get furthest open teammate",
+        "Get most open opponent",
+        "Get most open teammate",
+        "Get nearest open opponent",
+        "Get nearest open teammate",
+        "Lower Corner Away Side",
+        "Lower Corner Home Side",
         "Lower Corner Opposing Side",
+        "Lower Corner Team Side",
         "Lower Midfield",
+        "Upper Corner Away Side",
+        "Upper Corner Home Side",
         "Upper Corner Opposing Side",
+        "Upper Corner Team Side",
         "Upper Midfield",
     ],
 ):
-    """Soccer Vector3 accessor. Modifier is the exact label string (not a dropdown index)."""
+    """Soccer Vector3 accessor. Modifier is the exact label string (not a dropdown index).
+
+    Field bounds helpers include Center Field and Home/Away/Team/Opposing corners.
+    """
     return AddNode("SoccerGetVector3", value)
 
 
