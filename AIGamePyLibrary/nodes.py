@@ -1096,8 +1096,14 @@ def SoccerGetVector3(
         "Clear direction from team carrier (avoid all walls)",
         "Clear direction from team carrier (avoid goal lines)",
         "Clear direction from team carrier (avoid sidelines)",
+        "Direction of ball from Teammate 1",
         "Direction of ball from Teammate 2",
+        "Direction of ball from Teammate 3",
+        "Direction of ball from Teammate 4",
         "Direction of clear teammate from Opponent 1",
+        "Direction of clear teammate from Opponent 2",
+        "Direction of clear teammate from Opponent 3",
+        "Direction of clear teammate from Opponent 4",
         "Direction of clear teammate from Teammate 1",
         "Direction of clear teammate from Teammate 2",
         "Direction of clear teammate from Teammate 3",
@@ -1106,8 +1112,14 @@ def SoccerGetVector3(
         "Direction of opponent goal from Teammate 2",
         "Direction of opponent goal from Teammate 3",
         "Direction of opponent goal from Teammate 4",
+        "Direction of team goal from Teammate 1",
         "Direction of team goal from Teammate 2",
+        "Direction of team goal from Teammate 3",
+        "Direction of team goal from Teammate 4",
         "Direction of teammate from Team Player 1",
+        "Direction of teammate from Team Player 2",
+        "Direction of teammate from Team Player 3",
+        "Direction of teammate from Team Player 4",
         "Get furthest open opponent",
         "Get furthest open teammate",
         "Get most open opponent",
@@ -1129,6 +1141,8 @@ def SoccerGetVector3(
     """Soccer Vector3 accessor. Modifier is the exact label string (not a dropdown index).
 
     Field bounds helpers include Center Field and Home/Away/Team/Opposing corners.
+    Player/teammate/opponent-indexed options are listed for slots 1-4 even when only
+    some appeared in a dump (Unity exposes the full set).
     """
     return AddNode("SoccerGetVector3", value)
 
