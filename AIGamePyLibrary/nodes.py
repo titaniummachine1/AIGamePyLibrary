@@ -1070,15 +1070,23 @@ def SoccerGetTransform(
     value: Literal[
         "Ball",
         "Opponent Goal Center",
+        "Team Goal Center",
         "Team Goal Left Post",
         "Team Goal Right Post",
         "Team Player 1",
         "Team Player 2",
         "Team Player 3",
         "Team Player 4",
+        "Teammate Nearest Team Player 1",
+        "Teammate Nearest Team Player 2",
+        "Teammate Nearest Team Player 3",
+        "Teammate Nearest Team Player 4",
     ],
 ):
-    """Soccer transform accessor. World position via RelativePosition(tf, \"Self\")."""
+    """Soccer transform accessor for goals, players, and nearest teammates.
+
+    World position via RelativePosition(tf, "Self").
+    """
     return AddNode("SoccerGetTransform", value)
 
 
