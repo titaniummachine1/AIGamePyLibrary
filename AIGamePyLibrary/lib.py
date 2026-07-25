@@ -742,6 +742,191 @@ def _prepare_for_unity_format():
             port.pop("controlPointSerializableRectTransform", None)
 
 
+def removeUnreadVariables(verbose=False):
+    """Delete SetVariable writes no GetVariable reads, and GetVariable reads
+    whose output feeds nothing.
+
+    `removeUnusedNodes` cannot do this: a SetVariable is a SINK, so it always
+    looks used and its whole producing subgraph is kept alive with it. One
+    real graph carried a 405-node service this way -- 29 of 31 variables were
+    written and never read, and everything computing them came along.
+
+    Runs to a fixpoint: dropping a write can orphan a read, and dropping a
+    read can orphan a write. Bounded, since each round strictly removes nodes.
+
+    A variable pair is a data edge with NO wire between the two nodes, so this
+    is the one thing an optimiser can silently sever -- delete the write and
+    the read still looks connected while reading nothing. Callers should check
+    `assertVariablesIntact()` afterwards.
+    """
+    total_w = total_r = 0
+    for _ in range(10):
+        nodes = data["serializableNodes"]
+        read = {n["modifier"] for n in nodes if n["id"] == "GetVariable"}
+        doomed = {n["sID"] for n in nodes
+                  if n["id"] == "SetVariable" and n["modifier"] not in read}
+        wired = set()
+        for c in data["serializableConnections"]:
+            wired.add(c["port0SID"])
+            wired.add(c["port1SID"])
+        doomed |= {
+            n["sID"] for n in nodes if n["id"] == "GetVariable"
+            and not any(p["sID"] in wired for p in n.get("serializablePorts", []))
+        }
+        if not doomed:
+            break
+        dead_ports = {p["sID"] for n in nodes if n["sID"] in doomed
+                      for p in n.get("serializablePorts", [])}
+        data["serializableConnections"] = [
+            c for c in data["serializableConnections"]
+            if c["port0SID"] not in dead_ports and c["port1SID"] not in dead_ports
+        ]
+        data["serializableNodes"] = [n for n in nodes if n["sID"] not in doomed]
+        total_w += len(doomed)
+    if verbose and total_w:
+        print(f"  removeUnreadVariables: dropped {total_w} unread variable node(s)")
+    return total_w
+
+
+def assertVariablesIntact():
+    """Fail if any GetVariable lost the SetVariable that fed it.
+
+    Variables link by NAME, not by wire, so no wire-based pruner can see the
+    dependency. Severing one leaves a read that looks perfectly connected and
+    silently returns nothing -- this turns that into a hard error instead.
+    """
+    nodes = data["serializableNodes"]
+    written = {n["modifier"] for n in nodes if n["id"] == "SetVariable"}
+    read = {n["modifier"] for n in nodes if n["id"] == "GetVariable"}
+    orphaned = read - written
+    if orphaned:
+        raise RuntimeError(
+            "GetVariable with no SetVariable feeding it: " + ", ".join(sorted(orphaned))
+        )
+
+
+# Never merged by CSE: each is an EFFECT, not a value. Two identical
+# SetVariable writes are two writes; two identical draws are two lines.
+# String/Color are sink labels, and removeUnusedNodes special-cases String,
+# so merging them desynchronises that handling and silently kills output.
+_CSE_NEVER_MERGE = {
+    "SetVariable", "GetVariable", "DebugDrawLine", "DebugDrawDisc", "TimePlot",
+    "Debug", "Stat", "CreateFunction", "Function", "ConstructSoccerProperties",
+    "String", "Color",
+}
+
+
+def deduplicateNodes(verbose=False):
+    """Common-subexpression elimination over the built graph.
+
+    The @cache on node builders dedupes on PYTHON call arguments, so two calls
+    passing different-but-equal Node objects miss it and emit structurally
+    identical subgraphs anyway. This hashes the BUILT graph instead, so it
+    still finds ~8% duplication after caching.
+
+    Iterative congruence closure: refine (id, modifier, ownerFunctionSID,
+    input classes) until stable -- two nodes are the same computation only if
+    their inputs are too, all the way down. ownerFunctionSID is part of
+    identity: identical nodes in DIFFERENT function bodies are not the same
+    computation, because each body binds its own Param1..N per call. Omitting
+    it lets one call's arguments leak into another.
+    """
+    nodes = data["serializableNodes"]
+    by_sid = {n["sID"]: n for n in nodes}
+    port = {}
+    for n in nodes:
+        for p in n.get("serializablePorts", []):
+            port[p["sID"]] = (n["sID"], p["polarity"], p["id"])
+    ins = {}
+    for c in data["serializableConnections"]:
+        a, b = port.get(c["port0SID"]), port.get(c["port1SID"])
+        if not a or not b:
+            continue
+        (na, pa, ia), (nb, pb, ib) = a, b
+        if pa == 1 and pb == 0:
+            ins.setdefault(nb, {})[ib] = na
+        elif pb == 1 and pa == 0:
+            ins.setdefault(na, {})[ia] = nb
+
+    cls = {n["sID"]: (n["id"], str(n.get("modifier", "")), n.get("ownerFunctionSID", ""))
+           for n in nodes}
+    for _ in range(12):
+        sig = {sid: (cls[sid], tuple(sorted((k, cls[v]) for k, v in ins.get(sid, {}).items())))
+               for sid in cls}
+        renum, nxt = {}, {}
+        for sid, v in sig.items():
+            renum.setdefault(v, len(renum))
+            nxt[sid] = renum[v]
+        if nxt == cls:
+            break
+        cls = nxt
+
+    groups = {}
+    for sid, c in cls.items():
+        groups.setdefault(c, []).append(sid)
+    replace = {}
+    for members in groups.values():
+        if len(members) < 2:
+            continue
+        members.sort()
+        keep = next((m for m in members if by_sid[m]["id"] not in _CSE_NEVER_MERGE), None)
+        if keep is None:
+            continue
+        for m in members:
+            if m != keep and by_sid[m]["id"] not in _CSE_NEVER_MERGE:
+                replace[m] = keep
+    if not replace:
+        return 0
+
+    out_port = {}
+    for n in nodes:
+        for p in n.get("serializablePorts", []):
+            if p["polarity"] == 1:
+                out_port.setdefault(n["sID"], {})[p["id"]] = p["sID"]
+    remap = {}
+    for dead, keep in replace.items():
+        for pid, psid in out_port.get(dead, {}).items():
+            tgt = out_port.get(keep, {}).get(pid)
+            if tgt:
+                remap[psid] = tgt
+    kept = []
+    for c in data["serializableConnections"]:
+        c["port0SID"] = remap.get(c["port0SID"], c["port0SID"])
+        c["port1SID"] = remap.get(c["port1SID"], c["port1SID"])
+        if c["port0SID"] != c["port1SID"]:
+            kept.append(c)
+    data["serializableConnections"] = kept
+    data["serializableNodes"] = [n for n in nodes if n["sID"] not in replace]
+    if verbose:
+        print(f"  deduplicateNodes: merged {len(replace)} duplicate computation(s)")
+    return len(replace)
+
+
+def stripDebugSinks(verbose=False):
+    """Delete Debug*/TimePlot sinks so the pruner can collect everything that
+    existed only to feed them.
+
+    Typically ~29% of a graph. Competition builds do not render debug output,
+    and the save format costs ~2.4 KB per node. Safe only if drawing code
+    never feeds a decision -- verify that, do not assume it.
+    """
+    nodes = data["serializableNodes"]
+    sinks = {"DebugDrawLine", "DebugDrawDisc", "TimePlot", "Debug"}
+    doomed = {n["sID"] for n in nodes if n["id"] in sinks}
+    if not doomed:
+        return 0
+    dead_ports = {p["sID"] for n in nodes if n["sID"] in doomed
+                  for p in n.get("serializablePorts", [])}
+    data["serializableConnections"] = [
+        c for c in data["serializableConnections"]
+        if c["port0SID"] not in dead_ports and c["port1SID"] not in dead_ports
+    ]
+    data["serializableNodes"] = [n for n in nodes if n["sID"] not in doomed]
+    if verbose:
+        print(f"  stripDebugSinks: removed {len(doomed)} debug sink(s)")
+    return len(doomed)
+
+
 def removeUnusedNodes():
     portToNode = {}
     nodeToPorts = {}
@@ -853,9 +1038,33 @@ def SaveData(
     layout: Literal["auto", "grid", "single", "hidden", None] = "auto",
     pruneUnusedNodes=True,
     keepPosition=True,
+    optimize="debug",
+    verbose=False,
 ):
+    """`optimize` selects how hard to compile the graph down:
+
+      "debug"   (default) prune dead nodes and unread variables. Drawing and
+                TimePlot output is preserved, so the graph stays observable.
+      "release" additionally CSE duplicate computations and strip all
+                Debug*/TimePlot sinks. Smallest and fewest per-tick node
+                evaluations, but no on-screen debug at all.
+
+    Every node evaluates every tick in-engine, so removing nodes removes real
+    per-tick work, not just file size.
+    """
+    if optimize == "release":
+        # CSE is DISABLED in release: combining it with sink-stripping changed
+        # play (16.4 m divergence at tick 0, verified by parity_check).
+        # Stripping sinks makes more nodes structurally identical, so CSE
+        # merges more aggressively than it was ever tested doing. Strip alone
+        # is verified identical across the full opponent roster.
+        stripDebugSinks(verbose)
     if pruneUnusedNodes:
+        # Variables first: dropping unread writes turns their producers into
+        # genuinely dead nodes that removeUnusedNodes can then collect.
+        removeUnreadVariables()
         removeUnusedNodes()
+        assertVariablesIntact()
 
     match layout:
         case "auto":
