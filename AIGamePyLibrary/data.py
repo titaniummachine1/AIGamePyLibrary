@@ -725,7 +725,9 @@ ports = {
         {"id": "String1", "polarity": 0},
         {"id": "Color1", "polarity": 0},
         {"id": "String2", "polarity": 0},
-        {"id": "Float1", "polarity": 0}
+        {"id": "Float1", "polarity": 0},
+        {"id": "Float2", "polarity": 0},  # optional min graph value (Unity v0.5+)
+        {"id": "Float3", "polarity": 0},  # optional max graph value
     ],
     "ModularCarController": [
         {"id": "Float1", "polarity": 0},
@@ -763,6 +765,7 @@ ports = {
         {"id": "RaycastHit1", "polarity": 0},
         {"id": "Bool1", "polarity": 1},
         {"id": "Float1", "polarity": 1},
+        {"id": "String1", "polarity": 1},
     ],
     "ParkingGetFloat": [{"id": "Float1", "polarity": 1}],
     "ParkingGetBool": [{"id": "Bool1", "polarity": 1}],

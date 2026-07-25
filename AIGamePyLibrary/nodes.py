@@ -1032,7 +1032,12 @@ class RaycastHitComponents:
 
 
 class HitInfoComponents:
-    """Multi-output helper for `HitInfo` (WasHit, Distance)."""
+    """Multi-output helper for `HitInfo` (WasHit, Distance, Tag).
+
+    Unity-like RaycastHit split: bool hit, float distance (∞ on miss),
+    string collider.tag. Library historically only exposed hit+distance;
+    Tag is output index 3 (`String1`).
+    """
 
     def __init__(self, baseNode: Node):
         # We override `type` so Python operators work (==, <, arithmetic, etc.).
@@ -1042,6 +1047,11 @@ class HitInfoComponents:
         self._distance = Node(baseNode.data, 1)
         self._distance.type = float
 
+        # Tag is String1 (3rd output). Index 3 so Debug/Any and typed String
+        # fallback both resolve to String1 (see connectInputNodes).
+        self._tag = Node(baseNode.data, 3)
+        self._tag.type = str
+
     @property
     def WasHit(self) -> Node:
         return self._wasHit
@@ -1049,6 +1059,11 @@ class HitInfoComponents:
     @property
     def Distance(self) -> Node:
         return self._distance
+
+    @property
+    def Tag(self) -> Node:
+        """Unity `collider.tag` of the hit GameObject (empty / unused on miss)."""
+        return self._tag
 
     def __iter__(self):
         """Allow tuple unpacking: was_hit, distance = HitInfo(raycast_hit)."""
@@ -1203,7 +1218,7 @@ def CarRaycasts(spherecast: Node) -> RaycastHitComponents:
 
 @cache
 def HitInfo(raycastHit: Node) -> HitInfoComponents:
-    """Extracts bool+distance from a selected `RaycastHit` output."""
+    """Extracts hit bool, distance, and collider.tag from a `RaycastHit`."""
     baseNode = AddNode("HitInfo")
     inputTypes = ["RaycastHit"]
     connectInputNodes(baseNode, inputTypes, [raycastHit])
