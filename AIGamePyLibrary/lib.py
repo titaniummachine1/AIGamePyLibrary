@@ -17,6 +17,8 @@ from .data import (
     SERIALIZE_COLOR_NODES,
     DROPDOWN_OPTIONS,
 )
+
+_CSE_CONTROLLER_PREFIX = "SoccerController"
 from .utils import Position2, Position3, generateId
 
 data = {"serializableNodes": [], "serializableConnections": []}
@@ -812,11 +814,214 @@ def assertVariablesIntact():
 _CSE_NEVER_MERGE = {
     "SetVariable", "GetVariable", "DebugDrawLine", "DebugDrawDisc", "TimePlot",
     "Debug", "Stat", "CreateFunction", "Function", "ConstructSoccerProperties",
-    "String", "Color",
+    "String", "Color", "Keypress", "RandomFloat", "Spherecast", "CarRaycasts",
+    "SoccerController1", "SoccerController2", "SoccerController3",
+    "SoccerController4", "SoccerPlayerSensors1", "SoccerPlayerSensors2",
+    "SoccerPlayerSensors3", "SoccerPlayerSensors4",
 }
 
+_CSE_RUNTIME_GET_PREFIXES = (
+    "SoccerGet", "ParkingGet", "SurvivalGet", "RacingV2Get", "VolleyballGet",
+    "DemoDerbyGet", "SlimeGet",
+)
 
-def deduplicateNodes(verbose=False):
+# Escape hatch, empty by default. Merging MultiplyFloats/CompareFloats/
+# CompareBool used to change controller outputs, and the cause was misread as
+# "the VM caches each output port once across all SoccerControllers". It was
+# not: those nodes sit directly downstream of Vector3Split, and the input
+# index dropped the producer's OUTPUT port id, so `split.x * k` and
+# `split.z * k` hashed alike and got merged. See `_cse_index_graph`.
+_CSE_DENY_MERGE = set()
+
+# Everything `_cse_may_merge` lets through is pure for the whole tick --
+# SetVariable/GetVariable/RandomFloat/Keypress/SoccerGet* are all refused --
+# so WHEN a merged node is evaluated cannot change its value, and one shared
+# node feeding two controllers is safe. Set False to also confine merges to a
+# single SoccerController's region.
+_CSE_MERGE_ACROSS_CONTROLLERS = True
+
+
+def _cse_may_merge(node_id):
+    if node_id in _CSE_NEVER_MERGE or node_id in _CSE_DENY_MERGE:
+        return False
+    if node_id.startswith("ConditionalSet"):
+        return False
+    if any(node_id.startswith(p) for p in _CSE_RUNTIME_GET_PREFIXES):
+        return False
+    return True
+
+
+def _cse_index_graph(nodes, connections):
+    by_sid = {n["sID"]: n for n in nodes}
+    port = {}
+    for n in nodes:
+        for p in n.get("serializablePorts", []):
+            port[p["sID"]] = (n["sID"], p["polarity"], p["id"])
+    # ins[node][input_port_id] = (source_node_sid, source_OUTPUT_port_id).
+    #
+    # The output port id is not optional detail. Multi-output nodes exist --
+    # Vector3Split alone hands out Float1/Float2/Float3 (x/y/z) from one node.
+    # Recording only the source NODE makes `MultiplyFloats(split.x, k)` and
+    # `MultiplyFloats(split.z, k)` indistinguishable, so CSE merges them and
+    # silently swaps two components of a vector. That is exactly what broke
+    # play at tick 0 (~16 m on a controller's move_to) and got MultiplyFloats
+    # and CompareFloats blamed -- they are just the nodes sitting directly
+    # downstream of a split.
+    ins = {}
+    outs = {}
+    out_port = {}
+    for n in nodes:
+        for p in n.get("serializablePorts", []):
+            if p["polarity"] == 1:
+                out_port.setdefault(n["sID"], {})[p["id"]] = p["sID"]
+    for c in connections:
+        a, b = port.get(c["port0SID"]), port.get(c["port1SID"])
+        if not a or not b:
+            continue
+        (na, pa, ia), (nb, pb, ib) = a, b
+        if pa == 1 and pb == 0:
+            ins.setdefault(nb, {})[ib] = (na, ia)
+            outs.setdefault(na, set()).add(nb)
+        elif pb == 1 and pa == 0:
+            ins.setdefault(na, {})[ia] = (nb, ib)
+            outs.setdefault(nb, set()).add(na)
+    return by_sid, ins, outs, out_port
+
+
+def _cse_controller_slot(node_id):
+    if not node_id.startswith(_CSE_CONTROLLER_PREFIX):
+        return None
+    suffix = node_id[len(_CSE_CONTROLLER_PREFIX):]
+    if suffix.isdigit() and suffix in ("1", "2", "3", "4"):
+        return int(suffix)
+    return None
+
+
+def _cse_lineage_seed(node):
+    """Dropdown/runtime reads stamp downstream math with their (id, modifier)."""
+    node_id = node["id"]
+    modifier = str(node.get("modifier", ""))
+    if any(node_id.startswith(p) for p in _CSE_RUNTIME_GET_PREFIXES):
+        return frozenset({(node_id, modifier)})
+    if node_id in DROPDOWN_OPTIONS:
+        return frozenset({(node_id, modifier)})
+    return frozenset()
+
+
+def _cse_build_lineage(by_sid, ins, outs):
+    """Union every dropdown/runtime stamp found upstream — P1 stamina ≠ P2 stamina."""
+    in_degree = {sid: len(ins.get(sid, {})) for sid in by_sid}
+    queue = deque(sid for sid in by_sid if in_degree[sid] == 0)
+    order = []
+    while queue:
+        sid = queue.popleft()
+        order.append(sid)
+        for dst in outs.get(sid, ()):
+            in_degree[dst] -= 1
+            if in_degree[dst] == 0:
+                queue.append(dst)
+    for sid in by_sid:
+        if sid not in order:
+            order.append(sid)
+
+    lineage = {}
+    for sid in order:
+        stamp = _cse_lineage_seed(by_sid[sid])
+        for src, _out_port_id in ins.get(sid, {}).values():
+            stamp |= lineage.get(src, frozenset())
+        lineage[sid] = stamp
+    return lineage
+
+
+def _cse_build_controller_reach(by_sid, ins):
+    """BFS upstream from SoccerController1-4 — never merge P2 math into P3 math."""
+    reach = {}
+    for sid, node in by_sid.items():
+        slot = _cse_controller_slot(node["id"])
+        if slot is not None:
+            reach[sid] = frozenset({slot})
+
+    changed = True
+    while changed:
+        changed = False
+        for dst, slots in list(reach.items()):
+            for src, _out_port_id in ins.get(dst, {}).values():
+                merged = reach.get(src, frozenset()) | slots
+                if reach.get(src) != merged:
+                    reach[src] = merged
+                    changed = True
+
+    for sid in by_sid:
+        reach.setdefault(sid, frozenset())
+    return reach
+
+
+def _cse_node_identity(node):
+    return (node["id"], str(node.get("modifier", "")), node.get("ownerFunctionSID", ""))
+
+
+def _cse_nodes_equivalent(a_sid, b_sid, by_sid, ins, memo):
+    """TensorFlow-style mandatory check before merge: same opcode/modifier/owner,
+    and every wired input port fed from the SAME output port of a recursively
+    equivalent producer.
+
+    Comparing producers alone is not enough: two consumers of one Vector3Split
+    read different components off the same node, and treating them as equal
+    merges `x` with `z`."""
+    if a_sid == b_sid:
+        return True
+    key = (a_sid, b_sid)
+    if key in memo:
+        return memo[key]
+    na, nb = by_sid[a_sid], by_sid[b_sid]
+    if _cse_node_identity(na) != _cse_node_identity(nb):
+        memo[key] = False
+        return False
+    in_a, in_b = ins.get(a_sid, {}), ins.get(b_sid, {})
+    if set(in_a.keys()) != set(in_b.keys()):
+        memo[key] = False
+        return False
+    for port_id in in_a:
+        (src_a, out_a), (src_b, out_b) = in_a[port_id], in_b[port_id]
+        if out_a != out_b or not _cse_nodes_equivalent(src_a, src_b, by_sid, ins, memo):
+            memo[key] = False
+            return False
+    memo[key] = True
+    return True
+
+
+def _cse_congruence_partition(by_sid, ins, lineage, reach):
+    """AWZ-style partition refinement until Herbrand-stable (no iteration cap)."""
+    cls = {
+        sid: (_cse_node_identity(by_sid[sid]), lineage[sid], reach[sid])
+        for sid in by_sid
+    }
+    max_rounds = max(len(by_sid), 1)
+    for _ in range(max_rounds):
+        sig_to_class = {}
+        nxt = {}
+        for sid in by_sid:
+            sig = (
+                cls[sid],
+                # (my input port, producer's OUTPUT port, producer's class).
+                # Dropping the producer's output port here under-refines the
+                # partition and lets x/y/z reads off one split land in the
+                # same class.
+                tuple(sorted(
+                    (port_id, out_id, cls[src])
+                    for port_id, (src, out_id) in ins.get(sid, {}).items()
+                )),
+            )
+            if sig not in sig_to_class:
+                sig_to_class[sig] = len(sig_to_class)
+            nxt[sid] = sig_to_class[sig]
+        if nxt == cls:
+            break
+        cls = nxt
+    return cls
+
+
+def deduplicateNodes(verbose=False, merge_allow=None):
     """Common-subexpression elimination over the built graph.
 
     The @cache on node builders dedupes on PYTHON call arguments, so two calls
@@ -824,65 +1029,60 @@ def deduplicateNodes(verbose=False):
     identical subgraphs anyway. This hashes the BUILT graph instead, so it
     still finds ~8% duplication after caching.
 
-    Iterative congruence closure: refine (id, modifier, ownerFunctionSID,
-    input classes) until stable -- two nodes are the same computation only if
-    their inputs are too, all the way down. ownerFunctionSID is part of
-    identity: identical nodes in DIFFERENT function bodies are not the same
-    computation, because each body binds its own Param1..N per call. Omitting
-    it lets one call's arguments leak into another.
+    Safety rules (beyond textbook CSE):
+      - Every dropdown modifier is a unique stamp (P1 stamina ≠ P2 stamina).
+      - Stamps propagate downstream through all pure math.
+      - Nodes are tagged by which SoccerController(s) they feed; never merge
+        across different per-player regions (the VM caches port values once
+        per think() across all controllers).
+      - Mandatory structural Equivalent() before any merge.
     """
     nodes = data["serializableNodes"]
-    by_sid = {n["sID"]: n for n in nodes}
-    port = {}
-    for n in nodes:
-        for p in n.get("serializablePorts", []):
-            port[p["sID"]] = (n["sID"], p["polarity"], p["id"])
-    ins = {}
-    for c in data["serializableConnections"]:
-        a, b = port.get(c["port0SID"]), port.get(c["port1SID"])
-        if not a or not b:
-            continue
-        (na, pa, ia), (nb, pb, ib) = a, b
-        if pa == 1 and pb == 0:
-            ins.setdefault(nb, {})[ib] = na
-        elif pb == 1 and pa == 0:
-            ins.setdefault(na, {})[ia] = nb
-
-    cls = {n["sID"]: (n["id"], str(n.get("modifier", "")), n.get("ownerFunctionSID", ""))
-           for n in nodes}
-    for _ in range(12):
-        sig = {sid: (cls[sid], tuple(sorted((k, cls[v]) for k, v in ins.get(sid, {}).items())))
-               for sid in cls}
-        renum, nxt = {}, {}
-        for sid, v in sig.items():
-            renum.setdefault(v, len(renum))
-            nxt[sid] = renum[v]
-        if nxt == cls:
-            break
-        cls = nxt
+    if len(nodes) < 2:
+        return 0
+    by_sid, ins, outs, out_port = _cse_index_graph(nodes, data["serializableConnections"])
+    lineage = _cse_build_lineage(by_sid, ins, outs)
+    reach = _cse_build_controller_reach(by_sid, ins)
+    cls = _cse_congruence_partition(by_sid, ins, lineage, reach)
 
     groups = {}
     for sid, c in cls.items():
         groups.setdefault(c, []).append(sid)
     replace = {}
+    equiv_memo = {}
+    skipped = 0
     for members in groups.values():
         if len(members) < 2:
             continue
         members.sort()
-        keep = next((m for m in members if by_sid[m]["id"] not in _CSE_NEVER_MERGE), None)
+        keep = next(
+            (m for m in members
+             if _cse_may_merge(by_sid[m]["id"])
+             and (merge_allow is None or by_sid[m]["id"] in merge_allow)),
+            None,
+        )
         if keep is None:
             continue
         for m in members:
-            if m != keep and by_sid[m]["id"] not in _CSE_NEVER_MERGE:
+            if m == keep or not _cse_may_merge(by_sid[m]["id"]):
+                continue
+            if merge_allow is not None and by_sid[m]["id"] not in merge_allow:
+                continue
+            if lineage[keep] != lineage[m] or reach[keep] != reach[m]:
+                skipped += 1
+                continue
+            if not _CSE_MERGE_ACROSS_CONTROLLERS and reach[keep] and len(reach[keep]) != 1:
+                skipped += 1
+                continue
+            if _cse_nodes_equivalent(keep, m, by_sid, ins, equiv_memo):
                 replace[m] = keep
+            else:
+                skipped += 1
     if not replace:
+        if verbose and skipped:
+            print(f"  deduplicateNodes: skipped {skipped} unsafe congruence class member(s)")
         return 0
 
-    out_port = {}
-    for n in nodes:
-        for p in n.get("serializablePorts", []):
-            if p["polarity"] == 1:
-                out_port.setdefault(n["sID"], {})[p["id"]] = p["sID"]
     remap = {}
     for dead, keep in replace.items():
         for pid, psid in out_port.get(dead, {}).items():
@@ -898,7 +1098,10 @@ def deduplicateNodes(verbose=False):
     data["serializableConnections"] = kept
     data["serializableNodes"] = [n for n in nodes if n["sID"] not in replace]
     if verbose:
-        print(f"  deduplicateNodes: merged {len(replace)} duplicate computation(s)")
+        msg = f"  deduplicateNodes: merged {len(replace)} duplicate computation(s)"
+        if skipped:
+            msg += f", skipped {skipped} unsafe congruence class member(s)"
+        print(msg)
     return len(replace)
 
 
@@ -1033,6 +1236,25 @@ def removeUnusedNodes():
     data["serializableNodes"] = activeNodes
 
 
+def _optimize_to_fixpoint(verbose=False, *, strip_debug=False, cse=False, prune=True):
+    """Interleave strip, variable prune, DCE, and CSE until a full round is a no-op."""
+    max_rounds = max(len(data["serializableNodes"]), 1)
+    for round_idx in range(max_rounds):
+        changed = 0
+        if strip_debug:
+            changed += stripDebugSinks(verbose and round_idx == 0)
+        if prune:
+            changed += removeUnreadVariables(verbose and round_idx == 0)
+            before = len(data["serializableNodes"])
+            removeUnusedNodes()
+            changed += before - len(data["serializableNodes"])
+            assertVariablesIntact()
+        if cse:
+            changed += deduplicateNodes(verbose)
+        if changed == 0:
+            break
+
+
 def SaveData(
     filePath,
     layout: Literal["auto", "grid", "single", "hidden", None] = "auto",
@@ -1053,16 +1275,9 @@ def SaveData(
     per-tick work, not just file size.
     """
     if optimize == "release":
-        # CSE is DISABLED in release: combining it with sink-stripping changed
-        # play (16.4 m divergence at tick 0, verified by parity_check).
-        # Stripping sinks makes more nodes structurally identical, so CSE
-        # merges more aggressively than it was ever tested doing. Strip alone
-        # is verified identical across the full opponent roster.
-        stripDebugSinks(verbose)
-    if pruneUnusedNodes:
-        # Variables first: dropping unread writes turns their producers into
-        # genuinely dead nodes that removeUnusedNodes can then collect.
-        removeUnreadVariables()
+        _optimize_to_fixpoint(verbose, strip_debug=True, cse=True, prune=pruneUnusedNodes)
+    elif pruneUnusedNodes:
+        removeUnreadVariables(verbose)
         removeUnusedNodes()
         assertVariablesIntact()
 
