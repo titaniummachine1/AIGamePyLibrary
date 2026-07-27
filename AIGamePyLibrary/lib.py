@@ -944,22 +944,352 @@ def _inline_passthrough_variables():
     ]
 
 
+def _norm_lit(mod) -> str:
+    s = str(mod).replace(",", ".").strip()
+    try:
+        return f"{float(s):.6g}"
+    except Exception:
+        return s
+
+
+def _producer_consumer_edges():
+    polarity = {}
+    node_of = {}
+    for n in data["serializableNodes"]:
+        for p in n.get("serializablePorts", []):
+            if p.get("sID"):
+                polarity[p["sID"]] = int(p.get("polarity", 0))
+                node_of[p["sID"]] = n["sID"]
+    edges = []
+    for c in data["serializableConnections"]:
+        a, b = c.get("port0SID"), c.get("port1SID")
+        if not a or not b or a not in polarity or b not in polarity:
+            continue
+        pa, pb = polarity[a], polarity[b]
+        if pa != 0 and pb == 0:
+            edges.append((a, b))
+        elif pb != 0 and pa == 0:
+            edges.append((b, a))
+    return polarity, node_of, edges
+
+
+def _bypass_node(node_sid: str, in_port: str, out_port: str) -> bool:
+    polarity, node_of, edges = _producer_consumer_edges()
+    producers = [a for a, b in edges if b == in_port]
+    consumers = [b for a, b in edges if a == out_port]
+    if len(producers) != 1 or not consumers:
+        return False
+    prod = producers[0]
+    dead = set()
+    for n in data["serializableNodes"]:
+        if n["sID"] == node_sid:
+            for p in n.get("serializablePorts", []):
+                if p.get("sID"):
+                    dead.add(p["sID"])
+            break
+    new_conns = []
+    seen: set[tuple[str, str]] = set()
+    for c in data["serializableConnections"]:
+        a, b = c.get("port0SID"), c.get("port1SID")
+        if a in dead or b in dead:
+            continue
+        key = (a, b)
+        if key in seen:
+            continue
+        seen.add(key)
+        new_conns.append(c)
+    for cons in consumers:
+        key = (prod, cons)
+        if key in seen or prod == cons:
+            continue
+        seen.add(key)
+        new_conns.append(
+            {
+                "sID": generateId(),
+                "port0SID": prod,
+                "port1SID": cons,
+                "port0InstanceID": 0,
+                "port1InstanceID": 0,
+            }
+        )
+    data["serializableConnections"] = new_conns
+    data["serializableNodes"] = [n for n in data["serializableNodes"] if n["sID"] != node_sid]
+    return True
+
+
+def _inline_double_not() -> int:
+    """Not(Not(x)) path: wire x to outer consumers; drop the outer Not (and inner if unused)."""
+    changed = 0
+    while True:
+        polarity, node_of, edges = _producer_consumer_edges()
+        nodes = {n["sID"]: n for n in data["serializableNodes"]}
+        did = False
+        for n2 in list(data["serializableNodes"]):
+            if n2.get("id") != "Not":
+                continue
+            in2 = next((p["sID"] for p in n2["serializablePorts"] if p.get("polarity") == 0), None)
+            out2 = next((p["sID"] for p in n2["serializablePorts"] if p.get("polarity") == 1), None)
+            if not in2 or not out2:
+                continue
+            prods = [a for a, b in edges if b == in2]
+            if len(prods) != 1:
+                continue
+            n1 = nodes.get(node_of.get(prods[0]))
+            if not n1 or n1.get("id") != "Not":
+                continue
+            out1 = prods[0]
+            in1 = next((p["sID"] for p in n1["serializablePorts"] if p.get("polarity") == 0), None)
+            if not in1:
+                continue
+            inner = [a for a, b in edges if b == in1]
+            if len(inner) != 1:
+                continue
+            src = inner[0]
+            consumers = [b for a, b in edges if a == out2]
+            if not consumers:
+                continue
+            dead = {p["sID"] for p in n2["serializablePorts"] if p.get("sID")}
+            new_conns = []
+            seen: set[tuple[str, str]] = set()
+            for c in data["serializableConnections"]:
+                a, b = c.get("port0SID"), c.get("port1SID")
+                if a in dead or b in dead:
+                    continue
+                key = (a, b)
+                if key in seen:
+                    continue
+                seen.add(key)
+                new_conns.append(c)
+            for cons in consumers:
+                key = (src, cons)
+                if key in seen or src == cons:
+                    continue
+                seen.add(key)
+                new_conns.append(
+                    {
+                        "sID": generateId(),
+                        "port0SID": src,
+                        "port1SID": cons,
+                        "port0InstanceID": 0,
+                        "port1InstanceID": 0,
+                    }
+                )
+            data["serializableConnections"] = new_conns
+            data["serializableNodes"] = [n for n in data["serializableNodes"] if n["sID"] != n2["sID"]]
+            _, _, edges2 = _producer_consumer_edges()
+            if not any(a == out1 for a, _ in edges2):
+                dead1 = {p["sID"] for p in n1["serializablePorts"] if p.get("sID")}
+                data["serializableConnections"] = [
+                    c
+                    for c in data["serializableConnections"]
+                    if c.get("port0SID") not in dead1 and c.get("port1SID") not in dead1
+                ]
+                data["serializableNodes"] = [
+                    n for n in data["serializableNodes"] if n["sID"] != n1["sID"]
+                ]
+            changed += 1
+            did = True
+            break
+        if not did:
+            break
+    return changed
+
+
+def _inline_identity_math() -> int:
+    """Bypass ScaleVector3(*1), MultiplyFloats(*1), AddFloats(+0)."""
+    changed = 0
+    while True:
+        polarity, node_of, edges = _producer_consumer_edges()
+        float_val = {
+            n["sID"]: _norm_lit(n.get("modifier"))
+            for n in data["serializableNodes"]
+            if n.get("id") == "Float"
+        }
+
+        def port_named(node, name, pol):
+            for p in node.get("serializablePorts", []):
+                if p.get("id") == name and int(p.get("polarity", -1)) == pol:
+                    return p.get("sID")
+            return None
+
+        def producer_of(consumer_port):
+            ps = [a for a, b in edges if b == consumer_port]
+            return ps[0] if len(ps) == 1 else None
+
+        did = False
+        for n in list(data["serializableNodes"]):
+            tid = n.get("id")
+            target = None
+            if tid == "ScaleVector3":
+                f_in = port_named(n, "Float1", 0)
+                v_in = port_named(n, "Vector31", 0)
+                v_out = port_named(n, "Vector31", 1)
+                if f_in and v_in and v_out:
+                    fp = producer_of(f_in)
+                    if fp and node_of.get(fp) in float_val and float_val[node_of[fp]] == "1":
+                        target = (n["sID"], v_in, v_out)
+            elif tid == "MultiplyFloats":
+                a_in = port_named(n, "Float1", 0)
+                b_in = port_named(n, "Float2", 0)
+                out = port_named(n, "Float1", 1)
+                if a_in and b_in and out:
+                    pa, pb = producer_of(a_in), producer_of(b_in)
+                    keep = None
+                    if pa and node_of.get(pa) in float_val and float_val[node_of[pa]] == "1":
+                        keep = b_in
+                    elif pb and node_of.get(pb) in float_val and float_val[node_of[pb]] == "1":
+                        keep = a_in
+                    if keep:
+                        target = (n["sID"], keep, out)
+            elif tid == "AddFloats":
+                a_in = port_named(n, "Float1", 0)
+                b_in = port_named(n, "Float2", 0)
+                out = port_named(n, "Float1", 1)
+                if a_in and b_in and out:
+                    pa, pb = producer_of(a_in), producer_of(b_in)
+                    keep = None
+                    if pa and node_of.get(pa) in float_val and float_val[node_of[pa]] == "0":
+                        keep = b_in
+                    elif pb and node_of.get(pb) in float_val and float_val[node_of[pb]] == "0":
+                        keep = a_in
+                    if keep:
+                        target = (n["sID"], keep, out)
+            if target and _bypass_node(*target):
+                changed += 1
+                did = True
+                break
+        if not did:
+            break
+    return changed
+
+
+def _inline_split_construct() -> int:
+    """ConstructVector3(split.xyz) from one Vector3Split -> use the split's input vector."""
+    changed = 0
+    while True:
+        polarity, node_of, edges = _producer_consumer_edges()
+        nodes = {n["sID"]: n for n in data["serializableNodes"]}
+        did = False
+        for n in list(data["serializableNodes"]):
+            if n.get("id") != "ConstructVector3":
+                continue
+            feeds = {}
+            for p in n.get("serializablePorts", []):
+                if int(p.get("polarity", -1)) != 0:
+                    continue
+                ps = [a for a, b in edges if b == p["sID"]]
+                if len(ps) == 1:
+                    feeds[p.get("id")] = ps[0]
+            if not {"Float1", "Float2", "Float3"} <= set(feeds):
+                continue
+            split_ids = []
+            ok = True
+            for pname, prod in feeds.items():
+                sn = nodes.get(node_of.get(prod))
+                if not sn or sn.get("id") != "Vector3Split":
+                    ok = False
+                    break
+                pr = next((pp for pp in sn["serializablePorts"] if pp.get("sID") == prod), None)
+                if not pr or pr.get("id") != pname:
+                    ok = False
+                    break
+                split_ids.append(sn["sID"])
+            if not ok or len(set(split_ids)) != 1:
+                continue
+            split = nodes[split_ids[0]]
+            vin = next(
+                (
+                    p["sID"]
+                    for p in split["serializablePorts"]
+                    if p.get("id") == "Vector31" and int(p.get("polarity", -1)) == 0
+                ),
+                None,
+            )
+            vout_c = next(
+                (
+                    p["sID"]
+                    for p in n["serializablePorts"]
+                    if p.get("id") == "Vector31" and int(p.get("polarity", -1)) == 1
+                ),
+                None,
+            )
+            if not vin or not vout_c:
+                continue
+            sprods = [a for a, b in edges if b == vin]
+            if len(sprods) != 1:
+                continue
+            src = sprods[0]
+            consumers = [b for a, b in edges if a == vout_c]
+            if not consumers:
+                continue
+            dead = {p["sID"] for p in n["serializablePorts"] if p.get("sID")}
+            new_conns = []
+            seen: set[tuple[str, str]] = set()
+            for c in data["serializableConnections"]:
+                a, b = c.get("port0SID"), c.get("port1SID")
+                if a in dead or b in dead:
+                    continue
+                key = (a, b)
+                if key in seen:
+                    continue
+                seen.add(key)
+                new_conns.append(c)
+            for cons in consumers:
+                key = (src, cons)
+                if key in seen or src == cons:
+                    continue
+                seen.add(key)
+                new_conns.append(
+                    {
+                        "sID": generateId(),
+                        "port0SID": src,
+                        "port1SID": cons,
+                        "port0InstanceID": 0,
+                        "port1InstanceID": 0,
+                    }
+                )
+            data["serializableConnections"] = new_conns
+            data["serializableNodes"] = [x for x in data["serializableNodes"] if x["sID"] != n["sID"]]
+            _, _, edges2 = _producer_consumer_edges()
+            split_outs = {
+                p["sID"]
+                for p in split["serializablePorts"]
+                if p.get("sID") and int(p.get("polarity", -1)) == 1
+            }
+            if not any(a in split_outs for a, _ in edges2):
+                dead_s = {p["sID"] for p in split["serializablePorts"] if p.get("sID")}
+                data["serializableConnections"] = [
+                    c
+                    for c in data["serializableConnections"]
+                    if c.get("port0SID") not in dead_s and c.get("port1SID") not in dead_s
+                ]
+                data["serializableNodes"] = [
+                    x for x in data["serializableNodes"] if x["sID"] != split["sID"]
+                ]
+            changed += 1
+            did = True
+            break
+        if not did:
+            break
+    return changed
+
+
 def _strip_leaner_fields():
     """Extra size trim beyond Lean — decision-irrelevant chrome only.
 
-    Validated by ``parity_check`` lean vs leaner on Titanium:
-      PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
-            flags, empty modifiers, editor ``Region`` backdrops, ``Relay``
-            pass-throughs (rewired), pure Set/Get alias variables (rewired)
-      FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
+    Parity-checked ladder (AIA / AIA3 / Titanium):
+      PASS: Region, Relay rewire, Set/Get alias inline, double-Not, identity
+            math (*1/+0), split→construct noop, UUID remap / field chrome
+      FAIL: stripDebugSinks on AIA/AIA3 (debug nodes feed decisions)
     """
-    # Editor-only backdrop boxes (no ports, no decisions). DCE never removes
-    # them because the unused-node heuristic only fires on wired I/O ports.
     data["serializableNodes"] = [
         n for n in data["serializableNodes"] if n.get("id") != "Region"
     ]
     _strip_relay_nodes()
     _inline_passthrough_variables()
+    _inline_double_not()
+    _inline_identity_math()
+    _inline_split_construct()
     for node in data["serializableNodes"]:
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
