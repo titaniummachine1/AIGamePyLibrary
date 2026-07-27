@@ -663,12 +663,131 @@ def updateConnectionLinePoints():
     pass
 
 
+def _strip_relay_nodes():
+    """Bypass and delete Relay nodes (editor/pass-through only).
+
+    Relays use a single polarity-2 ``Any1`` port. Rewrite every consumer that
+    was fed through a Relay to the ultimate non-Relay producer, then drop the
+    Relay nodes and the old edges. Matches the sim's RelayRemoval intent at
+    JSON level so the editor graph is smaller too.
+    """
+    port_polarity: dict[str, int] = {}
+    port_node_id: dict[str, str] = {}
+    relay_ports: set[str] = set()
+    for node in data["serializableNodes"]:
+        for port in node.get("serializablePorts", []):
+            sid = port.get("sID")
+            if not sid:
+                continue
+            port_polarity[sid] = int(port.get("polarity", 0))
+            port_node_id[sid] = node.get("id", "")
+            if node.get("id") == "Relay":
+                relay_ports.add(sid)
+
+    if not relay_ports:
+        return
+
+    # relay_port -> producer port (may still be a relay; resolved below)
+    source: dict[str, str] = {}
+    relay_relay: list[tuple[str, str]] = []
+    for conn in data["serializableConnections"]:
+        a, b = conn.get("port0SID"), conn.get("port1SID")
+        if not a or not b:
+            continue
+        pa, pb = port_polarity.get(a), port_polarity.get(b)
+        if pa is None or pb is None:
+            continue
+        a_rel, b_rel = a in relay_ports, b in relay_ports
+        # Out(1) → Relay(2)
+        if pa == 1 and pb == 2 and b_rel:
+            source[b] = a
+        elif pb == 1 and pa == 2 and a_rel:
+            source[a] = b
+        # Relay(2) ↔ Relay(2)
+        elif pa == 2 and pb == 2 and a_rel and b_rel:
+            relay_relay.append((a, b))
+
+    # Propagate along Relay↔Relay chains.
+    changed = True
+    while changed:
+        changed = False
+        for a, b in relay_relay:
+            if a in source and b not in source:
+                source[b] = source[a]
+                changed = True
+            if b in source and a not in source:
+                source[a] = source[b]
+                changed = True
+
+    def ultimate(port: str) -> str | None:
+        seen: set[str] = set()
+        cur = port
+        while cur in relay_ports:
+            if cur in seen:
+                return None
+            seen.add(cur)
+            nxt = source.get(cur)
+            if not nxt:
+                return None
+            cur = nxt
+        return cur
+
+    new_conns: list[dict] = []
+    seen_edges: set[tuple[str, str]] = set()
+
+    def add_edge(p0: str, p1: str) -> None:
+        key = (p0, p1)
+        if key in seen_edges or p0 == p1:
+            return
+        seen_edges.add(key)
+        new_conns.append(
+            {
+                "sID": generateId(),
+                "port0SID": p0,
+                "port1SID": p1,
+                "port0InstanceID": 0,
+                "port1InstanceID": 0,
+            }
+        )
+
+    for conn in data["serializableConnections"]:
+        a, b = conn.get("port0SID"), conn.get("port1SID")
+        if not a or not b:
+            continue
+        a_rel, b_rel = a in relay_ports, b in relay_ports
+        if not a_rel and not b_rel:
+            # Preserve existing non-relay edge (keep original fields for now;
+            # leaner chrome strip runs after).
+            key = (a, b)
+            if key not in seen_edges:
+                seen_edges.add(key)
+                new_conns.append(conn)
+            continue
+        if a_rel and b_rel:
+            continue  # relay↔relay absorbed
+        # Exactly one side is a relay.
+        relay_p, other = (a, b) if a_rel else (b, a)
+        pol_other = port_polarity.get(other)
+        if pol_other == 0:
+            # Relay → consumer input: rewire ultimate source → consumer.
+            src = ultimate(relay_p)
+            if src:
+                add_edge(src, other)
+        # Out → Relay: absorbed into source map; no edge kept.
+
+    data["serializableConnections"] = new_conns
+    data["serializableNodes"] = [
+        n for n in data["serializableNodes"] if n.get("id") != "Relay"
+    ]
+
+
 def _strip_leaner_fields():
     """Extra size trim beyond Lean — decision-irrelevant chrome only.
 
     Validated by ``parity_check`` lean vs leaner on Titanium:
       PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
-            flags, empty modifiers, editor ``Region`` backdrops
+            flags, empty modifiers, editor ``Region`` backdrops, ``Relay``
+            pass-throughs (rewired)
       FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
     """
     # Editor-only backdrop boxes (no ports, no decisions). DCE never removes
@@ -676,6 +795,7 @@ def _strip_leaner_fields():
     data["serializableNodes"] = [
         n for n in data["serializableNodes"] if n.get("id") != "Region"
     ]
+    _strip_relay_nodes()
     for node in data["serializableNodes"]:
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
