@@ -668,9 +668,14 @@ def _strip_leaner_fields():
 
     Validated by ``parity_check`` lean vs leaner on Titanium:
       PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
-            flags, empty modifiers
+            flags, empty modifiers, editor ``Region`` backdrops
       FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
     """
+    # Editor-only backdrop boxes (no ports, no decisions). DCE never removes
+    # them because the unused-node heuristic only fires on wired I/O ports.
+    data["serializableNodes"] = [
+        n for n in data["serializableNodes"] if n.get("id") != "Region"
+    ]
     for node in data["serializableNodes"]:
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
