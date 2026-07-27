@@ -2504,9 +2504,25 @@ LoadData("MyBot.txt")
 SaveData("MyBot_compact.txt", layout=None, optimize="release")
 ```
 
-`OptimizeFile` defaults to `layout=None` so existing node positions stay put.
-Use `optimize="normal"` if you only want unreachable/unread pruning and must
-keep Debug / TimePlot sinks.
+### `leaner=True` (headless / size-max; parity-checked)
+
+After Lean prepare, also drop fields the soccer sim does not need to decide:
+
+- connection `sID` / instance IDs
+- port `nodeSID`
+- all `serializableRectTransform` layout chrome
+- serialize/color flags, empty `modifier` / `ownerFunctionSID`
+
+```python
+OptimizeFile("Titanium.txt", "Titanium_leaner.txt", optimize="normal",
+             pruneUnusedNodes=False, leaner=True)
+# or while building:
+SaveData("MyBot.txt", layout="grid", optimize="release", leaner=True)
+```
+
+Do **not** drop real `modifier` values or port `polarity` — those break load /
+dropdown resolution. `leaner` graphs may not round-trip cleanly through the
+Unity node editor (layout/chrome removed).
 
 ## Example: Advanced Bot
 

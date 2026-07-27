@@ -713,22 +713,28 @@ def _prepare_for_unity_format(*, leaner: bool = False):
 def _strip_leaner_fields():
     """Extra size trim beyond Lean — decision-irrelevant chrome only.
 
-    Does NOT drop port ``nodeSID`` or connection ``sID`` (Unity identity /
-    wiring helpers). Validated by ``parity_check`` lean vs leaner.
+    Validated by ``parity_check`` lean vs leaner on Titanium:
+      PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
+            flags, empty modifiers
+      FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
     """
     for node in data["serializableNodes"]:
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
-        if node.get("modifier", None) in ("", None):
+        mod = node.get("modifier", None)
+        if mod in ("", None) or (isinstance(mod, str) and not str(mod).strip()):
             node.pop("modifier", None)
-        transform = node.get("serializableRectTransform")
-        if isinstance(transform, dict):
-            # Always zeroed above; drop rather than emit {"x":0,"y":0,"z":0}.
-            transform.pop("position", None)
-            transform.pop("scale", None)
-            if not transform:
-                node.pop("serializableRectTransform", None)
+        node.pop("serializableRectTransform", None)
+        node.pop("serializeSizeDelta", None)
+        node.pop("serializeColor", None)
+        node.pop("defaultColor", None)
+        node.pop("serializableDefaultColor", None)
+        for port in node.get("serializablePorts", []):
+            port.pop("nodeSID", None)
+            port.pop("serializableRectTransform", None)
+            port.pop("controlPointSerializableRectTransform", None)
     for conn in data["serializableConnections"]:
+        conn.pop("sID", None)
         conn.pop("port0InstanceID", None)
         conn.pop("port1InstanceID", None)
 
