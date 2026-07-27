@@ -665,7 +665,99 @@ def updateConnectionLinePoints():
     pass
 
 
-def _prepare_for_unity_format(*, leaner: bool = False):
+def _strip_leaner_fields():
+    """Extra size trim beyond Lean — decision-irrelevant chrome only.
+
+    Validated by ``parity_check`` lean vs leaner on Titanium:
+      PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
+            flags, empty modifiers
+      FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
+    """
+    for node in data["serializableNodes"]:
+        if not node.get("ownerFunctionSID"):
+            node.pop("ownerFunctionSID", None)
+        mod = node.get("modifier", None)
+        if mod in ("", None) or (isinstance(mod, str) and not str(mod).strip()):
+            node.pop("modifier", None)
+        node.pop("serializableRectTransform", None)
+        node.pop("serializeSizeDelta", None)
+        node.pop("serializeColor", None)
+        node.pop("defaultColor", None)
+        node.pop("serializableDefaultColor", None)
+        for port in node.get("serializablePorts", []):
+            port.pop("nodeSID", None)
+            port.pop("serializableRectTransform", None)
+            port.pop("controlPointSerializableRectTransform", None)
+    for conn in data["serializableConnections"]:
+        conn.pop("sID", None)
+        conn.pop("port0InstanceID", None)
+        conn.pop("port1InstanceID", None)
+
+
+_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+
+def _short_id(index: int) -> str:
+    """Dense base62 id; length grows only when needed."""
+    if index < 0:
+        raise ValueError("index must be >= 0")
+    if index == 0:
+        return _ALPHABET[0]
+    digits = []
+    n = index
+    base = len(_ALPHABET)
+    while n:
+        n, rem = divmod(n, base)
+        digits.append(_ALPHABET[rem])
+    return "".join(reversed(digits))
+
+
+def remapSids(verbose=False):
+    """Rewrite every node/port/connection SID to a short dense id.
+
+    Preserves graph topology and modifiers; only opaque identity strings change.
+    Call after Lean/leaner chrome stripping. Returns ``(unique_old, unique_new)``.
+    """
+    mapping: dict[str, str] = {}
+    next_i = 0
+
+    def map_one(old):
+        nonlocal next_i
+        if not old:
+            return old
+        if old in mapping:
+            return mapping[old]
+        new = _short_id(next_i)
+        next_i += 1
+        mapping[old] = new
+        return new
+
+    # Nodes first so ownerFunctionSID targets exist in the map before ports.
+    for node in data["serializableNodes"]:
+        if "sID" in node:
+            node["sID"] = map_one(node["sID"])
+        owner = node.get("ownerFunctionSID")
+        if owner:
+            node["ownerFunctionSID"] = map_one(owner)
+        for port in node.get("serializablePorts", []):
+            if "sID" in port:
+                port["sID"] = map_one(port["sID"])
+            if "nodeSID" in port:
+                port["nodeSID"] = map_one(port["nodeSID"])
+    for conn in data["serializableConnections"]:
+        if "sID" in conn:
+            conn["sID"] = map_one(conn["sID"])
+        if "port0SID" in conn:
+            conn["port0SID"] = map_one(conn["port0SID"])
+        if "port1SID" in conn:
+            conn["port1SID"] = map_one(conn["port1SID"])
+
+    if verbose:
+        print(f"  remapSids: {len(mapping)} ids -> base62 (max len {max((len(v) for v in mapping.values()), default=0)})")
+    return len(mapping), next_i
+
+
+def _prepare_for_unity_format(*, leaner: bool = False, remap_sids: bool = False):
     """Ensure graph data matches new minimal format (NodeTypeDataSO).
     - Standard nodes: rect = position (0,0,0) + anchoredPosition only; no color/size (prefab provides)
     - Region: full rect + color (SerializeSizeDelta, SerializeColor)
@@ -673,8 +765,7 @@ def _prepare_for_unity_format(*, leaner: bool = False):
     - Connections: wire SIDs only — drop editor line/curve/color chrome (Lean format)
 
     ``leaner=True`` additionally drops fields the headless sim does not need
-    for decisions (zero ``position``, ``scale``, empty owner/modifier, connection
-    instance IDs). Keep off for Unity editor round-trips until validated.
+    for decisions. ``remap_sids=True`` rewrites UUIDs to short base62 ids.
     """
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
@@ -708,35 +799,8 @@ def _prepare_for_unity_format(*, leaner: bool = False):
 
     if leaner:
         _strip_leaner_fields()
-
-
-def _strip_leaner_fields():
-    """Extra size trim beyond Lean — decision-irrelevant chrome only.
-
-    Validated by ``parity_check`` lean vs leaner on Titanium:
-      PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
-            flags, empty modifiers
-      FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
-    """
-    for node in data["serializableNodes"]:
-        if not node.get("ownerFunctionSID"):
-            node.pop("ownerFunctionSID", None)
-        mod = node.get("modifier", None)
-        if mod in ("", None) or (isinstance(mod, str) and not str(mod).strip()):
-            node.pop("modifier", None)
-        node.pop("serializableRectTransform", None)
-        node.pop("serializeSizeDelta", None)
-        node.pop("serializeColor", None)
-        node.pop("defaultColor", None)
-        node.pop("serializableDefaultColor", None)
-        for port in node.get("serializablePorts", []):
-            port.pop("nodeSID", None)
-            port.pop("serializableRectTransform", None)
-            port.pop("controlPointSerializableRectTransform", None)
-    for conn in data["serializableConnections"]:
-        conn.pop("sID", None)
-        conn.pop("port0InstanceID", None)
-        conn.pop("port1InstanceID", None)
+    if remap_sids:
+        remapSids(verbose=False)
 
 
 def removeUnreadVariables(verbose=False):
@@ -992,6 +1056,7 @@ def OptimizeFile(
     pruneUnusedNodes=True,
     keepPosition=True,
     leaner=False,
+    remap_sids=False,
     verbose=False,
 ):
     """Compact an existing Unity bot JSON without a Python rebuild.
@@ -1002,8 +1067,8 @@ def OptimizeFile(
     the result. Default ``optimize`` is ``"release"``; default ``layout`` is
     ``None`` so existing node positions are kept.
 
-    ``leaner=True`` also drops decision-irrelevant chrome (zero position,
-    empty owner/modifier, connection instance IDs).
+    ``leaner=True`` also drops decision-irrelevant chrome.
+    ``remap_sids=True`` rewrites UUIDs to short base62 ids.
 
     Pass ``outputPath=None`` to overwrite ``inputPath`` in place.
     Returns the path written.
@@ -1019,6 +1084,7 @@ def OptimizeFile(
         keepPosition=keepPosition,
         optimize=optimize,
         leaner=leaner,
+        remap_sids=remap_sids,
         verbose=verbose,
     )
     after_n = len(data["serializableNodes"])
@@ -1038,6 +1104,7 @@ def SaveData(
     keepPosition=True,
     optimize: Literal["normal", "release"] = "normal",
     leaner=False,
+    remap_sids=False,
     verbose=False,
 ):
     """`optimize` selects how hard to compile the graph down:
@@ -1049,8 +1116,8 @@ def SaveData(
                 to a fixpoint, so anything that ONLY fed debug output goes
                 with it. Smallest and fewest per-tick node evaluations.
 
-    ``leaner=True`` additionally drops decision-irrelevant JSON chrome after
-    the Lean prepare step (see ``_strip_leaner_fields``).
+    ``leaner=True`` drops decision-irrelevant JSON chrome after Lean prepare.
+    ``remap_sids=True`` rewrites node/port/connection UUIDs to short base62 ids.
 
     Every node evaluates every tick in-engine, so removing nodes removes real
     per-tick work, not just file size.
@@ -1093,7 +1160,7 @@ def SaveData(
                 transform["scale"] = Position3(0, 0)
 
     updateConnectionLinePoints()
-    _prepare_for_unity_format(leaner=leaner)
+    _prepare_for_unity_format(leaner=leaner, remap_sids=remap_sids)
 
     with open(filePath, "w", encoding="utf-8") as f:
         json.dump(data, f, separators=(",", ":"), ensure_ascii=False)
