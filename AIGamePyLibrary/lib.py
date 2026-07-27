@@ -665,12 +665,16 @@ def updateConnectionLinePoints():
     pass
 
 
-def _prepare_for_unity_format():
+def _prepare_for_unity_format(*, leaner: bool = False):
     """Ensure graph data matches new minimal format (NodeTypeDataSO).
     - Standard nodes: rect = position (0,0,0) + anchoredPosition only; no color/size (prefab provides)
     - Region: full rect + color (SerializeSizeDelta, SerializeColor)
     - Ports: id, sID, polarity, nodeSID only (position from prefab)
     - Connections: wire SIDs only — drop editor line/curve/color chrome (Lean format)
+
+    ``leaner=True`` additionally drops fields the headless sim does not need
+    for decisions (zero ``position``, ``scale``, empty owner/modifier, connection
+    instance IDs). Keep off for Unity editor round-trips until validated.
     """
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
@@ -684,6 +688,7 @@ def _prepare_for_unity_format():
             if node_id not in SERIALIZE_SIZE_DELTA_NODES:
                 for key in ("localPosition", "anchorMin", "anchorMax", "sizeDelta"):
                     transform.pop(key, None)
+            transform.pop("scale", None)
         if node_id not in SERIALIZE_COLOR_NODES:
             node.pop("defaultColor", None)
             node.pop("serializableDefaultColor", None)
@@ -700,6 +705,32 @@ def _prepare_for_unity_format():
     for conn in data["serializableConnections"]:
         slim.append({k: conn[k] for k in _CONN_KEEP if k in conn})
     data["serializableConnections"] = slim
+
+    if leaner:
+        _strip_leaner_fields()
+
+
+def _strip_leaner_fields():
+    """Extra size trim beyond Lean — decision-irrelevant chrome only.
+
+    Does NOT drop port ``nodeSID`` or connection ``sID`` (Unity identity /
+    wiring helpers). Validated by ``parity_check`` lean vs leaner.
+    """
+    for node in data["serializableNodes"]:
+        if not node.get("ownerFunctionSID"):
+            node.pop("ownerFunctionSID", None)
+        if node.get("modifier", None) in ("", None):
+            node.pop("modifier", None)
+        transform = node.get("serializableRectTransform")
+        if isinstance(transform, dict):
+            # Always zeroed above; drop rather than emit {"x":0,"y":0,"z":0}.
+            transform.pop("position", None)
+            transform.pop("scale", None)
+            if not transform:
+                node.pop("serializableRectTransform", None)
+    for conn in data["serializableConnections"]:
+        conn.pop("port0InstanceID", None)
+        conn.pop("port1InstanceID", None)
 
 
 def removeUnreadVariables(verbose=False):
@@ -954,6 +985,7 @@ def OptimizeFile(
     layout: Literal["auto", "grid", "single", "hidden", None] = None,
     pruneUnusedNodes=True,
     keepPosition=True,
+    leaner=False,
     verbose=False,
 ):
     """Compact an existing Unity bot JSON without a Python rebuild.
@@ -963,6 +995,9 @@ def OptimizeFile(
     the file, runs the same optimiser as ``SaveData(optimize=...)``, and writes
     the result. Default ``optimize`` is ``"release"``; default ``layout`` is
     ``None`` so existing node positions are kept.
+
+    ``leaner=True`` also drops decision-irrelevant chrome (zero position,
+    empty owner/modifier, connection instance IDs).
 
     Pass ``outputPath=None`` to overwrite ``inputPath`` in place.
     Returns the path written.
@@ -977,6 +1012,7 @@ def OptimizeFile(
         pruneUnusedNodes=pruneUnusedNodes,
         keepPosition=keepPosition,
         optimize=optimize,
+        leaner=leaner,
         verbose=verbose,
     )
     after_n = len(data["serializableNodes"])
@@ -995,6 +1031,7 @@ def SaveData(
     pruneUnusedNodes=True,
     keepPosition=True,
     optimize: Literal["normal", "release"] = "normal",
+    leaner=False,
     verbose=False,
 ):
     """`optimize` selects how hard to compile the graph down:
@@ -1005,6 +1042,9 @@ def SaveData(
       "release" additionally strips every Debug*/TimePlot sink, then re-prunes
                 to a fixpoint, so anything that ONLY fed debug output goes
                 with it. Smallest and fewest per-tick node evaluations.
+
+    ``leaner=True`` additionally drops decision-irrelevant JSON chrome after
+    the Lean prepare step (see ``_strip_leaner_fields``).
 
     Every node evaluates every tick in-engine, so removing nodes removes real
     per-tick work, not just file size.
@@ -1047,7 +1087,7 @@ def SaveData(
                 transform["scale"] = Position3(0, 0)
 
     updateConnectionLinePoints()
-    _prepare_for_unity_format()
+    _prepare_for_unity_format(leaner=leaner)
 
     with open(filePath, "w", encoding="utf-8") as f:
         json.dump(data, f, separators=(",", ":"), ensure_ascii=False)
