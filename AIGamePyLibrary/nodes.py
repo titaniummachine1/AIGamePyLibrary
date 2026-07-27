@@ -11,6 +11,7 @@ from .lib import (
     OptimizeFile,
     SaveData,
     data,
+    remapSids,
 )
 from .utils import Color, GetSurvivalSavePath, GetTennisSavePath, Position3
 
