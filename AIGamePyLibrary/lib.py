@@ -666,12 +666,16 @@ def updateConnectionLinePoints():
 
 
 def _strip_relay_nodes():
-    """Bypass and delete Relay nodes (editor/pass-through only).
+    """Bypass and delete Relay nodes that are pure editor pass-throughs.
 
     Relays use a single polarity-2 ``Any1`` port. Rewrite every consumer that
     was fed through a Relay to the ultimate non-Relay producer, then drop the
-    Relay nodes and the old edges. Matches the sim's RelayRemoval intent at
-    JSON level so the editor graph is smaller too.
+    Relay nodes and the old edges.
+
+    **Exception — memory latches:** if a node's output feeds a Relay that
+    feeds back into the *same* node (Zudan ``ConditionalSet*`` pattern:
+    out → Relay → false-branch), keep that Relay and its edges. Stripping
+    those destroys tick-to-tick memory.
     """
     port_polarity: dict[str, int] = {}
     port_node_id: dict[str, str] = {}
@@ -734,6 +738,46 @@ def _strip_relay_nodes():
             cur = nxt
         return cur
 
+    port_to_node_sid: dict[str, str] = {}
+    for node in data["serializableNodes"]:
+        for port in node.get("serializablePorts", []):
+            if port.get("sID"):
+                port_to_node_sid[port["sID"]] = node["sID"]
+
+    # Consumers of each relay port: polarity-0 (or other) ports fed by this relay.
+    relay_consumers: dict[str, list[str]] = {rp: [] for rp in relay_ports}
+    for conn in data["serializableConnections"]:
+        a, b = conn.get("port0SID"), conn.get("port1SID")
+        if not a or not b:
+            continue
+        pa, pb = port_polarity.get(a), port_polarity.get(b)
+        if pa is None or pb is None:
+            continue
+        if a in relay_ports and pb == 0:
+            relay_consumers[a].append(b)
+        elif b in relay_ports and pa == 0:
+            relay_consumers[b].append(a)
+        # Relay ↔ Relay already in relay_relay; Relay fed by Out already in source.
+
+    # Memory-cell Relays: output of node N feeds Relay, Relay feeds back into N
+    # (Zudan ConditionalSet* latch). Also keep pure Relay↔Relay loops with no
+    # external source (ultimate is None).
+    cyclic_relay_ports: set[str] = set()
+    for rp in relay_ports:
+        if ultimate(rp) is None:
+            cyclic_relay_ports.add(rp)
+            continue
+        prod = source.get(rp)
+        if not prod:
+            continue
+        prod_node = port_to_node_sid.get(prod)
+        if not prod_node:
+            continue
+        for cons in relay_consumers.get(rp, ()):
+            if port_to_node_sid.get(cons) == prod_node:
+                cyclic_relay_ports.add(rp)
+                break
+
     new_conns: list[dict] = []
     seen_edges: set[tuple[str, str]] = set()
 
@@ -757,9 +801,14 @@ def _strip_relay_nodes():
         if not a or not b:
             continue
         a_rel, b_rel = a in relay_ports, b in relay_ports
+        if a in cyclic_relay_ports or b in cyclic_relay_ports:
+            # Preserve latch memory wiring intact.
+            key = (a, b)
+            if key not in seen_edges:
+                seen_edges.add(key)
+                new_conns.append(conn)
+            continue
         if not a_rel and not b_rel:
-            # Preserve existing non-relay edge (keep original fields for now;
-            # leaner chrome strip runs after).
             key = (a, b)
             if key not in seen_edges:
                 seen_edges.add(key)
@@ -767,19 +816,22 @@ def _strip_relay_nodes():
             continue
         if a_rel and b_rel:
             continue  # relay↔relay absorbed
-        # Exactly one side is a relay.
         relay_p, other = (a, b) if a_rel else (b, a)
         pol_other = port_polarity.get(other)
         if pol_other == 0:
-            # Relay → consumer input: rewire ultimate source → consumer.
             src = ultimate(relay_p)
             if src:
                 add_edge(src, other)
-        # Out → Relay: absorbed into source map; no edge kept.
+
+    keep_relay_nodes = {
+        port_to_node_sid[p] for p in cyclic_relay_ports if p in port_to_node_sid
+    }
 
     data["serializableConnections"] = new_conns
     data["serializableNodes"] = [
-        n for n in data["serializableNodes"] if n.get("id") != "Relay"
+        n
+        for n in data["serializableNodes"]
+        if n.get("id") != "Relay" or n["sID"] in keep_relay_nodes
     ]
 
 
@@ -1096,7 +1148,8 @@ def _inline_double_not() -> int:
 
 
 def _inline_identity_math() -> int:
-    """Bypass ScaleVector3(*1), MultiplyFloats(*1), AddFloats(+0)."""
+    """Bypass ScaleVector3(*1), MultiplyFloats(*1), AddFloats(+0),
+    SubtractFloats(x-0), DivideFloats(x/1). Not 0-x or 1/x."""
     changed = 0
     while True:
         polarity, node_of, edges = _producer_consumer_edges()
@@ -1154,6 +1207,24 @@ def _inline_identity_math() -> int:
                         keep = a_in
                     if keep:
                         target = (n["sID"], keep, out)
+            elif tid == "SubtractFloats":
+                # x - 0 only (Float2 == 0). 0 - x is negate, not identity.
+                a_in = port_named(n, "Float1", 0)
+                b_in = port_named(n, "Float2", 0)
+                out = port_named(n, "Float1", 1)
+                if a_in and b_in and out:
+                    pb = producer_of(b_in)
+                    if pb and node_of.get(pb) in float_val and float_val[node_of[pb]] == "0":
+                        target = (n["sID"], a_in, out)
+            elif tid == "DivideFloats":
+                # x / 1 only (Float2 == 1). 1 / x is reciprocal, not identity.
+                a_in = port_named(n, "Float1", 0)
+                b_in = port_named(n, "Float2", 0)
+                out = port_named(n, "Float1", 1)
+                if a_in and b_in and out:
+                    pb = producer_of(b_in)
+                    if pb and node_of.get(pb) in float_val and float_val[node_of[pb]] == "1":
+                        target = (n["sID"], a_in, out)
             if target and _bypass_node(*target):
                 changed += 1
                 did = True
@@ -1274,12 +1345,119 @@ def _inline_split_construct() -> int:
     return changed
 
 
+# Pure producers / constants safe to drop when nothing consumes their outputs.
+# Never include Function/CreateFunction, Set/Get, ConditionalSet*, Debug/TimePlot,
+# or action sinks — those can affect play without a used output edge.
+_ORPHAN_DCE_ALLOW = frozenset(
+    {
+        "String",
+        "Float",
+        "Bool",
+        "Color",
+        "Vector3",
+        "Vector3Constant",
+        "AddFloats",
+        "SubtractFloats",
+        "MultiplyFloats",
+        "DivideFloats",
+        "AddVector3",
+        "SubtractVector3",
+        "ScaleVector3",
+        "Normalize",
+        "ConstructVector3",
+        "Vector3Split",
+        "CompareBool",
+        "CompareFloats",
+        "Not",
+        "And",
+        "Or",
+        "Xor",
+        "IsNull",
+        "DotProduct",
+        "Distance",
+        "ClampFloat",
+        "Operation",
+        "RelativePosition",
+        "Magnitude",
+        "Cross",
+        "Lerp",
+        "SoccerGetBool",
+        "SoccerGetFloat",
+        "SoccerGetVector3",
+        "SoccerGetTransform",
+        "SoccerPlayerSensors1",
+        "SoccerPlayerSensors2",
+        "SoccerPlayerSensors3",
+        "SoccerPlayerSensors4",
+    }
+)
+
+
+def _orphan_dce_allowed(node_id: str) -> bool:
+    if not node_id:
+        return False
+    if node_id in _ORPHAN_DCE_ALLOW:
+        return True
+    return node_id.startswith("SoccerPlayerSensors")
+
+
+def _dce_orphan_producers() -> int:
+    """Drop allowlisted nodes whose outputs feed nobody (and fully disconnected ones).
+
+    Existing ``removeUnusedNodes`` keeps every String forever; this cleans those
+    leftover label constants and other pure dead producers after leaner inlines.
+    Fixpoint: removing a consumer can orphan its producers.
+    """
+    total = 0
+    for _ in range(32):
+        _, _, edges = _producer_consumer_edges()
+        used_out = {a for a, _ in edges}
+        used_any = used_out | {b for _, b in edges}
+        doomed: set[str] = set()
+        for n in data["serializableNodes"]:
+            nid = n.get("id")
+            if not _orphan_dce_allowed(nid):
+                continue
+            ports = [p for p in n.get("serializablePorts", []) if p.get("sID")]
+            outs = [p["sID"] for p in ports if int(p.get("polarity", -1)) == 1]
+            if outs:
+                if any(o in used_out for o in outs):
+                    continue
+                doomed.add(n["sID"])
+                continue
+            # No output ports: drop only if nothing touches the node at all.
+            if ports and not any(p["sID"] in used_any for p in ports):
+                doomed.add(n["sID"])
+            elif not ports:
+                doomed.add(n["sID"])
+        if not doomed:
+            break
+        dead_ports = {
+            p["sID"]
+            for n in data["serializableNodes"]
+            if n["sID"] in doomed
+            for p in n.get("serializablePorts", [])
+            if p.get("sID")
+        }
+        data["serializableConnections"] = [
+            c
+            for c in data["serializableConnections"]
+            if c.get("port0SID") not in dead_ports and c.get("port1SID") not in dead_ports
+        ]
+        data["serializableNodes"] = [
+            n for n in data["serializableNodes"] if n["sID"] not in doomed
+        ]
+        total += len(doomed)
+    return total
+
+
 def _strip_leaner_fields():
     """Extra size trim beyond Lean — decision-irrelevant chrome only.
 
     Parity-checked ladder (AIA / AIA3 / Titanium):
       PASS: Region, Relay rewire, Set/Get alias inline, double-Not, identity
-            math (*1/+0), split→construct noop, UUID remap / field chrome
+            math (*1/+0/x-0/x/1), split→construct noop, orphan DCE (allowlist),
+            UUID remap / field chrome
       FAIL: stripDebugSinks on AIA/AIA3 (debug nodes feed decisions)
     """
     data["serializableNodes"] = [
@@ -1290,6 +1468,7 @@ def _strip_leaner_fields():
     _inline_double_not()
     _inline_identity_math()
     _inline_split_construct()
+    _dce_orphan_producers()
     for node in data["serializableNodes"]:
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
