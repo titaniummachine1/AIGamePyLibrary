@@ -57,6 +57,7 @@ The library uses a node-based system where operations return `Node` objects. Nod
 - **Boolean**: `&` (and), `|` (or), `^` (xor), `~` (not)
 
 Example:
+
 ```python
 ball_pos = VolleyballGetVector3("Ball Position")
 self_pos = VolleyballGetVector3("Self Position")
@@ -1166,15 +1167,18 @@ Aialanders are trapped on a deserted island with apple trees and other inhabitan
 ### Customization
 
 **Body Type**
+
 - `0` Pants and shorts
 - `1` Dress
 - `2` Robot
 
 **Beard Styles**
+
 - `0` None
 - `1` Full trimmed beard
 
 **Hair Styles**
+
 - `0` Curtains
 - `1` Caesar
 - `2` Bob
@@ -1199,11 +1203,13 @@ If you want, here's the PSD to make a custom outfit texture for your character:
 ### Container Information
 
 **Health**
+
 - Each player starts with a designated container with 250 health.
 - Containers do not regenerate health.
 - When a container's health reaches 0 it will be destroyed along with any food stored in it.
 
 **Terrain**
+
 - Terrain has an approximate diameter of 160.
 - For the competition the seed will be random—you may be the closest one to a tree, or the furthest.
 - I'll be running the sim with both abundant and scarce resources. Adjust your strategy appropriately.
@@ -1216,6 +1222,7 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 ### Player Information
 
 **Abilities**
+
 - Standard move speed is 5.
 - Sprinting increases player speed 9. Players must have available stamina to sprint.
 - Attacking deals 10 damage per hit and consumes 5 stamina. Players must have enough stamina to attack. Attack range is 2. Attack radius is 1 in the forward direction of the player. Attacking while holding food will drop the food.
@@ -1223,22 +1230,26 @@ Players are sorted by Survival Time, then Most Health, then Hunger, then stored 
 - Emoting will stop all movement and cause the player to perform a looping animation until their emote state is set to "None".
 
 **Health**
+
 - Players all start with 100 health.
 - Players will regenerate 1 health per Tick after they've not taken damage for 5 seconds.
 - After a player has started regenerating health, their "last attacked by" player is reset.
 
 **Hunger**
+
 - Players start with 100 Hunger points.
 - Every 5 seconds players lose 10 points. The 5 second timer is reset whenever a player eats.
 - If the player does not have 10 hunger to be consumed, they will instead take 10 damage.
 - Consuming food restores 25 points.
 
 **Stamina**
+
 - Players all start with 100 stamina.
 - Sprinting consumes stamina at .15 per tick and Attacking consumes stamina at 5 per attack.
 - After not consuming stamina for 3 seconds players will regenerate 2 stamina per Tick.
 
 **Aggression**
+
 - Players have an aggression level.
 - Attacking a player with the same or lower aggression level will increase a player's aggression by 1.
 - Attacking a player's container with the same or lower aggression level will increase a player's aggression by .5.
@@ -1740,7 +1751,7 @@ Maximize damage to other cars. Collisions deal damage; vulnerable parts change h
 
 ### Guardrails (common LLM pitfalls)
 
-- **Transform vs Vector3**: Many helpers output a **Transform** (type `Transform`) which is *not* a Vector3 position. In this library, transforms are represented as `Node` objects and **do not** have Unity-style fields like `.Position` / `.position`.
+- **Transform vs Vector3**: Many helpers output a **Transform** (type `Transform`) which is _not_ a Vector3 position. In this library, transforms are represented as `Node` objects and **do not** have Unity-style fields like `.Position` / `.position`.
 - **How to get a position Vector3 from a Transform**: use **`RelativePosition(transform_node, "Self")`** (returns a `Vector3`).
 - **Bad (will error)**: `goal = CarGetPart(0, car).PartTransform.Position`
 - **Good**:
@@ -2008,6 +2019,7 @@ Search order prioritizes the team’s attacking direction:
 Live values from the Soccer scene / player prefab. Several are also exposed as `SoccerGetFloat` labels (listed in parentheses).
 
 **Field**
+
 - Field width (sideline to sideline): **50** (`"Field Width"`)
 - Field depth (goal line to goal line): **80** (`"Field Depth"`)
 - Kickoff / center circle radius: **7.25** (`"Kickoff Circle Radius"`)
@@ -2016,10 +2028,12 @@ Live values from the Soccer scene / player prefab. Several are also exposed as `
 - Players per team: **4**
 
 **Movement**
+
 - Walk / run speed: **7**
 - Sprint speed: **8** (requires available stamina)
 
 **Stamina**
+
 - Max stamina: **100**
 - Sprint consume: **0.15** per simulation tick while sprinting
 - Regen rate: **5** stamina per second (after the regen delay)
@@ -2027,6 +2041,7 @@ Live values from the Soccer scene / player prefab. Several are also exposed as `
 - Tackle / contested-steal regen delay: **1.5** seconds (applied to both players in the contest)
 
 **Match & interaction**
+
 - Match duration: **180** seconds of playing time
 - Kickoff restriction delay: **1** second (or until first touch)
 - Player interact / tackle / pickup radius: **1.75** (`"Player Interact Radius"`)
@@ -2037,6 +2052,7 @@ Live values from the Soccer scene / player prefab. Several are also exposed as `
 - Stale-ball whistle: ball stays within **2.5** of its anchor for **5** s
 
 **Ball physics** (from `SoccerBall` prefab + project Physics settings)
+
 - Mass: **0.45**
 - Linear damping: **0**
 - Angular damping: **0**
@@ -2873,10 +2889,10 @@ Every node in the saved graph evaluates every tick in-engine, so fewer nodes
 means both a smaller file **and** less per-tick work. Pass `optimize=` to
 `SaveData` to choose how aggressively to prune:
 
-| Value | What it does |
-| --- | --- |
+| Value                | What it does                                                                                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `"normal"` (default) | Safe prune only: drop unreachable nodes and `SetVariable` writes that no `GetVariable` reads. Keeps every `Debug*` / `TimePlot` sink so the graph stays observable while you develop. |
-| `"release"` | Also strips every `Debug*` / `TimePlot` sink, then re-prunes to a fixpoint so anything that **only** fed debug output is removed too. Smallest graph; fewest per-tick evaluations. |
+| `"release"`          | Also strips every `Debug*` / `TimePlot` sink, then re-prunes to a fixpoint so anything that **only** fed debug output is removed too. Smallest graph; fewest per-tick evaluations.    |
 
 ```python
 # Development: keep DebugDraw / TimePlot so you can inspect the graph
@@ -2896,6 +2912,29 @@ when you want release:
 ```python
 SaveData("MyBot.txt", "grid", optimize="release")
 ```
+
+### Optimizing an existing bot JSON (no Python source)
+
+There is **no general decompiler** from Unity graph JSON back into Python.
+You do not need one: the optimiser works on the JSON graph itself.
+
+```python
+from AIGamePyLibrary import OptimizeFile, LoadData, SaveData
+
+# Compact an editor-made / already-exported bot (default optimize="release")
+OptimizeFile("Haialand-v2.txt", "Haialand-v2_release.txt", verbose=True)
+
+# Or overwrite in place
+OptimizeFile("MyBot.txt", verbose=True)
+
+# Or load → tweak in memory → save yourself
+LoadData("MyBot.txt")
+SaveData("MyBot_compact.txt", layout=None, optimize="release")
+```
+
+`OptimizeFile` defaults to `layout=None` so existing node positions stay put.
+Use `optimize="normal"` if you only want unreachable/unread pruning and must
+keep Debug / TimePlot sinks.
 
 ## Example: Advanced Bot
 
@@ -3178,7 +3217,8 @@ throttle = ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)
 # or: Magnitude(CarInfo(car).Velocity) → 'Vector32'
 ```
 
-**Fix:** 
+**Fix:**
+
 - Only use `.CarTransform` and `.PartTransform` from these helpers.
 - For stuck detection use **forward raycast sensors** (`HitInfo(ray_f)`) as shown in `Grok.py`.
 - See full details in [Multi-output component accessor bug](#multi-output-component-accessor-bug) below.
@@ -3189,28 +3229,28 @@ throttle = ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)
 
 These are the exact mistakes we keep seeing. If your draft does any of them, rewrite it before saving.
 
-| ❌ Don't | ✅ Do |
-|---|---|
-| `import AIGamePyLibrary as aig` then `aig.InitializeDemoDerby(...)` (treats helpers as methods on a sim object) | `from AIGamePyLibrary import *` and call helpers as free functions |
-| `InitializeDemoDerby(name="X", country="USA", modifier_llm=True, save_file="X")` | `props = InitializeDemoDerby("X", "United States of America", "Tan", 0, 0, "Brown", 0, "Red", "")` — positional only |
-| `country="USA"` / `country="UK"` / `country="South-Korea"` | Use the exact strings from the Country list, e.g. `"United States of America"`, `"United Kingdom"`, `"South Korea"`. Bot personas: `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"` |
-| Pass `modifier_llm=True` / `is_llm=True` / `llm=True` to any helper | After init: `props.data["modifier"] = "True"` (see [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven)) |
-| Pass `save_file="X"` to any helper | Saving is a separate call at the end of the script: `SaveData("X", "auto")` |
-| `while sim.is_active(): sim.set_controls(...)` style runtime loop | Build the graph once. Unity runs it every tick. There is no loop in your script. |
-| `sim.get_self_data()`, `sim.get_opponents()`, `sim.set_controls()`, `sim.update()`, `sim.is_active()` | None of these exist. Use `DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarInfo`, `CarRaycasts`, `ModularUniformController`, etc. |
-| `if dist < 50: throttle = 1.0 else: throttle = 0.5` | `throttle = ConditionalSetFloat(dist < 50, 1.0, 0.5)` |
-| `min(opponents, key=lambda o: ...)` / iterating Python lists of game entities | There is no Python-side list of opponents. Use selector nodes like `DemoDerbyGetCar(8)` (nearest active), `CarGetPart(3, car)` (nearest crucial part), `SurvivalGetTransform(3)` (player nearest), etc. |
-| `math.atan2(...)`, `math.sqrt(...)`, `math.degrees(...)` | `Operation(x)` (`atan`, `sqrt`, etc.), `Magnitude`, `Distance`, `DotProduct`, `Normalize`, or just rely on `Autosteer(goal)` / `Autothrottle(goal, speed)` for car driving |
-| 2D thinking: `pos[0]`, `pos[1]`, `heading` in degrees | Everything is 3D `Vector3`. Access components via `vec.x`, `vec.y`, `vec.z`. There is no scalar "heading". Use `Autosteer` for car aim. |
-| `transform.Position` / `transform.position` on a Transform node | `RelativePosition(transform_node, "Self")` returns the world `Vector3` |
-| `Self.Position` / `Ball.Position` / `entity.Velocity` / `Self.TeamSpawn` / `Game.DeltaTime` — dotted accessors on a game entity | **Use the simulation-prefixed node helpers everywhere.** Volleyball: `VolleyballGetVector3("Self Position")`, `VolleyballGetVector3("Ball Velocity")`, `VolleyballGetTransform("Self Team Spawn")`, `VolleyballGetBool("Self Can Jump")`, `VolleyballGetFloat("Delta time")`. Other sims have their own helpers (`DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarGetPart(...).PartTransform`, `SurvivalGetTransform`, `ParkingGetTransform`, etc.). Never assume `.Position` / `.Velocity` / `.Transform` exists on a Node — it does not, and examples that used to show that shortcut have been rewritten. |
-| `GetTransform(...)` / `GetBool(...)` / `GetFloat(...)` / `GetVector3(...)` used in Survival / Parking / Demo Derby / Soccer / RacingV2 graphs | Those unprefixed names are **Volleyball-only** backward-compat aliases. In other sims you'll silently build the wrong Unity node. Use the sim prefix: `SurvivalGetTransform` / `ParkingGetTransform` / `DemoDerbyGetTransform` / `SoccerGetTransform` / `RacingV2GetFloat`, etc. |
-| Treating `CreateFunction` like `Region`, or like Python `customNodes.py` | Custom Functions change execution: body nodes only run via `CustomFunction(...)` calls; params/optional return are the interface. `Region` is visual-only. |
-| Building `Power` / math inside `CreateFunction` but forgetting the return wire | Always call `SetFunctionReturn(fn, powered)` so `Power.Float1` connects to CreateFunction Return (`Any1` In). Without it, `CustomFunction(...)` output is null. |
-| Wiring Return to port id `Any` | Return is **`Any1` polarity In** (not `Any`). Param1 Out is also `Any1` — polarity distinguishes them. |
-| One `SlimeController` / single controller for Soccer | Soccer needs `SoccerController(1..4, moveTo, sprint, interact)` per player on the team graph |
-| `Magnitude(CarInfo(car).Velocity)`, `ClampFloat(CarInfo(car).Health, ...)`, `pos + CarInfo(car).Velocity * dt`, `ConditionalSetFloat(CarGetPart(3, car).HealthPercent < 50, ...)` | **Broken in the current library.** Only `.CarTransform` (on `CarInfo`) and `.PartTransform` (on `CarGetPart`) can be passed to another node — everything else raises `KeyError: 'Vector32'` / `'Bool3'` / `'Bool4'` / `'Float5'` / `'Float6'` / `'Float2'` in `ConnectPorts`. Plan your bot around `Autosteer` / `Autothrottle` + `DemoDerbyGetCar` / `CarGetPart(3, ...).PartTransform` + raycast sensors. See **[Multi-output component accessor bug](#multi-output-component-accessor-bug)**. |
-| Forget to call `SaveData(...)` at the end | Always finish with `SaveData("YourBotName", "auto")` — without this the script does literally nothing |
+| ❌ Don't                                                                                                                                                                          | ✅ Do                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `import AIGamePyLibrary as aig` then `aig.InitializeDemoDerby(...)` (treats helpers as methods on a sim object)                                                                   | `from AIGamePyLibrary import *` and call helpers as free functions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `InitializeDemoDerby(name="X", country="USA", modifier_llm=True, save_file="X")`                                                                                                  | `props = InitializeDemoDerby("X", "United States of America", "Tan", 0, 0, "Brown", 0, "Red", "")` — positional only                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `country="USA"` / `country="UK"` / `country="South-Korea"`                                                                                                                        | Use the exact strings from the Country list, e.g. `"United States of America"`, `"United Kingdom"`, `"South Korea"`. Bot personas: `"ChatGPT"`, `"Claude"`, `"Deepseek"`, `"Gemini"`, `"Grok"`, `"Llama"`, `"Mistral"`, `"Perplexity"`, `"Qwen"`                                                                                                                                                                                                                                                                                                                                                            |
+| Pass `modifier_llm=True` / `is_llm=True` / `llm=True` to any helper                                                                                                               | After init: `props.data["modifier"] = "True"` (see [Marking your bot as LLM-driven](#marking-your-bot-as-llm-driven))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Pass `save_file="X"` to any helper                                                                                                                                                | Saving is a separate call at the end of the script: `SaveData("X", "auto")`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `while sim.is_active(): sim.set_controls(...)` style runtime loop                                                                                                                 | Build the graph once. Unity runs it every tick. There is no loop in your script.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `sim.get_self_data()`, `sim.get_opponents()`, `sim.set_controls()`, `sim.update()`, `sim.is_active()`                                                                             | None of these exist. Use `DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarInfo`, `CarRaycasts`, `ModularUniformController`, etc.                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `if dist < 50: throttle = 1.0 else: throttle = 0.5`                                                                                                                               | `throttle = ConditionalSetFloat(dist < 50, 1.0, 0.5)`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `min(opponents, key=lambda o: ...)` / iterating Python lists of game entities                                                                                                     | There is no Python-side list of opponents. Use selector nodes like `DemoDerbyGetCar(8)` (nearest active), `CarGetPart(3, car)` (nearest crucial part), `SurvivalGetTransform(3)` (player nearest), etc.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `math.atan2(...)`, `math.sqrt(...)`, `math.degrees(...)`                                                                                                                          | `Operation(x)` (`atan`, `sqrt`, etc.), `Magnitude`, `Distance`, `DotProduct`, `Normalize`, or just rely on `Autosteer(goal)` / `Autothrottle(goal, speed)` for car driving                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 2D thinking: `pos[0]`, `pos[1]`, `heading` in degrees                                                                                                                             | Everything is 3D `Vector3`. Access components via `vec.x`, `vec.y`, `vec.z`. There is no scalar "heading". Use `Autosteer` for car aim.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `transform.Position` / `transform.position` on a Transform node                                                                                                                   | `RelativePosition(transform_node, "Self")` returns the world `Vector3`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `Self.Position` / `Ball.Position` / `entity.Velocity` / `Self.TeamSpawn` / `Game.DeltaTime` — dotted accessors on a game entity                                                   | **Use the simulation-prefixed node helpers everywhere.** Volleyball: `VolleyballGetVector3("Self Position")`, `VolleyballGetVector3("Ball Velocity")`, `VolleyballGetTransform("Self Team Spawn")`, `VolleyballGetBool("Self Can Jump")`, `VolleyballGetFloat("Delta time")`. Other sims have their own helpers (`DemoDerbyGetTransform`, `DemoDerbyGetCar`, `CarGetPart(...).PartTransform`, `SurvivalGetTransform`, `ParkingGetTransform`, etc.). Never assume `.Position` / `.Velocity` / `.Transform` exists on a Node — it does not, and examples that used to show that shortcut have been rewritten. |
+| `GetTransform(...)` / `GetBool(...)` / `GetFloat(...)` / `GetVector3(...)` used in Survival / Parking / Demo Derby / Soccer / RacingV2 graphs                                     | Those unprefixed names are **Volleyball-only** backward-compat aliases. In other sims you'll silently build the wrong Unity node. Use the sim prefix: `SurvivalGetTransform` / `ParkingGetTransform` / `DemoDerbyGetTransform` / `SoccerGetTransform` / `RacingV2GetFloat`, etc.                                                                                                                                                                                                                                                                                                                            |
+| Treating `CreateFunction` like `Region`, or like Python `customNodes.py`                                                                                                          | Custom Functions change execution: body nodes only run via `CustomFunction(...)` calls; params/optional return are the interface. `Region` is visual-only.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Building `Power` / math inside `CreateFunction` but forgetting the return wire                                                                                                    | Always call `SetFunctionReturn(fn, powered)` so `Power.Float1` connects to CreateFunction Return (`Any1` In). Without it, `CustomFunction(...)` output is null.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Wiring Return to port id `Any`                                                                                                                                                    | Return is **`Any1` polarity In** (not `Any`). Param1 Out is also `Any1` — polarity distinguishes them.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| One `SlimeController` / single controller for Soccer                                                                                                                              | Soccer needs `SoccerController(1..4, moveTo, sprint, interact)` per player on the team graph                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `Magnitude(CarInfo(car).Velocity)`, `ClampFloat(CarInfo(car).Health, ...)`, `pos + CarInfo(car).Velocity * dt`, `ConditionalSetFloat(CarGetPart(3, car).HealthPercent < 50, ...)` | **Broken in the current library.** Only `.CarTransform` (on `CarInfo`) and `.PartTransform` (on `CarGetPart`) can be passed to another node — everything else raises `KeyError: 'Vector32'` / `'Bool3'` / `'Bool4'` / `'Float5'` / `'Float6'` / `'Float2'` in `ConnectPorts`. Plan your bot around `Autosteer` / `Autothrottle` + `DemoDerbyGetCar` / `CarGetPart(3, ...).PartTransform` + raycast sensors. See **[Multi-output component accessor bug](#multi-output-component-accessor-bug)**.                                                                                                            |
+| Forget to call `SaveData(...)` at the end                                                                                                                                         | Always finish with `SaveData("YourBotName", "auto")` — without this the script does literally nothing                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ## Side-by-side example
 
@@ -3279,16 +3319,16 @@ weak = part.HealthPercent < 30                                      # KeyError: 
 
 For reference, here's what each accessor currently does and what port id it asks for:
 
-| Accessor | `outputIndex` | Port name built | Actual Unity port | Status |
-|---|---|---|---|---|
-| `CarInfo(...).CarTransform` | 1 | `Transform1` | `Transform1` | ✅ works |
-| `CarInfo(...).Velocity` | 2 | `Vector32` | `Vector31` | ❌ `KeyError` |
-| `CarInfo(...).IsAI` | 3 | `Bool3` | `Bool1` | ❌ `KeyError` |
-| `CarInfo(...).IsImmobile` | 4 | `Bool4` | `Bool2` | ❌ `KeyError` |
-| `CarInfo(...).Health` | 5 | `Float5` | `Float1` | ❌ `KeyError` |
-| `CarInfo(...).Rank` | 6 | `Float6` | `Float2` | ❌ `KeyError` |
-| `CarGetPart(...).PartTransform` | 1 | `Transform1` | `Transform1` | ✅ works |
-| `CarGetPart(...).HealthPercent` | 2 | `Float2` | `Float1` | ❌ `KeyError` |
+| Accessor                        | `outputIndex` | Port name built | Actual Unity port | Status        |
+| ------------------------------- | ------------- | --------------- | ----------------- | ------------- |
+| `CarInfo(...).CarTransform`     | 1             | `Transform1`    | `Transform1`      | ✅ works      |
+| `CarInfo(...).Velocity`         | 2             | `Vector32`      | `Vector31`        | ❌ `KeyError` |
+| `CarInfo(...).IsAI`             | 3             | `Bool3`         | `Bool1`           | ❌ `KeyError` |
+| `CarInfo(...).IsImmobile`       | 4             | `Bool4`         | `Bool2`           | ❌ `KeyError` |
+| `CarInfo(...).Health`           | 5             | `Float5`        | `Float1`          | ❌ `KeyError` |
+| `CarInfo(...).Rank`             | 6             | `Float6`        | `Float2`          | ❌ `KeyError` |
+| `CarGetPart(...).PartTransform` | 1             | `Transform1`    | `Transform1`      | ✅ works      |
+| `CarGetPart(...).HealthPercent` | 2             | `Float2`        | `Float1`          | ❌ `KeyError` |
 
 `HitInfoComponents` sidesteps this by storing `outputIndex=1` for **both** `WasHit` and `Distance` and instead setting `node.type` to `bool` / `float` so the consumer prefixes the right port type — `CarInfoComponents` and `GetCarPartComponents` would need the same kind of fix.
 
@@ -3306,15 +3346,15 @@ LLM authors: **plan your bot so you never pass the broken accessors into another
 
 If you find yourself reaching for one of the broken accessors, swap in the pattern on the right instead. Every example on the right compiles against the current library.
 
-| Broken pattern (crashes in `ConnectPorts`) | Safe replacement |
-|---|---|
-| `speed = Magnitude(CarInfo(self).Velocity)` — reason about own speed | **Skip it.** `Autothrottle(goal, desired_speed)` already manages cruise speed for you. If you absolutely need a "too slow" signal, use `HitInfo(ray_forward)` + `HitInfo(ray_back)` proximity — if the nose is pinned and the rear is clear, you're stuck. |
-| `lead = target_pos + CarInfo(target).Velocity * dt` — predict the target | **Skip it.** `Autosteer(goal)` already tracks a moving `Vector3` goal reasonably well. |
+| Broken pattern (crashes in `ConnectPorts`)                                                       | Safe replacement                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `speed = Magnitude(CarInfo(self).Velocity)` — reason about own speed                             | **Skip it.** `Autothrottle(goal, desired_speed)` already manages cruise speed for you. If you absolutely need a "too slow" signal, use `HitInfo(ray_forward)` + `HitInfo(ray_back)` proximity — if the nose is pinned and the rear is clear, you're stuck.       |
+| `lead = target_pos + CarInfo(target).Velocity * dt` — predict the target                         | **Skip it.** `Autosteer(goal)` already tracks a moving `Vector3` goal reasonably well.                                                                                                                                                                           |
 | `is_stuck = CarInfo(self).IsImmobile` (then `ConditionalSetFloat(is_stuck, -1.0, throttle_fwd)`) | `front_hit, front_dist = HitInfo(ray_forward)`<br>`rear_hit, rear_dist = HitInfo(ray_back)`<br>`nose_wedged = front_hit & (front_dist < 2.0) & (goal_dist > 6.0)`<br>`rear_clear  = ~rear_hit \| (rear_dist > 4.0)`<br>`reverse_mode = nose_wedged & rear_clear` |
-| `finish_them = CarInfo(target).Health < 50` | **Pre-select a weak target instead of branching on health.** `target = DemoDerbyGetCar(5)` (lowest health) or `DemoDerbyGetCar(12)` (nearest with disabled steering). |
-| `winning = CarInfo(self).Rank < 3` | **No safe replacement right now.** Drop the rank-based branching — the built-in target selectors already keep you aggressive. |
-| `is_ai = CarInfo(target).IsAI` (avoid human targets) | **No safe replacement right now.** Drop the filter — the derby is set up to only pit eligible cars against each other. |
-| `weak = CarGetPart(3, target).HealthPercent < 30` | `target_part = CarGetPart(2, target)  # mode 2 = weakest part`<br>`goal = RelativePosition(target_part.PartTransform, "Self")` |
+| `finish_them = CarInfo(target).Health < 50`                                                      | **Pre-select a weak target instead of branching on health.** `target = DemoDerbyGetCar(5)` (lowest health) or `DemoDerbyGetCar(12)` (nearest with disabled steering).                                                                                            |
+| `winning = CarInfo(self).Rank < 3`                                                               | **No safe replacement right now.** Drop the rank-based branching — the built-in target selectors already keep you aggressive.                                                                                                                                    |
+| `is_ai = CarInfo(target).IsAI` (avoid human targets)                                             | **No safe replacement right now.** Drop the filter — the derby is set up to only pit eligible cars against each other.                                                                                                                                           |
+| `weak = CarGetPart(3, target).HealthPercent < 30`                                                | `target_part = CarGetPart(2, target)  # mode 2 = weakest part`<br>`goal = RelativePosition(target_part.PartTransform, "Self")`                                                                                                                                   |
 
 #### Worked example: "`is_stuck = CarInfo(self).IsImmobile`" done right
 

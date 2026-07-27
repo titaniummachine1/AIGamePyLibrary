@@ -915,6 +915,78 @@ def _optimize_to_fixpoint(verbose=False, *, strip_debug=False, prune=True):
             break
 
 
+def ClearData():
+    """Empty the in-memory graph (keeps the shared `data` dict identity)."""
+    data["serializableNodes"].clear()
+    data["serializableConnections"].clear()
+
+
+def LoadData(filePath):
+    """Replace the in-memory graph with an existing Unity save JSON.
+
+    Mutates the shared `data` dict in place so imports of `data` keep working.
+    No Python decompile — this loads the graph as-is for further editing or
+    `SaveData` / `OptimizeFile`. Returns ``(node_count, connection_count)``.
+    """
+    with open(filePath, encoding="utf-8") as f:
+        loaded = json.load(f)
+    if not isinstance(loaded, dict):
+        raise ValueError(f"{filePath}: expected a JSON object graph")
+    nodes = loaded.get("serializableNodes")
+    conns = loaded.get("serializableConnections")
+    if not isinstance(nodes, list) or not isinstance(conns, list):
+        raise ValueError(
+            f"{filePath}: missing serializableNodes / serializableConnections"
+        )
+    # Replace list contents in place — some callers may hold the list refs.
+    data["serializableNodes"][:] = nodes
+    data["serializableConnections"][:] = conns
+    return len(data["serializableNodes"]), len(data["serializableConnections"])
+
+
+def OptimizeFile(
+    inputPath,
+    outputPath=None,
+    *,
+    optimize: Literal["normal", "release"] = "release",
+    layout: Literal["auto", "grid", "single", "hidden", None] = None,
+    pruneUnusedNodes=True,
+    keepPosition=True,
+    verbose=False,
+):
+    """Compact an existing Unity bot JSON without a Python rebuild.
+
+    Editor-made (or already-exported) graphs are the same JSON format Python
+    writes, so there is no need to reverse them into Python source. This loads
+    the file, runs the same optimiser as ``SaveData(optimize=...)``, and writes
+    the result. Default ``optimize`` is ``"release"``; default ``layout`` is
+    ``None`` so existing node positions are kept.
+
+    Pass ``outputPath=None`` to overwrite ``inputPath`` in place.
+    Returns the path written.
+    """
+    before_n, before_c = LoadData(inputPath)
+    if verbose:
+        print(f"  loaded {inputPath}: {before_n} nodes, {before_c} connections")
+    out = inputPath if outputPath is None else outputPath
+    SaveData(
+        out,
+        layout=layout,
+        pruneUnusedNodes=pruneUnusedNodes,
+        keepPosition=keepPosition,
+        optimize=optimize,
+        verbose=verbose,
+    )
+    after_n = len(data["serializableNodes"])
+    after_c = len(data["serializableConnections"])
+    if verbose:
+        print(
+            f"  wrote {out}: {after_n} nodes, {after_c} connections "
+            f"({before_n - after_n} nodes / {before_c - after_c} connections removed)"
+        )
+    return out
+
+
 def SaveData(
     filePath,
     layout: Literal["auto", "grid", "single", None] = "auto",
@@ -941,6 +1013,10 @@ def SaveData(
     no drawing or plotting code also feeds a controller. That holds for every
     graph I know of, but it is an assumption about YOUR graph, so verify it
     before shipping a release build.
+
+    To compact a bot that was *not* built in Python (Unity editor export, or
+    any existing .txt graph), use ``OptimizeFile`` / ``LoadData`` instead of
+    trying to reverse it into Python — there is no general decompiler.
     """
     if optimize == "release":
         _optimize_to_fixpoint(verbose, strip_debug=True, prune=pruneUnusedNodes)
