@@ -781,13 +781,174 @@ def _strip_relay_nodes():
     ]
 
 
+def _inline_passthrough_variables():
+    """Replace pure Set/Get alias variables with direct producer→consumer wires.
+
+    Keeps a variable when it looks like memoization / bridging:
+      - more than one ``SetVariable`` for the name
+      - Set has no single wired producer
+      - any ``GetVariable`` of the name is an ancestor of the Set (feedback)
+      - Set and Get live in different ``ownerFunctionSID`` scopes (function
+        bodies often use root variables as the intentional bridge)
+    """
+    port_polarity: dict[str, int] = {}
+    port_node: dict[str, str] = {}
+    for node in data["serializableNodes"]:
+        for port in node.get("serializablePorts", []):
+            sid = port.get("sID")
+            if not sid:
+                continue
+            port_polarity[sid] = int(port.get("polarity", 0))
+            port_node[sid] = node["sID"]
+
+    # Directed node edges: producer node -> consumer node.
+    forward: dict[str, set[str]] = {}
+    reverse: dict[str, set[str]] = {}
+    for conn in data["serializableConnections"]:
+        a, b = conn.get("port0SID"), conn.get("port1SID")
+        if not a or not b or a not in port_polarity or b not in port_polarity:
+            continue
+        pa, pb = port_polarity[a], port_polarity[b]
+        if pa != 0 and pb == 0:
+            src, dst = port_node[a], port_node[b]
+        elif pb != 0 and pa == 0:
+            src, dst = port_node[b], port_node[a]
+        else:
+            continue
+        forward.setdefault(src, set()).add(dst)
+        reverse.setdefault(dst, set()).add(src)
+
+    sets: dict[str, list[dict]] = {}
+    gets: dict[str, list[dict]] = {}
+    for node in data["serializableNodes"]:
+        name = node.get("modifier", "")
+        if node.get("id") == "SetVariable":
+            sets.setdefault(name, []).append(node)
+        elif node.get("id") == "GetVariable":
+            gets.setdefault(name, []).append(node)
+
+    def ancestors(start: str) -> set[str]:
+        seen: set[str] = set()
+        stack = [start]
+        while stack:
+            u = stack.pop()
+            if u in seen:
+                continue
+            seen.add(u)
+            for p in reverse.get(u, ()):
+                if p not in seen:
+                    stack.append(p)
+        return seen
+
+    def producer_port_for_set(set_node: dict) -> str | None:
+        in_ports = {
+            p["sID"]
+            for p in set_node.get("serializablePorts", [])
+            if p.get("polarity") == 0 and p.get("sID")
+        }
+        found: list[str] = []
+        for conn in data["serializableConnections"]:
+            a, b = conn.get("port0SID"), conn.get("port1SID")
+            if b in in_ports and a in port_polarity and port_polarity[a] != 0:
+                found.append(a)
+            elif a in in_ports and b in port_polarity and port_polarity[b] != 0:
+                found.append(b)
+        return found[0] if len(found) == 1 else None
+
+    def get_out_port(get_node: dict) -> str | None:
+        for p in get_node.get("serializablePorts", []):
+            if p.get("polarity") == 1 and p.get("sID"):
+                return p["sID"]
+        return None
+
+    inline_names: list[str] = []
+    for name, set_list in sets.items():
+        get_list = gets.get(name, [])
+        if len(set_list) != 1 or not get_list:
+            continue
+        set_node = set_list[0]
+        prod = producer_port_for_set(set_node)
+        if not prod:
+            continue
+        set_owner = set_node.get("ownerFunctionSID") or ""
+        if any((g.get("ownerFunctionSID") or "") != set_owner for g in get_list):
+            continue
+        get_ids = {g["sID"] for g in get_list}
+        if get_ids & ancestors(set_node["sID"]):
+            continue  # feedback / memoization through this variable
+        inline_names.append(name)
+
+    if not inline_names:
+        return
+
+    remove_node_sids: set[str] = set()
+    remove_ports: set[str] = set()
+    rewires: list[tuple[str, str]] = []  # producer_port -> consumer_port
+
+    for name in inline_names:
+        set_node = sets[name][0]
+        prod = producer_port_for_set(set_node)
+        assert prod is not None
+        remove_node_sids.add(set_node["sID"])
+        for p in set_node.get("serializablePorts", []):
+            if p.get("sID"):
+                remove_ports.add(p["sID"])
+        for get_node in gets[name]:
+            gout = get_out_port(get_node)
+            remove_node_sids.add(get_node["sID"])
+            for p in get_node.get("serializablePorts", []):
+                if p.get("sID"):
+                    remove_ports.add(p["sID"])
+            if not gout:
+                continue
+            for conn in data["serializableConnections"]:
+                a, b = conn.get("port0SID"), conn.get("port1SID")
+                if a == gout and b in port_polarity and port_polarity[b] == 0:
+                    rewires.append((prod, b))
+                elif b == gout and a in port_polarity and port_polarity[a] == 0:
+                    rewires.append((prod, a))
+
+    new_conns: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    for conn in data["serializableConnections"]:
+        a, b = conn.get("port0SID"), conn.get("port1SID")
+        if not a or not b:
+            continue
+        if a in remove_ports or b in remove_ports:
+            continue
+        key = (a, b)
+        if key in seen:
+            continue
+        seen.add(key)
+        new_conns.append(conn)
+    for prod, cons in rewires:
+        key = (prod, cons)
+        if key in seen or prod == cons:
+            continue
+        seen.add(key)
+        new_conns.append(
+            {
+                "sID": generateId(),
+                "port0SID": prod,
+                "port1SID": cons,
+                "port0InstanceID": 0,
+                "port1InstanceID": 0,
+            }
+        )
+
+    data["serializableConnections"] = new_conns
+    data["serializableNodes"] = [
+        n for n in data["serializableNodes"] if n["sID"] not in remove_node_sids
+    ]
+
+
 def _strip_leaner_fields():
     """Extra size trim beyond Lean — decision-irrelevant chrome only.
 
     Validated by ``parity_check`` lean vs leaner on Titanium:
       PASS: drop conn sID, port nodeSID, all rect transforms, serialize/color
             flags, empty modifiers, editor ``Region`` backdrops, ``Relay``
-            pass-throughs (rewired)
+            pass-throughs (rewired), pure Set/Get alias variables (rewired)
       FAIL: drop all modifiers (dropdown panic) or port polarity (parse error)
     """
     # Editor-only backdrop boxes (no ports, no decisions). DCE never removes
@@ -796,6 +957,7 @@ def _strip_leaner_fields():
         n for n in data["serializableNodes"] if n.get("id") != "Region"
     ]
     _strip_relay_nodes()
+    _inline_passthrough_variables()
     for node in data["serializableNodes"]:
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
