@@ -11,8 +11,6 @@ from .data import (
     NODE_SIZES,
     DEFAULT_NODE_SIZE,
     DEFAULT_NODE_COLOR,
-    DEFAULT_CONNECTION_COLOR,
-    CAP_COLOR,
     SERIALIZE_SIZE_DELTA_NODES,
     SERIALIZE_COLOR_NODES,
     DROPDOWN_OPTIONS,
@@ -469,42 +467,6 @@ def _set_layout_position(transform, x, y):
     transform["position"] = {"x": 0, "y": 0, "z": 0}
 
 
-def _default_line():
-    """Line structure matching Unity UIC4 Line class. Points filled by UpdateLine at runtime."""
-    return {
-        "capStart": {
-            "active": False,
-            "shape": 3,  # Shape.Type.Diamond
-            "size": 5,
-            "color": CAP_COLOR,
-            "angleOffset": 0,
-        },
-        "capEnd": {
-            "active": False,
-            "shape": 3,
-            "size": 5,
-            "color": CAP_COLOR,
-            "angleOffset": 0,
-        },
-        "ID": "line",  # Match Unity Line default
-        "startWidth": 3,
-        "endWidth": 3,
-        "dashDistance": 5,
-        "color": DEFAULT_CONNECTION_COLOR,
-        "points": [],
-        "lineStyle": 0,  # LineStyle.Type.Solid
-        "length": 0,
-        "animation": {
-            "isActive": False,
-            "pointsDistance": 35,  # Match Unity LineAnimation default
-            "size": 10,
-            "color": {"r": 1, "g": 0.81, "b": 0.3, "a": 1},
-            "shape": 1,  # Shape.Type.Diamond
-            "speed": 20,
-        },
-    }
-
-
 def _normalize_modifier(node_name: str, node_value):
     """
     Normalize `modifier` for nodes whose modifier is a dropdown selection.
@@ -593,30 +555,19 @@ def AddNode(nodeName, nodeValue="", includePorts=True, position=None, ownerFunct
 
 
 def ConnectPorts(portType: tuple | str, node0: Node, node1: Node):
+    """Wire two ports. Emits Lean-minimal connection JSON only (no line/chrome)."""
     if isinstance(portType, tuple):
         port0 = node0.outputPorts[portType[0]]
         port1 = node1.inputPorts[portType[1]]
     else:
         port0 = node0.outputPorts[portType]
         port1 = node1.inputPorts[portType]
-    conn_id = generateId()
     connection = {
-        "id": f"Connection ({node0.data['id']} - {node1.data['id']})",
-        "sID": conn_id,
+        "sID": generateId(),
         "port0InstanceID": 0,
         "port1InstanceID": 0,
         "port0SID": port0["sID"],
         "port1SID": port1["sID"],
-        "selectedColor": {"r": 1, "g": 0.58, "b": 0.04, "a": 1},
-        "hoverColor": CAP_COLOR,
-        "defaultColor": DEFAULT_CONNECTION_COLOR,
-        "curveStyle": 2,  # Connection.CurveStyle.Soft_Z_Shape (Unity default)
-        "label": "",
-        "line": _default_line(),
-        "enableDrag": True,
-        "enableHover": True,
-        "enableSelect": True,
-        "disableClick": False,
     }
     data["serializableConnections"].append(connection)
     return connection
@@ -719,6 +670,7 @@ def _prepare_for_unity_format():
     - Standard nodes: rect = position (0,0,0) + anchoredPosition only; no color/size (prefab provides)
     - Region: full rect + color (SerializeSizeDelta, SerializeColor)
     - Ports: id, sID, polarity, nodeSID only (position from prefab)
+    - Connections: wire SIDs only — drop editor line/curve/color chrome (Lean format)
     """
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
@@ -741,6 +693,13 @@ def _prepare_for_unity_format():
         for port in node.get("serializablePorts", []):
             port.pop("serializableRectTransform", None)
             port.pop("controlPointSerializableRectTransform", None)
+
+    # Match TitaniumLean / minimal Unity load: connections are pure port links.
+    _CONN_KEEP = ("sID", "port0SID", "port1SID", "port0InstanceID", "port1InstanceID")
+    slim = []
+    for conn in data["serializableConnections"]:
+        slim.append({k: conn[k] for k in _CONN_KEEP if k in conn})
+    data["serializableConnections"] = slim
 
 
 def removeUnreadVariables(verbose=False):

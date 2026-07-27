@@ -504,7 +504,7 @@ def Debug(inputData, string: str = None, changePosition=True):
     ]
     portName = ports[num - 1]
     ConnectPorts((portName, "Any1"), inputNode, baseNode)
-    data["serializableConnections"][-1]["line"]["startWidth"] = 0  # invisible line
+    # Connections are Lean-minimal (no line chrome); Unity draws defaults.
 
     return baseNode
 
