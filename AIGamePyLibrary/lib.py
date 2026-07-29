@@ -428,17 +428,25 @@ class Node:
         return self.__matmul__(other)
 
 
+def _quantize_layout_coord(v, decimals=None):
+    if v is None:
+        return 0
+    return v
+
+
 def _rect_transform(local_pos, size, node_id, anchor_x=0, anchor_y=1):
     """Build serializableRectTransform. New minimal format: only position+anchoredPosition for layout.
     Region nodes include sizeDelta/anchors (SerializeSizeDelta per NodeTypeDataSO)."""
-    x, y, z = local_pos.get("x", 0), local_pos.get("y", 0), local_pos.get("z", 0)
-    w, h = size
+    x = _quantize_layout_coord(local_pos.get("x", 0))
+    y = _quantize_layout_coord(local_pos.get("y", 0))
+    z = _quantize_layout_coord(local_pos.get("z", 0))
+    w, h = _quantize_layout_coord(size[0]), _quantize_layout_coord(size[1])
     rect = {
         "position": {"x": 0, "y": 0, "z": 0},
         "anchoredPosition": {"x": x, "y": y},
     }
     if node_id in SERIALIZE_SIZE_DELTA_NODES:
-        rect["localPosition"] = local_pos
+        rect["localPosition"] = {"x": x, "y": y, "z": z}
         rect["anchorMin"] = {"x": anchor_x, "y": anchor_y}
         rect["anchorMax"] = {"x": anchor_x, "y": anchor_y}
         rect["sizeDelta"] = {"x": w, "y": h}
@@ -462,9 +470,190 @@ def _is_at_origin(transform):
 
 def _set_layout_position(transform, x, y):
     """Set layout position. Uses anchoredPosition (Unity's preferred field for placement)."""
+    x = _quantize_layout_coord(x)
+    y = _quantize_layout_coord(y)
     transform["anchoredPosition"] = Position2(x, y)
     transform["localPosition"] = Position3(x, y, 0)
     transform["position"] = {"x": 0, "y": 0, "z": 0}
+
+
+# Spatial compaction: refuse passthrough collapse when it would create a long
+# wire through dense local structure; prefer collapsing isolated outliers.
+_SPATIAL_LONG_SPAN = 500.0
+_SPATIAL_BRIDGE_BAND = 120.0
+_SPATIAL_CLOSE = 250.0
+_LAYOUT_ANCHOR_NODES = frozenset({"Region", "CreateFunction"})
+
+
+def _node_layout_xy(node) -> tuple[float, float] | None:
+    transform = node.get("serializableRectTransform")
+    if not transform:
+        return None
+    x, y = _get_layout_position(transform)
+    return (float(x), float(y))
+
+
+def _collect_node_positions() -> dict[str, tuple[float, float]]:
+    positions: dict[str, tuple[float, float]] = {}
+    for node in data["serializableNodes"]:
+        xy = _node_layout_xy(node)
+        if xy is not None:
+            positions[node["sID"]] = xy
+    return positions
+
+
+def _layout_dist(a: tuple[float, float], b: tuple[float, float]) -> float:
+    return math.hypot(a[0] - b[0], a[1] - b[1])
+
+
+def _spatial_isolation(sid: str, positions: dict[str, tuple[float, float]], k: int = 3) -> float:
+    if sid not in positions:
+        return 0.0
+    px = positions[sid]
+    dists = sorted(_layout_dist(px, positions[o]) for o in positions if o != sid)
+    if not dists:
+        return 0.0
+    take = dists[: min(k, len(dists))]
+    return sum(take) / len(take)
+
+
+def _isolation_quartile_threshold(positions: dict[str, tuple[float, float]]) -> float:
+    if len(positions) < 4:
+        return 0.0
+    isolations = sorted(_spatial_isolation(sid, positions) for sid in positions)
+    idx = int(0.75 * (len(isolations) - 1))
+    return isolations[idx]
+
+
+def _point_to_segment_dist(
+    p: tuple[float, float],
+    a: tuple[float, float],
+    b: tuple[float, float],
+) -> float:
+    ax, ay = a
+    bx, by = b
+    px, py = p
+    dx, dy = bx - ax, by - ay
+    if dx == 0 and dy == 0:
+        return _layout_dist(p, a)
+    t = ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)
+    t = max(0.0, min(1.0, t))
+    proj = (ax + t * dx, ay + t * dy)
+    return _layout_dist(p, proj)
+
+
+def _is_spatial_bridge(
+    node_xy: tuple[float, float],
+    src_xy: tuple[float, float],
+    dst_xy: tuple[float, float],
+) -> bool:
+    span = _layout_dist(src_xy, dst_xy)
+    if span < _SPATIAL_LONG_SPAN:
+        return False
+    return _point_to_segment_dist(node_xy, src_xy, dst_xy) <= _SPATIAL_BRIDGE_BAND
+
+
+def _spatial_collapse_allowed(
+    *,
+    spatial_structure: bool,
+    candidate_sid: str,
+    src_sid: str,
+    dst_sids: set[str] | list[str],
+    positions: dict[str, tuple[float, float]] | None = None,
+    isolation_q75: float | None = None,
+) -> bool:
+    """True when a passthrough node may be collapsed without ruining local layout."""
+    if not spatial_structure:
+        return True
+    if positions is None:
+        positions = _collect_node_positions()
+    if isolation_q75 is None:
+        isolation_q75 = _isolation_quartile_threshold(positions)
+
+    src_xy = positions.get(src_sid)
+    cand_xy = positions.get(candidate_sid)
+    if src_xy is None or cand_xy is None:
+        return True
+
+    dst_list = list(dst_sids)
+    if not dst_list:
+        return True
+
+    max_span = 0.0
+    for dst_sid in dst_list:
+        dst_xy = positions.get(dst_sid)
+        if dst_xy is None:
+            continue
+        span = _layout_dist(src_xy, dst_xy)
+        if span < _SPATIAL_CLOSE:
+            return True
+        max_span = max(max_span, span)
+
+    if max_span < _SPATIAL_CLOSE:
+        return True
+
+    if _spatial_isolation(candidate_sid, positions) >= isolation_q75:
+        return True
+
+    for dst_sid in dst_list:
+        dst_xy = positions.get(dst_sid)
+        if dst_xy is None:
+            continue
+        if _is_spatial_bridge(cand_xy, src_xy, dst_xy):
+            return False
+
+    return True
+
+
+def _tighten_layout_to_neighbors(*, iterations: int = 2, blend: float = 0.35, max_step: float = 400.0) -> None:
+    """Pull nodes toward wired neighbors to shrink leftover long wires after inlines."""
+    for _ in range(iterations):
+        positions = _collect_node_positions()
+        if len(positions) < 2:
+            return
+
+        _, node_of, edges = _producer_consumer_edges()
+        neighbors: dict[str, set[str]] = {}
+        for prod_port, cons_port in edges:
+            src = node_of.get(prod_port)
+            dst = node_of.get(cons_port)
+            if src and dst and src != dst:
+                neighbors.setdefault(src, set()).add(dst)
+                neighbors.setdefault(dst, set()).add(src)
+
+        new_positions = dict(positions)
+        for node in data["serializableNodes"]:
+            sid = node["sID"]
+            if node.get("id") in _LAYOUT_ANCHOR_NODES or sid not in positions:
+                continue
+            nbrs = neighbors.get(sid)
+            if not nbrs:
+                continue
+            nbr_pos = [positions[n] for n in nbrs if n in positions]
+            if not nbr_pos:
+                continue
+            cx = sum(p[0] for p in nbr_pos) / len(nbr_pos)
+            cy = sum(p[1] for p in nbr_pos) / len(nbr_pos)
+            ox, oy = positions[sid]
+            nx = ox + blend * (cx - ox)
+            ny = oy + blend * (cy - oy)
+            dx, dy = nx - ox, ny - oy
+            step = math.hypot(dx, dy)
+            if step > max_step:
+                scale = max_step / step
+                nx = ox + dx * scale
+                ny = oy + dy * scale
+            new_positions[sid] = (nx, ny)
+
+        for node in data["serializableNodes"]:
+            sid = node["sID"]
+            if sid not in new_positions:
+                continue
+            transform = node.get("serializableRectTransform")
+            if not transform:
+                continue
+            x, y = new_positions[sid]
+            _set_layout_position(transform, x, y)
 
 
 def _normalize_modifier(node_name: str, node_value):
@@ -665,7 +854,7 @@ def updateConnectionLinePoints():
     pass
 
 
-def _strip_relay_nodes():
+def _strip_relay_nodes(*, spatial_structure: bool = False):
     """Bypass and delete Relay nodes that are pure editor pass-throughs.
 
     Relays use a single polarity-2 ``Any1`` port. Rewrite every consumer that
@@ -778,6 +967,39 @@ def _strip_relay_nodes():
                 cyclic_relay_ports.add(rp)
                 break
 
+    blocked_relay_ports: set[str] = set()
+    if spatial_structure:
+        positions = _collect_node_positions()
+        q75 = _isolation_quartile_threshold(positions)
+        for rp in relay_ports:
+            if rp in cyclic_relay_ports:
+                continue
+            src_port = ultimate(rp)
+            if not src_port:
+                continue
+            relay_node = port_to_node_sid.get(rp)
+            src_node = port_to_node_sid.get(src_port)
+            if not relay_node or not src_node:
+                continue
+            dst_nodes = {
+                port_to_node_sid[cons]
+                for cons in relay_consumers.get(rp, ())
+                if cons in port_to_node_sid
+            }
+            if not dst_nodes:
+                continue
+            if not _spatial_collapse_allowed(
+                spatial_structure=True,
+                candidate_sid=relay_node,
+                src_sid=src_node,
+                dst_sids=dst_nodes,
+                positions=positions,
+                isolation_q75=q75,
+            ):
+                blocked_relay_ports.add(rp)
+
+    keep_relay_ports = cyclic_relay_ports | blocked_relay_ports
+
     new_conns: list[dict] = []
     seen_edges: set[tuple[str, str]] = set()
 
@@ -801,8 +1023,8 @@ def _strip_relay_nodes():
         if not a or not b:
             continue
         a_rel, b_rel = a in relay_ports, b in relay_ports
-        if a in cyclic_relay_ports or b in cyclic_relay_ports:
-            # Preserve latch memory wiring intact.
+        if a in keep_relay_ports or b in keep_relay_ports:
+            # Preserve latch memory wiring and spatially blocked relays.
             key = (a, b)
             if key not in seen_edges:
                 seen_edges.add(key)
@@ -824,7 +1046,7 @@ def _strip_relay_nodes():
                 add_edge(src, other)
 
     keep_relay_nodes = {
-        port_to_node_sid[p] for p in cyclic_relay_ports if p in port_to_node_sid
+        port_to_node_sid[p] for p in keep_relay_ports if p in port_to_node_sid
     }
 
     data["serializableConnections"] = new_conns
@@ -835,7 +1057,7 @@ def _strip_relay_nodes():
     ]
 
 
-def _inline_passthrough_variables():
+def _inline_passthrough_variables(*, spatial_structure: bool = False):
     """Replace pure Set/Get alias variables with direct producer→consumer wires.
 
     Keeps a variable when it looks like memoization / bridging:
@@ -916,6 +1138,8 @@ def _inline_passthrough_variables():
         return None
 
     inline_names: list[str] = []
+    positions = _collect_node_positions() if spatial_structure else None
+    isolation_q75 = _isolation_quartile_threshold(positions) if positions else 0.0
     for name, set_list in sets.items():
         get_list = gets.get(name, [])
         if len(set_list) != 1 or not get_list:
@@ -930,6 +1154,27 @@ def _inline_passthrough_variables():
         get_ids = {g["sID"] for g in get_list}
         if get_ids & ancestors(set_node["sID"]):
             continue  # feedback / memoization through this variable
+        prod_node = port_node.get(prod)
+        consumer_nodes: set[str] = set()
+        for get_node in get_list:
+            gout = get_out_port(get_node)
+            if not gout:
+                continue
+            for conn in data["serializableConnections"]:
+                a, b = conn.get("port0SID"), conn.get("port1SID")
+                if a == gout and b in port_node:
+                    consumer_nodes.add(port_node[b])
+                elif b == gout and a in port_node:
+                    consumer_nodes.add(port_node[a])
+        if prod_node and not _spatial_collapse_allowed(
+            spatial_structure=spatial_structure,
+            candidate_sid=set_node["sID"],
+            src_sid=prod_node,
+            dst_sids=consumer_nodes or {g["sID"] for g in get_list},
+            positions=positions,
+            isolation_q75=isolation_q75,
+        ):
+            continue
         inline_names.append(name)
 
     if not inline_names:
@@ -1025,13 +1270,33 @@ def _producer_consumer_edges():
     return polarity, node_of, edges
 
 
-def _bypass_node(node_sid: str, in_port: str, out_port: str) -> bool:
+def _bypass_node(
+    node_sid: str,
+    in_port: str,
+    out_port: str,
+    *,
+    spatial_structure: bool = False,
+) -> bool:
     polarity, node_of, edges = _producer_consumer_edges()
     producers = [a for a, b in edges if b == in_port]
     consumers = [b for a, b in edges if a == out_port]
     if len(producers) != 1 or not consumers:
         return False
     prod = producers[0]
+    if spatial_structure:
+        positions = _collect_node_positions()
+        q75 = _isolation_quartile_threshold(positions)
+        prod_node = node_of.get(prod)
+        dst_nodes = {node_of[c] for c in consumers if node_of.get(c)}
+        if prod_node and dst_nodes and not _spatial_collapse_allowed(
+            spatial_structure=True,
+            candidate_sid=node_sid,
+            src_sid=prod_node,
+            dst_sids=dst_nodes,
+            positions=positions,
+            isolation_q75=q75,
+        ):
+            return False
     dead = set()
     for n in data["serializableNodes"]:
         if n["sID"] == node_sid:
@@ -1069,7 +1334,7 @@ def _bypass_node(node_sid: str, in_port: str, out_port: str) -> bool:
     return True
 
 
-def _inline_double_not() -> int:
+def _inline_double_not(*, spatial_structure: bool = False) -> int:
     """Not(Not(x)) path: wire x to outer consumers; drop the outer Not (and inner if unused)."""
     changed = 0
     while True:
@@ -1099,6 +1364,15 @@ def _inline_double_not() -> int:
             src = inner[0]
             consumers = [b for a, b in edges if a == out2]
             if not consumers:
+                continue
+            src_node = node_of.get(src)
+            dst_nodes = {node_of[c] for c in consumers if node_of.get(c)}
+            if src_node and dst_nodes and not _spatial_collapse_allowed(
+                spatial_structure=spatial_structure,
+                candidate_sid=n2["sID"],
+                src_sid=src_node,
+                dst_sids=dst_nodes,
+            ):
                 continue
             dead = {p["sID"] for p in n2["serializablePorts"] if p.get("sID")}
             new_conns = []
@@ -1147,7 +1421,7 @@ def _inline_double_not() -> int:
     return changed
 
 
-def _inline_identity_math() -> int:
+def _inline_identity_math(*, spatial_structure: bool = False) -> int:
     """Bypass ScaleVector3(*1), MultiplyFloats(*1), AddFloats(+0),
     SubtractFloats(x-0), DivideFloats(x/1). Not 0-x or 1/x."""
     changed = 0
@@ -1225,7 +1499,7 @@ def _inline_identity_math() -> int:
                     pb = producer_of(b_in)
                     if pb and node_of.get(pb) in float_val and float_val[node_of[pb]] == "1":
                         target = (n["sID"], a_in, out)
-            if target and _bypass_node(*target):
+            if target and _bypass_node(*target, spatial_structure=spatial_structure):
                 changed += 1
                 did = True
                 break
@@ -1234,7 +1508,7 @@ def _inline_identity_math() -> int:
     return changed
 
 
-def _inline_split_construct() -> int:
+def _inline_split_construct(*, spatial_structure: bool = False) -> int:
     """ConstructVector3(split.xyz) from one Vector3Split -> use the split's input vector."""
     changed = 0
     while True:
@@ -1292,6 +1566,15 @@ def _inline_split_construct() -> int:
             src = sprods[0]
             consumers = [b for a, b in edges if a == vout_c]
             if not consumers:
+                continue
+            src_node = node_of.get(src)
+            dst_nodes = {node_of[c] for c in consumers if node_of.get(c)}
+            if src_node and dst_nodes and not _spatial_collapse_allowed(
+                spatial_structure=spatial_structure,
+                candidate_sid=n["sID"],
+                src_sid=src_node,
+                dst_sids=dst_nodes,
+            ):
                 continue
             dead = {p["sID"] for p in n["serializablePorts"] if p.get("sID")}
             new_conns = []
@@ -1451,8 +1734,24 @@ def _dce_orphan_producers() -> int:
     return total
 
 
-def _strip_leaner_fields():
+def _strip_leaner_fields(
+    *,
+    strip_regions: bool = False,
+    strip_layout: bool = False,
+    spatial_structure: bool = False,
+):
     """Extra size trim beyond Lean — decision-irrelevant chrome only.
+
+    Keeps node serializableRectTransform (quantized anchoredPosition from
+    _prepare_for_unity_format) so Unity editor graphs stay readable unless
+    ``strip_layout`` (core). Still strips port rects and other chrome.
+    Region nodes are kept for editor readability unless ``strip_regions``
+    (core). Region / CreateFunction visual fields (colors, serializeSizeDelta)
+    are preserved.
+
+    When ``spatial_structure`` is True (layout kept), passthrough inlines are
+    gated to avoid long cross-graph wires through dense local structure, then
+    node positions are tightened toward wired neighbors.
 
     Parity-checked ladder (AIA / AIA3 / Titanium):
       PASS: Region, Relay rewire, Set/Get alias inline, double-Not, identity
@@ -1460,26 +1759,33 @@ def _strip_leaner_fields():
             UUID remap / field chrome
       FAIL: stripDebugSinks on AIA/AIA3 (debug nodes feed decisions)
     """
-    data["serializableNodes"] = [
-        n for n in data["serializableNodes"] if n.get("id") != "Region"
-    ]
-    _strip_relay_nodes()
-    _inline_passthrough_variables()
-    _inline_double_not()
-    _inline_identity_math()
-    _inline_split_construct()
+    if strip_regions:
+        data["serializableNodes"] = [
+            n for n in data["serializableNodes"] if n.get("id") != "Region"
+        ]
+    _strip_relay_nodes(spatial_structure=spatial_structure)
+    _inline_passthrough_variables(spatial_structure=spatial_structure)
+    _inline_double_not(spatial_structure=spatial_structure)
+    _inline_identity_math(spatial_structure=spatial_structure)
+    _inline_split_construct(spatial_structure=spatial_structure)
     _dce_orphan_producers()
+    if spatial_structure:
+        _tighten_layout_to_neighbors()
     for node in data["serializableNodes"]:
+        node_id = node.get("id", "")
         if not node.get("ownerFunctionSID"):
             node.pop("ownerFunctionSID", None)
         mod = node.get("modifier", None)
         if mod in ("", None) or (isinstance(mod, str) and not str(mod).strip()):
             node.pop("modifier", None)
-        node.pop("serializableRectTransform", None)
-        node.pop("serializeSizeDelta", None)
-        node.pop("serializeColor", None)
-        node.pop("defaultColor", None)
-        node.pop("serializableDefaultColor", None)
+        if node_id not in SERIALIZE_SIZE_DELTA_NODES:
+            node.pop("serializeSizeDelta", None)
+        if node_id not in SERIALIZE_COLOR_NODES:
+            node.pop("serializeColor", None)
+            node.pop("defaultColor", None)
+            node.pop("serializableDefaultColor", None)
+        if strip_layout:
+            node.pop("serializableRectTransform", None)
         for port in node.get("serializablePorts", []):
             port.pop("nodeSID", None)
             port.pop("serializableRectTransform", None)
@@ -1553,15 +1859,23 @@ def remapSids(verbose=False):
     return len(mapping), next_i
 
 
-def _prepare_for_unity_format(*, leaner: bool = False, remap_sids: bool = False):
+def _prepare_for_unity_format(
+    *,
+    leaner: bool = False,
+    remap_sids: bool = False,
+    strip_regions: bool = False,
+    strip_layout: bool = False,
+):
     """Ensure graph data matches new minimal format (NodeTypeDataSO).
     - Standard nodes: rect = position (0,0,0) + anchoredPosition only; no color/size (prefab provides)
     - Region: full rect + color (SerializeSizeDelta, SerializeColor)
     - Ports: id, sID, polarity, nodeSID only (position from prefab)
     - Connections: wire SIDs only — drop editor line/curve/color chrome (Lean format)
 
-    ``leaner=True`` additionally drops fields the headless sim does not need
-    for decisions. ``remap_sids=True`` rewrites UUIDs to short base62 ids.
+    ``strip_regions=True`` / ``strip_layout=True`` are the ``core`` chrome kill
+    switch (Regions + node serializableRectTransform). ``leaner=True``
+    additionally drops fields the headless sim does not need for decisions.
+    ``remap_sids=True`` rewrites UUIDs to short base62 ids.
     """
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
@@ -1570,11 +1884,29 @@ def _prepare_for_unity_format(*, leaner: bool = False, remap_sids: bool = False)
             ap = transform.get("anchoredPosition")
             lp = transform.get("localPosition", {})
             if ap is None and lp:
-                transform["anchoredPosition"] = {"x": lp.get("x", 0), "y": lp.get("y", 0)}
+                ap = {"x": lp.get("x", 0), "y": lp.get("y", 0)}
+            if ap is not None:
+                transform["anchoredPosition"] = {
+                    "x": _quantize_layout_coord(ap.get("x", 0)),
+                    "y": _quantize_layout_coord(ap.get("y", 0)),
+                }
             transform["position"] = {"x": 0, "y": 0, "z": 0}
             if node_id not in SERIALIZE_SIZE_DELTA_NODES:
                 for key in ("localPosition", "anchorMin", "anchorMax", "sizeDelta"):
                     transform.pop(key, None)
+            else:
+                if lp:
+                    transform["localPosition"] = {
+                        "x": _quantize_layout_coord(lp.get("x", 0)),
+                        "y": _quantize_layout_coord(lp.get("y", 0)),
+                        "z": _quantize_layout_coord(lp.get("z", 0)),
+                    }
+                sd = transform.get("sizeDelta")
+                if sd is not None:
+                    transform["sizeDelta"] = {
+                        "x": _quantize_layout_coord(sd.get("x", 0)),
+                        "y": _quantize_layout_coord(sd.get("y", 0)),
+                    }
             transform.pop("scale", None)
         if node_id not in SERIALIZE_COLOR_NODES:
             node.pop("defaultColor", None)
@@ -1593,8 +1925,20 @@ def _prepare_for_unity_format(*, leaner: bool = False, remap_sids: bool = False)
         slim.append({k: conn[k] for k in _CONN_KEEP if k in conn})
     data["serializableConnections"] = slim
 
+    if strip_regions:
+        data["serializableNodes"] = [
+            n for n in data["serializableNodes"] if n.get("id") != "Region"
+        ]
     if leaner:
-        _strip_leaner_fields()
+        # Regions already handled above when strip_regions=True.
+        _strip_leaner_fields(
+            strip_regions=False,
+            strip_layout=strip_layout,
+            spatial_structure=not strip_layout,
+        )
+    elif strip_layout:
+        for node in data["serializableNodes"]:
+            node.pop("serializableRectTransform", None)
     if remap_sids:
         remapSids(verbose=False)
 
@@ -1847,7 +2191,7 @@ def OptimizeFile(
     inputPath,
     outputPath=None,
     *,
-    optimize: Literal["normal", "release"] = "release",
+    optimize: Literal["normal", "release", "core"] = "release",
     layout: Literal["auto", "grid", "single", "hidden", None] = None,
     pruneUnusedNodes=True,
     keepPosition=True,
@@ -1860,11 +2204,15 @@ def OptimizeFile(
     Editor-made (or already-exported) graphs are the same JSON format Python
     writes, so there is no need to reverse them into Python source. This loads
     the file, runs the same optimiser as ``SaveData(optimize=...)``, and writes
-    the result. Default ``optimize`` is ``"release"``; default ``layout`` is
-    ``None`` so existing node positions are kept.
+    the result.
 
-    ``leaner=True`` also drops decision-irrelevant chrome.
-    ``remap_sids=True`` rewrites UUIDs to short base62 ids.
+    ``optimize="normal"``: prune dead nodes only, preserve all visual data.
+    ``optimize="release"`` (default here): also strip debug sinks and re-prune.
+    Still preserves all visual data.
+    ``optimize="core"``: strip ALL visual chrome (Regions, layout rects,
+    colors, port rects). Nodes at 0,0. Leaves only logic for headless use.
+    ``leaner=True``: run graph inlines + strip chrome, keep layout/Regions.
+    ``remap_sids=True``: rewrite UUIDs to short base62 ids.
 
     Pass ``outputPath=None`` to overwrite ``inputPath`` in place.
     Returns the path written.
@@ -1893,70 +2241,103 @@ def OptimizeFile(
     return out
 
 
+def _slim_connections():
+    """Strip connection metadata down to just port0SID + port1SID.
+
+    The game engine only needs to know which two ports are wired. Fields like
+    sID, port0InstanceID, port1InstanceID, line points, colors, etc. are
+    editor chrome that has no effect on in-game visuals or logic.
+    """
+    data["serializableConnections"] = [
+        {"port0SID": c["port0SID"], "port1SID": c["port1SID"]}
+        for c in data["serializableConnections"]
+        if c.get("port0SID") and c.get("port1SID")
+    ]
+
+
 def SaveData(
     filePath,
     layout: Literal["auto", "grid", "single", "hidden", None] = "auto",
     pruneUnusedNodes=True,
     keepPosition=True,
-    optimize: Literal["normal", "release"] = "normal",
+    optimize: Literal["normal", "release", "core"] = "normal",
     leaner=False,
     remap_sids=False,
     verbose=False,
 ):
-    """`optimize` selects how hard to compile the graph down:
+    """Write the in-memory graph to a Unity save JSON file.
 
-      "normal"  (default) remove only what cannot be observed: unreachable
-                nodes, and SetVariable writes that no GetVariable reads. Every
-                Debug*/TimePlot sink is kept, so the graph stays observable.
-      "release" additionally strips every Debug*/TimePlot sink, then re-prunes
-                to a fixpoint, so anything that ONLY fed debug output goes
-                with it. Smallest and fewest per-tick node evaluations.
+    Three independent optimization modes via ``optimize``:
 
-    ``leaner=True`` drops decision-irrelevant JSON chrome after Lean prepare.
-    ``remap_sids=True`` rewrites node/port/connection UUIDs to short base62 ids.
+    **"normal"** (default):
+        Prune dead nodes and unread variables only. All visual data
+        (layout, Regions, positions, scale, colors, port rects) preserved
+        exactly as-is. Safe on a friend's Unity-exported graph — looks
+        identical in the editor, just smaller.
+
+    **"release"**:
+        Same as normal, plus strip every Debug*/TimePlot sink and re-prune
+        to a fixpoint so anything that ONLY fed debug output goes with it.
+        Visual data still preserved exactly.
+
+    **"core"**:
+        Same as release, plus strip ALL visual chrome: Regions removed,
+        node layout rects removed (nodes at 0,0), no coordinate quantizing,
+        port rects and connection chrome stripped. Leaves only logic.
+        Smallest possible output for headless / competition use.
+
+    ``leaner=True`` runs graph-level inlines (relay bypass, passthrough
+    variable collapse, identity-math fold, split→construct noop) and strips
+    decision-irrelevant JSON chrome, but keeps layout/Regions. Spatial-aware
+    (won't create long wires through dense local structure).
+
+    ``remap_sids=True`` rewrites node/port/connection UUIDs to short base62.
 
     Every node evaluates every tick in-engine, so removing nodes removes real
     per-tick work, not just file size.
-
-    The difference between the two is what they assume. "normal" assumes
-    nothing: a node no output can reach, and a variable no one reads, cannot
-    change a decision. "release" assumes debug output is not an input -- that
-    no drawing or plotting code also feeds a controller. That holds for every
-    graph I know of, but it is an assumption about YOUR graph, so verify it
-    before shipping a release build.
 
     To compact a bot that was *not* built in Python (Unity editor export, or
     any existing .txt graph), use ``OptimizeFile`` / ``LoadData`` instead of
     trying to reverse it into Python — there is no general decompiler.
     """
-    if optimize == "release":
+    if optimize == "core":
         _optimize_to_fixpoint(verbose, strip_debug=True, prune=pruneUnusedNodes)
-    elif pruneUnusedNodes:
-        removeUnreadVariables(verbose)
-        removeUnusedNodes()
-        assertVariablesIntact()
+        updateConnectionLinePoints()
+        _prepare_for_unity_format(
+            leaner=True,
+            remap_sids=remap_sids,
+            strip_regions=True,
+            strip_layout=True,
+        )
+    elif optimize == "release":
+        _optimize_to_fixpoint(verbose, strip_debug=True, prune=pruneUnusedNodes)
+        updateConnectionLinePoints()
+        if leaner:
+            _prepare_for_unity_format(
+                leaner=True,
+                remap_sids=remap_sids,
+                strip_regions=False,
+                strip_layout=False,
+            )
+        elif remap_sids:
+            remapSids(verbose=False)
+    else:  # "normal"
+        if pruneUnusedNodes:
+            removeUnreadVariables(verbose)
+            removeUnusedNodes()
+            assertVariablesIntact()
+        updateConnectionLinePoints()
+        if leaner:
+            _prepare_for_unity_format(
+                leaner=True,
+                remap_sids=remap_sids,
+                strip_regions=False,
+                strip_layout=False,
+            )
+        elif remap_sids:
+            remapSids(verbose=False)
 
-    match layout:
-        case "auto":
-            autoLayout()
-        case "grid":
-            gridLayout()
-        case "single":
-            for node in data["serializableNodes"]:
-                transform = node["serializableRectTransform"]
-                if not _is_at_origin(transform) and keepPosition:
-                    continue
-                _set_layout_position(transform, 0, 0)
-        case "hidden":
-            for node in data["serializableNodes"]:
-                transform = node["serializableRectTransform"]
-                if not _is_at_origin(transform) and keepPosition:
-                    continue
-                _set_layout_position(transform, 9999, 9999)
-                transform["scale"] = Position3(0, 0)
-
-    updateConnectionLinePoints()
-    _prepare_for_unity_format(leaner=leaner, remap_sids=remap_sids)
+    _slim_connections()
 
     with open(filePath, "w", encoding="utf-8") as f:
         json.dump(data, f, separators=(",", ":"), ensure_ascii=False)
