@@ -1767,8 +1767,6 @@ def _strip_leaner_fields(
     _inline_identity_math(spatial_structure=spatial_structure)
     _inline_split_construct(spatial_structure=spatial_structure)
     _dce_orphan_producers()
-    if spatial_structure:
-        _tighten_layout_to_neighbors()
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
         if not node.get("ownerFunctionSID"):
@@ -1878,7 +1876,7 @@ def _prepare_for_unity_format(
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
         transform = node.get("serializableRectTransform", {})
-        if transform:
+        if transform and strip_layout:
             ap = transform.get("anchoredPosition")
             lp = transform.get("localPosition", {})
             if ap is None and lp:
