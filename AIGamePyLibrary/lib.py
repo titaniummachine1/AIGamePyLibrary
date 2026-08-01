@@ -1732,6 +1732,171 @@ def _dce_orphan_producers() -> int:
     return total
 
 
+def _spatial_prune_duplicates(*, spatial_structure: bool = False) -> int:
+    """Prune exact duplicate producers, keeping the one closest to consumers.
+
+    After debug-sink stripping, some producers survive in the debug cluster
+    area even though an equivalent node (same id + modifier + same input
+    producers) exists closer to the release consumers. This creates long
+    "spiderweb" wires. When exact duplicates exist, rewire consumers of the
+    distant one to the closer one and prune the distant one.
+
+    Only touches pure nodes in ``_ORPHAN_DCE_ALLOW`` (no side effects).
+    Positions are never moved. No logic change -- the surviving node produces
+    the same value as the pruned one.
+    """
+    if not spatial_structure:
+        return 0
+    total = 0
+    for _ in range(16):
+        polarity, node_of, edges = _producer_consumer_edges()
+        positions = _collect_node_positions()
+        if len(positions) < 2:
+            break
+
+        # Build input signature per node: sorted tuple of producer node sIDs.
+        in_ports: dict[str, list[str]] = {}
+        out_ports: dict[str, list[str]] = {}
+        for n in data["serializableNodes"]:
+            sid = n["sID"]
+            in_ports[sid] = []
+            out_ports[sid] = []
+            for p in n.get("serializablePorts", []):
+                psid = p.get("sID")
+                if not psid:
+                    continue
+                if int(p.get("polarity", 0)) == 0:
+                    in_ports[sid].append(psid)
+                else:
+                    out_ports[sid].append(psid)
+
+        port_to_producer_node: dict[str, str] = {}
+        for prod_port, cons_port in edges:
+            port_to_producer_node[cons_port] = node_of.get(prod_port, "")
+
+        def input_signature(sid: str) -> tuple:
+            return tuple(sorted(
+                port_to_producer_node.get(ip, "") for ip in in_ports.get(sid, [])
+            ))
+
+        # Group pure nodes by (id, modifier, input_signature).
+        groups: dict[tuple, list[str]] = {}
+        for n in data["serializableNodes"]:
+            nid = n.get("id", "")
+            if nid not in _ORPHAN_DCE_ALLOW:
+                continue
+            if nid.startswith("SoccerPlayerSensors"):
+                continue
+            sid = n["sID"]
+            if not out_ports.get(sid):
+                continue
+            key = (nid, n.get("modifier", ""), input_signature(sid))
+            groups.setdefault(key, []).append(sid)
+
+        rewired = False
+        for key, sids in groups.items():
+            if len(sids) < 2:
+                continue
+
+            # Consumers of each node's output ports.
+            consumers_of: dict[str, list[str]] = {}
+            for sid in sids:
+                cons_nodes = set()
+                for op in out_ports.get(sid, []):
+                    for prod_port, cons_port in edges:
+                        if prod_port == op:
+                            cn = node_of.get(cons_port)
+                            if cn:
+                                cons_nodes.add(cn)
+                consumers_of[sid] = list(cons_nodes)
+
+            # Pick survivor: the one whose max wire distance to consumers is
+            # smallest. Nodes with no consumers are pruned first (they're dead
+            # weight that DCE missed).
+            best_sid = None
+            best_score = float("inf")
+            for sid in sids:
+                sxy = positions.get(sid)
+                if sxy is None:
+                    continue
+                cons = consumers_of.get(sid, [])
+                if not cons:
+                    # No consumers -- prefer to prune this one (score = inf so
+                    # it's never chosen as survivor).
+                    continue
+                max_dist = 0.0
+                for cn in cons:
+                    cxy = positions.get(cn)
+                    if cxy is None:
+                        max_dist = float("inf")
+                        break
+                    max_dist = max(max_dist, _layout_dist(sxy, cxy))
+                if max_dist < best_score:
+                    best_score = max_dist
+                    best_sid = sid
+
+            if best_sid is None:
+                continue
+
+            survivor_out = out_ports.get(best_sid, [])
+            if not survivor_out:
+                continue
+            survivor_out_port = survivor_out[0]
+
+            doomed: set[str] = set()
+            for sid in sids:
+                if sid == best_sid:
+                    continue
+                doomed.add(sid)
+                # Rewire each consumer of this node's output to the survivor.
+                for op in out_ports.get(sid, []):
+                    for prod_port, cons_port in edges:
+                        if prod_port != op:
+                            continue
+                        key_pair = (survivor_out_port, cons_port)
+                        existing = any(
+                            (c.get("port0SID"), c.get("port1SID")) == key_pair
+                            for c in data["serializableConnections"]
+                        )
+                        if existing:
+                            continue
+                        data["serializableConnections"].append(
+                            {
+                                "sID": generateId(),
+                                "port0SID": survivor_out_port,
+                                "port1SID": cons_port,
+                                "port0InstanceID": 0,
+                                "port1InstanceID": 0,
+                            }
+                        )
+
+            if not doomed:
+                continue
+
+            dead_ports = {
+                p["sID"]
+                for n in data["serializableNodes"]
+                if n["sID"] in doomed
+                for p in n.get("serializablePorts", [])
+                if p.get("sID")
+            }
+            data["serializableConnections"] = [
+                c
+                for c in data["serializableConnections"]
+                if c.get("port0SID") not in dead_ports
+                and c.get("port1SID") not in dead_ports
+            ]
+            data["serializableNodes"] = [
+                n for n in data["serializableNodes"] if n["sID"] not in doomed
+            ]
+            total += len(doomed)
+            rewired = True
+
+        if not rewired:
+            break
+    return total
+
+
 def _strip_leaner_fields(
     *,
     strip_regions: bool = False,
@@ -1767,6 +1932,7 @@ def _strip_leaner_fields(
     _inline_identity_math(spatial_structure=spatial_structure)
     _inline_split_construct(spatial_structure=spatial_structure)
     _dce_orphan_producers()
+    _spatial_prune_duplicates(spatial_structure=spatial_structure)
     for node in data["serializableNodes"]:
         node_id = node.get("id", "")
         if not node.get("ownerFunctionSID"):
