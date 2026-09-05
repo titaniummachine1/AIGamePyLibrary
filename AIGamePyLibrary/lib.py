@@ -2080,12 +2080,15 @@ def _prepare_for_unity_format(
             port.pop("serializableRectTransform", None)
             port.pop("controlPointSerializableRectTransform", None)
 
-    # Match TitaniumLean / minimal Unity load: connections are pure port links.
-    _CONN_KEEP = ("sID", "port0SID", "port1SID", "port0InstanceID", "port1InstanceID")
-    slim = []
-    for conn in data["serializableConnections"]:
-        slim.append({k: conn[k] for k in _CONN_KEEP if k in conn})
-    data["serializableConnections"] = slim
+    # Compression is strictly opt-in (leaner=True / core). Default saves keep
+    # full connection chrome so editor visuals (wire curves, labels, sids)
+    # round-trip identically to Unity's own exports.
+    if leaner or strip_layout:
+        _CONN_KEEP = ("sID", "port0SID", "port1SID", "port0InstanceID", "port1InstanceID")
+        slim = []
+        for conn in data["serializableConnections"]:
+            slim.append({k: conn[k] for k in _CONN_KEEP if k in conn})
+        data["serializableConnections"] = slim
 
     if strip_regions:
         data["serializableNodes"] = [
@@ -2420,7 +2423,7 @@ def _slim_connections():
 def SaveData(
     filePath,
     layout: Literal["auto", "grid", "single", None] = "auto",
-    pruneUnusedNodes=True,
+    pruneUnusedNodes=False,
     keepPosition=True,
     optimize: Literal["normal", "release", "core"] = "normal",
     leaner=False,
@@ -2429,17 +2432,22 @@ def SaveData(
 ):
     """Write the in-memory graph to a Unity save JSON file.
 
+    Default is fully lossless: no pruning, no chrome stripping, full
+    connection metadata (wire curves, labels, sids) preserved byte-comparable
+    to Unity's own exports. Pass ``pruneUnusedNodes=True`` to drop dead nodes
+    (including work-in-progress nodes you placed but have not wired yet).
+
     Three independent optimization modes via ``optimize``:
 
     **"normal"** (default):
-        Prune dead nodes and unread variables only. All visual data
+        No pruning unless ``pruneUnusedNodes=True``. All visual data
         (layout, Regions, positions, scale, colors, port rects) preserved
         exactly as-is. Safe on a friend's Unity-exported graph — looks
-        identical in the editor, just smaller.
+        identical in the editor.
 
     **"release"**:
-        Same as normal, plus strip every Debug*/TimePlot sink and re-prune
-        to a fixpoint so anything that ONLY fed debug output goes with it.
+        Strip every Debug*/TimePlot sink and prune to a fixpoint so anything
+        that ONLY fed debug output goes with it.
         Visual data still preserved exactly.
 
     **"core"**:
@@ -2499,7 +2507,8 @@ def SaveData(
         elif remap_sids:
             remapSids(verbose=False)
 
-    _slim_connections()
+    if optimize == "core" or leaner:
+        _slim_connections()
 
     with open(filePath, "w", encoding="utf-8") as f:
         json.dump(data, f, separators=(",", ":"), ensure_ascii=False)

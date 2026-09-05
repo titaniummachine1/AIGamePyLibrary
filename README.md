@@ -2868,7 +2868,7 @@ See the full list in the Country node docs above (same list used across simulati
 <details>
 <summary><strong>SaveData Function</strong></summary>
 
-- **`SaveData(filePath, layout="auto", pruneUnusedNodes=True, keepPosition=True, optimize="normal", verbose=False)`**
+- **`SaveData(filePath, layout="auto", pruneUnusedNodes=False, keepPosition=True, optimize="normal", verbose=False)`**
   - Saves the AI data to a JSON file that can be imported into Unity
   - `filePath`: Path to save the file
   - `layout`: Layout mode
@@ -2876,7 +2876,8 @@ See the full list in the Country node docs above (same list used across simulati
     - `"grid"` - Grid-based layout
     - `"single"` - All nodes at origin
     - `None` - No layout changes
-  - `pruneUnusedNodes`: Remove nodes that aren't connected (default: True)
+  - `pruneUnusedNodes`: Remove nodes that aren't connected (default: **False** —
+    default saves are fully lossless and never touch work-in-progress nodes)
   - `keepPosition`: Preserve manually set node positions (default: True)
   - `optimize`: How hard to compile the graph before saving (see below)
   - `verbose`: Print optimiser strip/prune counts (default: False)
@@ -2891,8 +2892,8 @@ means both a smaller file **and** less per-tick work. Pass `optimize=` to
 
 | Value                | What it does                                                                                                                                                                          |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"normal"` (default) | Safe prune only: drop unreachable nodes and `SetVariable` writes that no `GetVariable` reads. Keeps every `Debug*` / `TimePlot` sink so the graph stays observable while you develop. |
-| `"release"`          | Also strips every `Debug*` / `TimePlot` sink, then re-prunes to a fixpoint so anything that **only** fed debug output is removed too. Smallest graph; fewest per-tick evaluations.    |
+| `"normal"` (default) | Lossless by default: no pruning, full connection chrome (wire curves, labels, sids) preserved byte-comparable to Unity exports. Pass `pruneUnusedNodes=True` to also drop unreachable nodes and `SetVariable` writes that no `GetVariable` reads (this includes work-in-progress nodes you placed but have not wired yet). |
+| `"release"`          | Strips every `Debug*` / `TimePlot` sink, then re-prunes to a fixpoint so anything that **only** fed debug output is removed too. Smallest graph; fewest per-tick evaluations.         |
 
 ```python
 # Development: keep DebugDraw / TimePlot so you can inspect the graph
