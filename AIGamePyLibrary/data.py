@@ -373,6 +373,7 @@ DROPDOWN_OPTIONS: dict[str, tuple[str, ...]] = {
         "Direction of teammate from Team Player 4",
     ),
     # Tennis simulation
+    # Tennis v0.012 labels (live TennisGet*Gate.BuildItems order).
     "TennisGetBool": (
         "Is Playing",
         "Is Home",
@@ -452,6 +453,7 @@ DROPDOWN_OPTIONS: dict[str, tuple[str, ...]] = {
     ),
     "TennisGetVector3": (
         "Ball Position",
+        "Ball Velocity",
         "Predicted Bounce",
         "Center Of Half",
         "Center Of Back",
@@ -1688,15 +1690,15 @@ DROPDOWN_MODIFIER_AS_LABEL = frozenset(
 )
 
 # Legacy tennis labels → current Unity `BuildItems` text. Keys are casefolded.
-# Matches `TennisGet*Gate.LabelAliases`. v0.012 renamed the serve/time options
-# (stock bot embedded in the build uses the new text); aliases below point the
-# older spellings at the v0.012 labels so generated saves stay load-safe.
+# Matches `TennisGet*Gate.LabelAliases`. v0.012 renamed serve/time/last-shot
+# options; aliases keep older spellings load-safe.
 DROPDOWN_ALIASES: dict[str, dict[str, str]] = {
     "TennisGetBool": {
         "i am serving": "Is Self Server For Set",
         "is server": "Is Self Server For Set",
         "self is server": "Is Self Server For Set",
         "is self server": "Is Self Server For Set",
+        "is self server for set": "Is Self Server For Set",
         "opponent is server": "Is Opponent Server For Set",
         "is opponent server": "Is Opponent Server For Set",
         "is opponent server for set": "Is Opponent Server For Set",
@@ -1709,7 +1711,13 @@ DROPDOWN_ALIASES: dict[str, dict[str, str]] = {
         "can hit": "Is Ball Playable",
         "can swing": "Is Ball Playable",
         "ball is playable": "Is Ball Playable",
-        "ball is playable": "Is Ball Playable",
+        "is ball playable": "Is Ball Playable",
+        "ball is lob": "Was Last Shot Lob",
+        "is ball lob": "Was Last Shot Lob",
+        "ball is drop": "Was Last Shot Drop",
+        "is ball drop": "Was Last Shot Drop",
+        "ball has topspin": "Was Last Shot Topspin",
+        "ball has backspin": "Was Last Shot Slice",
         "is ball nearby": "Ball In Swing Range",
         "ball in swing range": "Ball In Swing Range",
         "does ball have charged effects": "Ball Has Charged Effect",
@@ -1729,8 +1737,6 @@ DROPDOWN_ALIASES: dict[str, dict[str, str]] = {
         "shot flat": "Shot: Flat",
         "shot drop": "Shot: Drop",
         "shot lob": "Shot: Lob",
-        # v0.012 split Trick into explicit Lob/Drop/Curve shots; Lob is the
-        # default trick body (drop is steered via move direction).
         "shot trick": "Shot: Lob",
         "shot: trick": "Shot: Lob",
         "shot curve left": "Shot: Curve Left",
